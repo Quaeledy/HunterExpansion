@@ -1,0 +1,267 @@
+﻿using HunterExpansion.CustomOracle;
+using HunterExpansion.CustomSave;
+using MonoMod.Cil;
+using System;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Mono.Cecil.Cil;
+using MoreSlugcats;
+using System.Collections.Generic;
+
+namespace HunterExpansion.HRTalk
+{
+    public class HRTalkHooks
+    {
+        public static bool oracleHasSpawn = false;
+        public static bool NSHHasSpawn = false;
+        public static bool SRSHasSpawn = false;
+
+        public static void InitIL()
+        {
+            IL.Player.ClassMechanicsSaint += Player_ClassMechanicsSaintIL;
+            IL.SSOracleBehavior.SSOracleRubicon.Update += SSOracleRubicon_UpdateIL;
+            IL.Oracle.ctor += Oracle_ctorIL;
+        }
+
+        public static void Init()
+        {
+            On.Oracle.ctor += Oracle_ctor;
+            On.RoomCamera.ChangeBothPalettes += RoomCamera_ChangeBothPalettes;
+            On.Room.ReadyForAI += Room_ReadyForAI;
+        }
+        #region IL输出修改后代码的示例
+        /*
+        public static ILCursor text;
+        public static bool logged;
+        //On.Player.ClassMechanicsSaint += Player_ClassMechanicsSaint;
+        public static void Player_ClassMechanicsSaint(On.Player.orig_ClassMechanicsSaint orig, Player self)
+        {
+            orig(self);
+            try
+            {
+                if (!logged)
+                {
+                    var instruction = text.Next;
+                    while (instruction.Next != null)
+                    {
+                        Plugin.Log(instruction.ToString());
+                        instruction = instruction.Next;
+                    }
+                    logged = true;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }*/
+        #endregion
+
+        #region IL Hooks
+        private static void Oracle_ctorIL(ILContext il)
+        {
+            try
+            {
+                ILCursor c = new ILCursor(il);
+                //当NSH还没在魔方节点生成时，需要把房间设为HR_AI
+                if (c.TryGotoNext(MoveType.After,
+                    (i) => i.MatchCall<PhysicalObject>("set_buoyancy")))
+                {
+                    c.EmitDelegate<Action>(() =>
+                    {
+                        if (!NSHHasSpawn)
+                            NSHOracleRegistry.currentLoadingRoom = "HR_AI"; 
+                        if (!SRSHasSpawn)
+                            SRSOracleRegistry.currentLoadingRoom = "HR_AI";
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
+        public static void Player_ClassMechanicsSaintIL(ILContext il)
+        {
+            try
+            {
+                ILCursor c = new ILCursor(il);
+                //text = new ILCursor(il);
+
+                //在圣猫的飞升技能中加入NSH
+                if (c.TryGotoNext(MoveType.After,
+                    (i) => i.Match(OpCodes.Ldc_R4),
+                    (i) => i.Match(OpCodes.Ldc_R4),
+                    (i) => i.Match(OpCodes.Ldc_I4_5),
+                    (i) => i.Match(OpCodes.Call),
+                    (i) => i.Match(OpCodes.Newobj),
+                    (i) => i.Match(OpCodes.Callvirt),
+                    (i) => i.Match(OpCodes.Ldc_I4_1),
+                    (i) => i.Match(OpCodes.Stloc_S),
+                    (i) => i.Match(OpCodes.Ldloc_S)))//这里已经找到了physicalObject的本地变量
+                {
+                    c.Emit(OpCodes.Ldloc_S, (byte)15);//找到flag2的本地变量
+                    c.Emit(OpCodes.Ldarg_0);//找到self
+                    c.EmitDelegate<Func<PhysicalObject, bool, Player, bool>>((physicalObject, flag2, self) =>
+                    {
+                        if (self.abstractCreature.world.game.IsStorySession &&
+                            self.abstractCreature.world.game.StoryCharacter == MoreSlugcatsEnums.SlugcatStatsName.Saint &&
+                            self.room.game.session is StoryGameSession && physicalObject is Oracle &&
+                            (physicalObject as Oracle).ID == NSHOracleRegistry.NSHOracle && !(RipNSHSave.ripNSH))
+                        {
+                            RipNSHSave.ripNSH = true;
+                            self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break, self.mainBodyChunk, false, 1f, 0.4f);
+                            Vector2 pos = (physicalObject as Oracle).bodyChunks[0].pos;
+                            self.room.AddObject(new ShockWave(pos, 500f, 0.75f, 18, false));
+                            self.room.AddObject(new Explosion.ExplosionLight(pos, 320f, 1f, 5, Color.white));
+                            Plugin.Log("Ascend saint NSH");
+                            ((physicalObject as Oracle).oracleBehavior as SRSOracleBehaviour).dialogBox.Interrupt("...", 1);
+                            if (((physicalObject as Oracle).oracleBehavior as SRSOracleBehaviour).conversation != null)
+                            {
+                                ((physicalObject as Oracle).oracleBehavior as SRSOracleBehaviour).conversation.Destroy();
+                                ((physicalObject as Oracle).oracleBehavior as SRSOracleBehaviour).conversation = null;
+                            }
+                            (physicalObject as Oracle).health = 0f;
+                            flag2 = true;
+                        }
+                        return flag2;
+                    });
+                    c.Emit(OpCodes.Stloc_S, (byte)15);//找到flag2的本地变量
+                    c.Emit(OpCodes.Ldloc_S, (byte)18);//这是给ST（茅草裂片）用的
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
+        public static void SSOracleRubicon_UpdateIL(ILContext il)
+        {
+            try
+            {
+                ILCursor c = new ILCursor(il);
+                ILCursor find = new ILCursor(il);
+                ILLabel pos = null;
+                //找到原方法结束的地方
+                if (find.TryGotoNext(MoveType.After,
+                    (i) => i.Match(OpCodes.Call),
+                    (i) => i.Match(OpCodes.Ldarg_0),
+                    (i) => i.Match(OpCodes.Ldc_I4_1),
+                    (i) => i.Match(OpCodes.Stfld)))
+                {
+                    pos = find.MarkLabel();
+                }
+                //当NSH被超度为true时，需要跳过原方法
+                if (c.TryGotoNext(MoveType.After,
+                    (i) => i.Match(OpCodes.Ldarg_0),
+                    (i) => i.Match(OpCodes.Call),
+                    (i) => i.Match(OpCodes.Ldc_I4_S),
+                    (i) => i.Match(OpCodes.Ble)))
+                {
+                    if (pos != null)
+                    {
+                        c.Emit(OpCodes.Ldarg_0);
+                        c.EmitDelegate<Func<SSOracleBehavior.SSOracleRubicon, bool>>((self) =>
+                        {
+                            //但是不要忘了，当NSH被超度为true时，其他迭的startedConversation依然需要为true;
+                            if (RipNSHSave.ripNSH && !self.startedConversation)
+                            {
+                                self.startedConversation = true;
+                                self.owner.conversation = null;
+                            }
+                            return RipNSHSave.ripNSH;
+                        });
+                        c.Emit(OpCodes.Brtrue, pos);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+        #endregion
+        private static void Oracle_ctor(On.Oracle.orig_ctor orig, Oracle self, AbstractPhysicalObject abstractPhysicalObject, Room room)
+        {
+            Plugin.Log("room.oracleWantToSpawn: " + room.oracleWantToSpawn);
+            oracleHasSpawn = false;
+            //如果在魔方节点已经生成了该生成的迭代器，则生成NSH
+            if (ModManager.MSC && room.world.name == "HR" && room.oracleWantToSpawn != null)
+            {
+                List<PhysicalObject>[] physicalObjects = room.physicalObjects;
+                for (int i = 0; i < physicalObjects.Length; i++)
+                {
+                    for (int j = 0; j < physicalObjects[i].Count; j++)
+                    {
+                        PhysicalObject physicalObject = physicalObjects[i][j];
+                        if ((physicalObject is Oracle))
+                        {
+                            if ((physicalObject as Oracle).ID == room.oracleWantToSpawn)
+                            {
+                                oracleHasSpawn = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < physicalObjects.Length; i++)
+                {
+                    for (int j = 0; j < physicalObjects[i].Count; j++)
+                    {
+                        PhysicalObject physicalObject = physicalObjects[i][j];
+                        if ((physicalObject is Oracle))
+                        {
+                            if ((physicalObject as Oracle).ID == NSHOracleRegistry.NSHOracle)
+                            {
+                                NSHHasSpawn = true;
+                                break;
+                            }
+                            if ((physicalObject as Oracle).ID == SRSOracleRegistry.SRSOracle)
+                            {
+                                SRSHasSpawn = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (oracleHasSpawn && !NSHHasSpawn)//如果之前的迭代器已经生成了，但NSH还没生成
+                    NSHOracleRegistry.currentLoadingRoom = "HR_AI";
+                else
+                    NSHOracleRegistry.currentLoadingRoom = "NSH_AI"; 
+                if (oracleHasSpawn && !SRSHasSpawn)//如果之前的迭代器已经生成了，但SRS还没生成
+                    SRSOracleRegistry.currentLoadingRoom = "HR_AI";
+                else
+                    SRSOracleRegistry.currentLoadingRoom = "SRS_AI";
+            }
+
+            orig(self, abstractPhysicalObject, room);
+        }
+
+        private static void RoomCamera_ChangeBothPalettes(On.RoomCamera.orig_ChangeBothPalettes orig, RoomCamera self, int palA, int palB, float blend)
+        {
+            if ((self.room != null && self.room.abstractRoom.name == "HR_AI" &&
+                RipNSHSave.ripNSH && self.room.game.IsStorySession &&
+                self.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Saint) ||
+                (self.room != null && self.room.abstractRoom.name == "NSH_AI" && self.room.game.IsStorySession &&
+                self.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Sofanthiel))
+            {
+                return;
+            }
+            orig(self, palA, palB, blend);
+        }
+
+        private static void Room_ReadyForAI(On.Room.orig_ReadyForAI orig, Room self)
+        {
+            if (RipNSHSave.ripNSH && self.game != null && self.game.IsStorySession &&
+                !self.game.GetStorySession.saveState.miscWorldSaveData.hrMelted)
+            {
+                NSHOracleRegistry.currentLoadingRoom = self.abstractRoom.name;
+                SRSOracleRegistry.currentLoadingRoom = self.abstractRoom.name;
+            }
+
+            orig.Invoke(self);
+        }
+    }
+}
