@@ -33,6 +33,14 @@ namespace HunterExpansion.CustomEnding
             On.RegionGate.KarmaBlinkRed += RegionGate_KarmaBlinkRed;
             On.GateKarmaGlyph.Update += GateKarmaGlyph_Update;
             Hook hook = new Hook(typeof(RegionGate).GetProperty("MeetRequirement", RegionHooks.propFlags).GetGetMethod(), typeof(RegionHooks).GetMethod("RegionGate_get_MeetRequirement", RegionHooks.methodFlags));
+            On.WorldLoader.SpawnerStabilityCheck += WorldLoader_SpawnerStabilityCheck;
+        }
+
+        private static void WorldLoader_SpawnerStabilityCheck(On.WorldLoader.orig_SpawnerStabilityCheck orig, WorldLoader self, World.CreatureSpawner spawner)
+        {
+            if (self.worldName == "NSH")
+                return;
+            orig.Invoke(self, spawner);
         }
 
         public static bool RegionGate_KarmaBlinkRed(On.RegionGate.orig_KarmaBlinkRed orig, RegionGate self)

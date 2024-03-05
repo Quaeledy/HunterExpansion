@@ -5,86 +5,64 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 	<ItemGroup>
-		<Reference Include="0Harmony">
-			<HintPath>..\..\TheOutsider\lib\0Harmony.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Assembly-CSharp-firstpass">
-			<HintPath>..\..\TheOutsider\lib\Assembly-CSharp-firstpass.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="BepInEx">
-			<HintPath>..\..\TheOutsider\lib\BepInEx.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="EmgTx">
-			<HintPath>..\..\TheOutsider\lib\EmgTx.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Fisobs">
-			<HintPath>..\..\TheOutsider\lib\Fisobs.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="HOOKS-Assembly-CSharp">
-			<HintPath>..\..\TheOutsider\lib\HOOKS-Assembly-CSharp.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Mono.Cecil">
-			<HintPath>..\..\TheOutsider\lib\Mono.Cecil.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Mono.Cecil.Rocks">
-			<HintPath>..\..\TheOutsider\lib\Mono.Cecil.Rocks.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="MonoMod">
-			<HintPath>..\..\TheOutsider\lib\MonoMod.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="MonoMod.RuntimeDetour">
-			<HintPath>..\..\TheOutsider\lib\MonoMod.RuntimeDetour.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="MonoMod.Utils">
-			<HintPath>..\..\TheOutsider\lib\MonoMod.Utils.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="PUBLIC-Assembly-CSharp">
-			<HintPath>..\..\TheOutsider\lib\PUBLIC-Assembly-CSharp.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="SlugBase">
-			<HintPath>..\..\TheOutsider\lib\SlugBase.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine">
-			<HintPath>..\..\TheOutsider\lib\UnityEngine.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.AssetBundleModule">
-			<HintPath>..\..\TheOutsider\lib\UnityEngine.AssetBundleModule.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.AudioModule">
-			<HintPath>..\..\TheOutsider\lib\UnityEngine.AudioModule.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.CoreModule">
-			<HintPath>..\..\TheOutsider\lib\UnityEngine.CoreModule.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.InputLegacyModule">
-			<HintPath>..\..\TheOutsider\lib\UnityEngine.InputLegacyModule.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.UIElementsModule">
-			<HintPath>..\..\TheOutsider\lib\UnityEngine.UIElementsModule.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-	</ItemGroup>
-	<ItemGroup>
 		<Compile Remove="CustomOracle\NSHMeetOtherOracle.cs" />
 		<Compile Remove="CustomOracle\SRSMeetOtherOracle.cs" />
 		<Compile Remove="CustomSave\AltEndingSave.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="0Harmony">
+	    <HintPath>..\lib\0Harmony.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Assembly-CSharp-firstpass">
+	    <HintPath>..\lib\Assembly-CSharp-firstpass.dll</HintPath>
+	  </Reference>
+	  <Reference Include="BepInEx">
+	    <HintPath>..\lib\BepInEx.dll</HintPath>
+	  </Reference>
+	  <Reference Include="EmgTx">
+	    <HintPath>..\lib\EmgTx.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Fisobs">
+	    <HintPath>..\lib\Fisobs.dll</HintPath>
+	  </Reference>
+	  <Reference Include="HOOKS-Assembly-CSharp">
+	    <HintPath>..\lib\HOOKS-Assembly-CSharp.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Mono.Cecil">
+	    <HintPath>..\lib\Mono.Cecil.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Mono.Cecil.Rocks">
+	    <HintPath>..\lib\Mono.Cecil.Rocks.dll</HintPath>
+	  </Reference>
+	  <Reference Include="MonoMod">
+	    <HintPath>..\lib\MonoMod.dll</HintPath>
+	  </Reference>
+	  <Reference Include="MonoMod.RuntimeDetour">
+	    <HintPath>..\lib\MonoMod.RuntimeDetour.dll</HintPath>
+	  </Reference>
+	  <Reference Include="MonoMod.Utils">
+	    <HintPath>..\lib\MonoMod.Utils.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Assembly-CSharp">
+	    <HintPath>..\lib\PUBLIC-Assembly-CSharp.dll</HintPath>
+	  </Reference>
+	  <Reference Include="SlugBase">
+	    <HintPath>..\lib\SlugBase.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine">
+	    <HintPath>..\lib\UnityEngine.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.AssetBundleModule">
+	    <HintPath>..\lib\UnityEngine.AssetBundleModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.AudioModule">
+	    <HintPath>..\lib\UnityEngine.AudioModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.CoreModule">
+	    <HintPath>..\lib\UnityEngine.CoreModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.UIElementsModule">
+	    <HintPath>..\lib\UnityEngine.UIElementsModule.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 </Project>
