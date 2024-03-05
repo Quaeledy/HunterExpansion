@@ -1,0 +1,7 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/HunterExpansion/bin/Debug/net48
+/HunterExpansion/.vs/HunterExpansion/FileContentIndex
+/HunterExpansion/obj/Debug/net48/.NETFramework,Version=v4.8.AssemblyAttributes.cs
