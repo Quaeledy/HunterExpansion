@@ -143,6 +143,7 @@ namespace HunterExpansion
                     startFix = false;
                     self.currentConversation = new SLOracleBehaviorHasMark.MoonConversation(MoonAfterFixNSHPearl, self, SLOracleBehaviorHasMark.MiscItemType.NA);
                     fixCount++;
+                    self.oracle.room.AddObject(new FixedDataPearlEffect(pearl, self.oracle.room));
                 }
             }
         }
@@ -154,6 +155,7 @@ namespace HunterExpansion
             SaveState saveState = Custom.rainWorld.progression.currentSaveState;
             if (slOracleBehaviorHasMark.oracle.room.game.session.characterStats.name == Plugin.SlugName &&
                 slOracleBehaviorHasMark.oracle.room.abstractRoom.name == "SL_AI" &&
+                saveState.miscWorldSaveData.SLOracleState.neuronsLeft >= 4 &&
                 id == Conversation.ID.Moon_Pearl_Red_stomach && !PearlFixedSave.pearlFixed)
             {
                 startFix = true;

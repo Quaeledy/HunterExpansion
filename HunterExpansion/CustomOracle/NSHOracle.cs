@@ -132,31 +132,55 @@ namespace HunterExpansion.CustomOracle
         {
             NSH_AI_Attack_1 = new SoundID("NSH_AI_Attack_1", true);
             NSH_AI_Attack_2 = new SoundID("NSH_AI_Attack_2", true);
-            NSH_AI_Break = new SoundID("NSH_AI_Break", true);
-            NSH_AI_Chat = new SoundID("NSH_AI_Chat", true);
-            NSH_AI_NoDialogue_1 = new SoundID("NSH_AI_Chat", true);
-            NSH_AI_NoDialogue_2 = new SoundID("NSH_AI_Chat", true);
-            NSH_AI_NoDialogue_3 = new SoundID("NSH_AI_Chat", true);
+            NSH_AI_Attack_3 = new SoundID("NSH_AI_Attack_3", true);
+            NSH_AI_Attack_4 = new SoundID("NSH_AI_Attack_4", true);
+            NSH_AI_Break_1 = new SoundID("NSH_AI_Break_1", true);
+            NSH_AI_Break_2 = new SoundID("NSH_AI_Break_2", true);
+            NSH_AI_Break_3 = new SoundID("NSH_AI_Break_3", true);
+            NSH_AI_Break_4 = new SoundID("NSH_AI_Break_4", true);
+            NSH_AI_LongDialogue_1 = new SoundID("NSH_AI_LongDialogue_1", true);
+            NSH_AI_LongDialogue_2 = new SoundID("NSH_AI_LongDialogue_2", true);
+            NSH_AI_LongDialogue_3 = new SoundID("NSH_AI_LongDialogue_3", true);
+            NSH_AI_Recover_1 = new SoundID("NSH_AI_Recover_1", true);
+            NSH_AI_Recover_2 = new SoundID("NSH_AI_Recover_2", true);
+            NSH_AI_ShortDialogue_1 = new SoundID("NSH_AI_ShortDialogue_1", true);
+            NSH_AI_ShortDialogue_2 = new SoundID("NSH_AI_ShortDialogue_2", true);
         }
 
         public static void UnregisterValues()
         {
             HunterExpansionEnums.Unregister(NSH_AI_Attack_1);
             HunterExpansionEnums.Unregister(NSH_AI_Attack_2);
-            HunterExpansionEnums.Unregister(NSH_AI_Break);
-            HunterExpansionEnums.Unregister(NSH_AI_Chat);
-            HunterExpansionEnums.Unregister(NSH_AI_NoDialogue_1);
-            HunterExpansionEnums.Unregister(NSH_AI_NoDialogue_2);
-            HunterExpansionEnums.Unregister(NSH_AI_NoDialogue_3);
+            HunterExpansionEnums.Unregister(NSH_AI_Attack_3);
+            HunterExpansionEnums.Unregister(NSH_AI_Attack_4);
+            HunterExpansionEnums.Unregister(NSH_AI_Break_1);
+            HunterExpansionEnums.Unregister(NSH_AI_Break_2);
+            HunterExpansionEnums.Unregister(NSH_AI_Break_3);
+            HunterExpansionEnums.Unregister(NSH_AI_Break_4);
+            HunterExpansionEnums.Unregister(NSH_AI_LongDialogue_1);
+            HunterExpansionEnums.Unregister(NSH_AI_LongDialogue_2);
+            HunterExpansionEnums.Unregister(NSH_AI_LongDialogue_3);
+            HunterExpansionEnums.Unregister(NSH_AI_Recover_1);
+            HunterExpansionEnums.Unregister(NSH_AI_Recover_2);
+            HunterExpansionEnums.Unregister(NSH_AI_ShortDialogue_1);
+            HunterExpansionEnums.Unregister(NSH_AI_ShortDialogue_2);
         }
 
         public static SoundID NSH_AI_Attack_1;
         public static SoundID NSH_AI_Attack_2;
-        public static SoundID NSH_AI_Break;
-        public static SoundID NSH_AI_Chat;
-        public static SoundID NSH_AI_NoDialogue_1;
-        public static SoundID NSH_AI_NoDialogue_2;
-        public static SoundID NSH_AI_NoDialogue_3;
+        public static SoundID NSH_AI_Attack_3;
+        public static SoundID NSH_AI_Attack_4;
+        public static SoundID NSH_AI_Break_1;
+        public static SoundID NSH_AI_Break_2;
+        public static SoundID NSH_AI_Break_3;
+        public static SoundID NSH_AI_Break_4;
+        public static SoundID NSH_AI_LongDialogue_1;
+        public static SoundID NSH_AI_LongDialogue_2;
+        public static SoundID NSH_AI_LongDialogue_3;
+        public static SoundID NSH_AI_Recover_1;
+        public static SoundID NSH_AI_Recover_2;
+        public static SoundID NSH_AI_ShortDialogue_1;
+        public static SoundID NSH_AI_ShortDialogue_2;
     }
 
     public class NSHOracleBehaviorAction

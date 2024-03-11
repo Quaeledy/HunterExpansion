@@ -7,6 +7,7 @@ using Debug = UnityEngine.Debug;
 using Mono.Cecil.Cil;
 using MoreSlugcats;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 namespace HunterExpansion.HRTalk
 {
@@ -67,6 +68,8 @@ namespace HunterExpansion.HRTalk
                 if (c.TryGotoNext(MoveType.After,
                     (i) => i.MatchCall<PhysicalObject>("set_buoyancy")))
                 {
+
+                    Plugin.Log("Oracle_ctorIL MatchFind!");
                     c.EmitDelegate<Action>(() =>
                     {
                         if (!NSHHasSpawn)
@@ -87,7 +90,6 @@ namespace HunterExpansion.HRTalk
             try
             {
                 ILCursor c = new ILCursor(il);
-                //text = new ILCursor(il);
 
                 //在圣猫的飞升技能中加入NSH
                 if (c.TryGotoNext(MoveType.After,
@@ -101,6 +103,7 @@ namespace HunterExpansion.HRTalk
                     (i) => i.Match(OpCodes.Stloc_S),
                     (i) => i.Match(OpCodes.Ldloc_S)))//这里已经找到了physicalObject的本地变量
                 {
+                    Plugin.Log("Player_ClassMechanicsSaintIL MatchFind!");
                     c.Emit(OpCodes.Ldloc_S, (byte)15);//找到flag2的本地变量
                     c.Emit(OpCodes.Ldarg_0);//找到self
                     c.EmitDelegate<Func<PhysicalObject, bool, Player, bool>>((physicalObject, flag2, self) =>
@@ -111,7 +114,21 @@ namespace HunterExpansion.HRTalk
                             (physicalObject as Oracle).ID == NSHOracleRegistry.NSHOracle && !(RipNSHSave.ripNSH))
                         {
                             RipNSHSave.ripNSH = true;
-                            self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break, self.mainBodyChunk, false, 1f, 0.4f);
+                            switch (Random.Range(0, 4))
+                            {
+                                case 0:
+                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_1, 0f, 1f, 1.5f);
+                                    break;
+                                case 1:
+                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_2, 0f, 1f, 1.5f);
+                                    break;
+                                case 2:
+                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_3, 0f, 1f, 1.5f);
+                                    break;
+                                case 3:
+                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_4, 0f, 1f, 1.5f);
+                                    break;
+                            }
                             Vector2 pos = (physicalObject as Oracle).bodyChunks[0].pos;
                             self.room.AddObject(new ShockWave(pos, 500f, 0.75f, 18, false));
                             self.room.AddObject(new Explosion.ExplosionLight(pos, 320f, 1f, 5, Color.white));
@@ -152,6 +169,7 @@ namespace HunterExpansion.HRTalk
                     (i) => i.Match(OpCodes.Stfld)))
                 {
                     pos = find.MarkLabel();
+                    Plugin.Log("SSOracleRubicon_UpdateIL Find Pos to MarkLabel!");
                 }
                 //当NSH被超度为true时，需要跳过原方法
                 if (c.TryGotoNext(MoveType.After,
@@ -160,6 +178,7 @@ namespace HunterExpansion.HRTalk
                     (i) => i.Match(OpCodes.Ldc_I4_S),
                     (i) => i.Match(OpCodes.Ble)))
                 {
+                    Plugin.Log("SSOracleRubicon_UpdateIL MatchFind!");
                     if (pos != null)
                     {
                         c.Emit(OpCodes.Ldarg_0);
@@ -185,7 +204,7 @@ namespace HunterExpansion.HRTalk
         #endregion
         private static void Oracle_ctor(On.Oracle.orig_ctor orig, Oracle self, AbstractPhysicalObject abstractPhysicalObject, Room room)
         {
-            Plugin.Log("room.oracleWantToSpawn: " + room.oracleWantToSpawn);
+            Plugin.Log("room.oracleWantToSpawn: " + (room.oracleWantToSpawn != null ? room.oracleWantToSpawn.ToString() : "NULL"));
             oracleHasSpawn = false;
             //如果在魔方节点已经生成了该生成的迭代器，则生成NSH
             if (ModManager.MSC && room.world.name == "HR" && room.oracleWantToSpawn != null)

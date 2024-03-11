@@ -635,7 +635,8 @@ namespace HunterExpansion.CustomOracle
 
             public void InitiateSprites(int sprite, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
             {
-                TriangleMesh mesh = TriangleMesh.MakeLongMesh(divs, false, true, "Futile_White");
+                string tex = NSHOracleRegistry.isCorrupted ? "NSHRibbonTex" : "Futile_White";
+                TriangleMesh mesh = MakeLongMesh(divs, false, true, tex, true);
                 sLeaser.sprites[sprite] = mesh;
                 for (int j = 0; j < mesh.verticeColors.Length; j++)
                 {
@@ -791,6 +792,36 @@ namespace HunterExpansion.CustomOracle
                 else if (!OutLength && !sLeaser.sprites[sprite].isVisible)
                     sLeaser.sprites[sprite].isVisible = true;
             }
+        }
+
+        public static TriangleMesh MakeLongMesh(int segments, bool pointyTip, bool customColor, string texture, bool atlasedImage)
+        {
+            TriangleMesh.Triangle[] array = new TriangleMesh.Triangle[(segments - 1) * 4 + (pointyTip ? 1 : 2)];
+            for (int i = 0; i < segments - 1; i++)
+            {
+                int num = i * 4;
+                for (int j = 0; j < 4; j++)
+                {
+                    array[num + j] = new TriangleMesh.Triangle(num + j, num + j + 1, num + j + 2);
+                }
+            }
+            array[(segments - 1) * 4] = new TriangleMesh.Triangle((segments - 1) * 4, (segments - 1) * 4 + 1, (segments - 1) * 4 + 2);
+            if (!pointyTip)
+            {
+                array[(segments - 1) * 4 + 1] = new TriangleMesh.Triangle((segments - 1) * 4 + 1, (segments - 1) * 4 + 2, (segments - 1) * 4 + 3);
+            }
+            TriangleMesh triangleMesh = new TriangleMesh(texture, array, customColor, atlasedImage);
+            float num2 = 1f / (float)((segments - 1) * 2 + 1);
+            for (int k = 0; k < triangleMesh.UVvertices.Length; k++)
+            {
+                triangleMesh.UVvertices[k].x = ((k % 2 == 0) ? 0f : 1f);
+                triangleMesh.UVvertices[k].y = (float)(k / 2) * num2;
+            }
+            if (pointyTip)
+            {
+                triangleMesh.UVvertices[triangleMesh.UVvertices.Length - 1].x = 0.5f;
+            }
+            return triangleMesh;
         }
     }
 }

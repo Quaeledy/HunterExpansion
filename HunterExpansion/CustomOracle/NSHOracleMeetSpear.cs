@@ -2,13 +2,36 @@
 using static CustomOracleTx.CustomOracleBehaviour;
 using MoreSlugcats;
 using HunterExpansion.CustomDream;
+using RWCustom;
+using System.Collections.Generic;
 
 namespace HunterExpansion.CustomOracle
 {
     public class NSHOracleMeetSpear : CustomConversationBehaviour
     {
+        private AbstractCreature lockedOverseer;
+        public bool holdPlayer;
+
         public NSHOracleMeetSpear(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetSpear, NSHConversationID.Spear_Talk0)
         {
+            this.communicationIndex = 0;
+            /*
+            (this.owner.oracle.room.world.game.session as StoryGameSession).saveState.miscWorldSaveData.playerGuideState.InfluenceLike(1000f, false);
+            WorldCoordinate worldCoordinate = new WorldCoordinate(base.oracle.room.world.offScreenDen.index, -1, -1, 0);
+            this.lockedOverseer = new AbstractCreature(base.oracle.room.world, StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Overseer), null, worldCoordinate, new EntityID(-1, 5));
+            if (base.oracle.room.world.GetAbstractRoom(worldCoordinate).offScreenDen)
+            {
+                base.oracle.room.world.GetAbstractRoom(worldCoordinate).entitiesInDens.Add(this.lockedOverseer);
+            }
+            else
+            {
+                base.oracle.room.world.GetAbstractRoom(worldCoordinate).AddEntity(this.lockedOverseer);
+            }
+            this.lockedOverseer.ignoreCycle = true;
+            (this.lockedOverseer.abstractAI as OverseerAbstractAI).spearmasterLockedOverseer = true;
+            (this.lockedOverseer.abstractAI as OverseerAbstractAI).SetAsPlayerGuide(3);
+            (this.lockedOverseer.abstractAI as OverseerAbstractAI).BringToRoomAndGuidePlayer(base.oracle.room.abstractRoom.index);
+            */
         }
 
         public static bool SubBehaviourIsMeetSpear(CustomAction nextAction)
@@ -108,8 +131,7 @@ namespace HunterExpansion.CustomOracle
             }
             //现实对话
             else if (action == NSHOracleBehaviorAction.MeetSpear_Talk1 ||
-                     action == NSHOracleBehaviorAction.MeetSpear_Talk2 ||
-                     action == NSHOracleBehaviorAction.MeetSpear_Talk3)
+                     action == NSHOracleBehaviorAction.MeetSpear_Talk2)
             {
                 if (inActionCounter == 100)
                 {
@@ -122,8 +144,86 @@ namespace HunterExpansion.CustomOracle
                         owner.conversation = null;
                         //说完继续工作
                         owner.getToWorking = 1f;
-                        movementBehavior = CustomMovementBehavior.Idle;
+                        movementBehavior = NSHOracleMovementBehavior.Meditate;
+                        //喂饱矛大师
+                        if (player.FoodInStomach <= player.MaxFoodInStomach)
+                        {
+                            player.AddFood(player.MaxFoodInStomach);
+                        } 
                         return;
+                    }
+                }
+            }
+            else if (action == NSHOracleBehaviorAction.MeetSpear_Talk3)
+            {
+                if (inActionCounter == 100)
+                {
+                    PlayerHooks.SpawnOverseerInRoom(oracle.room, "NSH_AI", CreatureTemplate.Type.Overseer, 3);
+                }
+                if (owner.conversation != null)
+                { //说第一句话之后展示与srs交流的图像
+                    if (owner.conversation.events.Count == 2 && this.communicationIndex == 0)
+                    {
+                        if ((this.owner as NSHOracleBehaviour).showImage != null)
+                        {
+                            (this.owner as NSHOracleBehaviour).showImage.Destroy();
+                            (this.owner as NSHOracleBehaviour).showImage = null;
+                        }
+                        (this.owner as NSHOracleBehaviour).showImage = base.oracle.myScreen.AddImage("AIimg2b_NSH");
+                        (this.owner as NSHOracleBehaviour).showMediaPos = new Vector2(0.4f * base.oracle.room.PixelWidth, 0.4f * base.oracle.room.PixelHeight);
+                        this.communicationIndex++;
+                        base.oracle.room.PlaySound(SoundID.SS_AI_Image, 0f, 1f, 1f);
+                        (this.owner as NSHOracleBehaviour).showImage.lastPos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                        (this.owner as NSHOracleBehaviour).showImage.pos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                        (this.owner as NSHOracleBehaviour).showImage.lastAlpha = 0.91f + Random.value * 0.06f;
+                        (this.owner as NSHOracleBehaviour).showImage.alpha = 0.91f + Random.value * 0.06f;
+                        (this.owner as NSHOracleBehaviour).showImage.setAlpha = new float?(0.91f + Random.value * 0.06f);
+                        movementBehavior = CustomMovementBehavior.ShowMedia;
+                    }
+                    if ((this.owner as NSHOracleBehaviour).showImage != null)
+                    {
+                        if (Random.value < 0.033333335f)
+                        {
+                            (this.owner as NSHOracleBehaviour).idealShowMediaPos += Custom.RNV() * Random.value * 30f;
+                            (this.owner as NSHOracleBehaviour).showMediaPos += Custom.RNV() * Random.value * 30f;
+                        }
+                        (this.owner as NSHOracleBehaviour).showImage.setPos = new Vector2?((this.owner as NSHOracleBehaviour).showMediaPos); 
+                        this.owner.lookPoint = (this.owner as NSHOracleBehaviour).showMediaPos;
+                    }
+                    if (owner.conversation.slatedForDeletion)
+                    {
+                        if ((this.owner as NSHOracleBehaviour).showImage != null)
+                        {
+                            (this.owner as NSHOracleBehaviour).showImage.Destroy();
+                            (this.owner as NSHOracleBehaviour).showImage = null;
+                        }
+                        /*
+                        if (this.holdPlayer && base.player.room == base.oracle.room)
+                        {
+                            base.player.mainBodyChunk.vel *= Custom.LerpMap((float)base.inActionCounter, 0f, 30f, 1f, 0.95f);
+                            base.player.bodyChunks[1].vel *= Custom.LerpMap((float)base.inActionCounter, 0f, 30f, 1f, 0.95f);
+                            base.player.mainBodyChunk.vel += Custom.DirVec(base.player.mainBodyChunk.pos, this.holdPlayerPos) * Mathf.Lerp(0.5f, Custom.LerpMap(Vector2.Distance(base.player.mainBodyChunk.pos, this.holdPlayerPos), 30f, 150f, 2.5f, 7f), base.oracle.room.gravity) * Mathf.InverseLerp(0f, 10f, (float)base.inActionCounter) * Mathf.InverseLerp(0f, 30f, Vector2.Distance(base.player.mainBodyChunk.pos, this.holdPlayerPos));
+                        }*/
+                        //owner.conversation = null;
+                        //说完继续工作
+                        owner.getToWorking = 1f;
+                        //喂饱矛大师
+                        if (player.FoodInStomach <= player.MaxFoodInStomach)
+                        {
+                            player.AddFood(player.MaxFoodInStomach);
+                        }
+                        //看矛大师
+                        owner.lookPoint = base.player.DangerPos;
+                        return;
+                    }
+                    if (owner.conversation.events.Count == 0)
+                    {
+                        //给矛大师朝向出口的速度
+                        if (player != null && player.room != null && player.room == oracle.room)
+                        {
+                            player.firstChunk.vel *= Custom.LerpMap(player.firstChunk.vel.magnitude, 1f, 6f, 0.9f, 0.5f);
+                            player.firstChunk.vel += 5f * Custom.DirVec(player.firstChunk.pos, player.room.MiddleOfTile(24, 28));
+                        }
                     }
                 }
             }
@@ -141,13 +241,69 @@ namespace HunterExpansion.CustomOracle
                         owner.conversation = null;
                         //说完继续工作
                         owner.getToWorking = 1f;
-                        movementBehavior = CustomMovementBehavior.Idle;
+                        movementBehavior = NSHOracleMovementBehavior.Meditate;
                         return;
                     }
                 }
             }
-            else if (action == NSHOracleBehaviorAction.MeetSpear_AfterAltEnd_1 ||
-                     action == NSHOracleBehaviorAction.MeetSpear_AfterAltEnd_2 ||
+            else if (action == NSHOracleBehaviorAction.MeetSpear_AfterAltEnd_1)
+            {
+                if (inActionCounter == 100)
+                {
+                    PlayerHooks.SpawnOverseerInRoom(oracle.room, "NSH_AI", CreatureTemplate.Type.Overseer, 3);
+                }
+                if (owner.conversation != null)
+                {
+                    //说第一句话时展示收到moon消息的图像
+                    if (owner.conversation.events.Count == 3 && this.communicationIndex == 0)
+                    {
+                        if ((this.owner as NSHOracleBehaviour).showImage != null)
+                        {
+                            (this.owner as NSHOracleBehaviour).showImage.Destroy();
+                            (this.owner as NSHOracleBehaviour).showImage = null;
+                        }
+                        (this.owner as NSHOracleBehaviour).showImage = base.oracle.myScreen.AddImage("AIimg2a_NSH");
+                        (this.owner as NSHOracleBehaviour).showMediaPos = new Vector2(0.25f * base.oracle.room.PixelWidth, 0.4f * base.oracle.room.PixelHeight);
+                        base.oracle.room.PlaySound(SoundID.SS_AI_Image, 0f, 1f, 1f);
+                        (this.owner as NSHOracleBehaviour).showImage.lastPos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                        (this.owner as NSHOracleBehaviour).showImage.pos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                        (this.owner as NSHOracleBehaviour).showImage.lastAlpha = 0.91f + Random.value * 0.06f;
+                        (this.owner as NSHOracleBehaviour).showImage.alpha = 0.91f + Random.value * 0.06f;
+                        (this.owner as NSHOracleBehaviour).showImage.setAlpha = new float?(0.91f + Random.value * 0.06f);
+                        this.communicationIndex++;
+                        movementBehavior = CustomMovementBehavior.ShowMedia;
+                    }
+                    //说第三句话时清除收到moon消息的图像
+                    if (owner.conversation.events.Count == 1 && this.communicationIndex == 1)
+                    {
+                        if ((this.owner as NSHOracleBehaviour).showImage != null)
+                        {
+                            (this.owner as NSHOracleBehaviour).showImage.Destroy();
+                            (this.owner as NSHOracleBehaviour).showImage = null;
+                        }
+                        movementBehavior = CustomMovementBehavior.Talk;
+                    }
+                    if ((this.owner as NSHOracleBehaviour).showImage != null)
+                    {
+                        if (Random.value < 0.033333335f)
+                        {
+                            (this.owner as NSHOracleBehaviour).idealShowMediaPos += Custom.RNV() * Random.value * 30f;
+                            (this.owner as NSHOracleBehaviour).showMediaPos += Custom.RNV() * Random.value * 30f;
+                        }
+                        (this.owner as NSHOracleBehaviour).showImage.setPos = new Vector2?((this.owner as NSHOracleBehaviour).showMediaPos);
+                        this.owner.lookPoint = (this.owner as NSHOracleBehaviour).showMediaPos;
+                    }
+                    if (owner.conversation.slatedForDeletion)
+                    {
+                        owner.conversation = null;
+                        //说完继续工作
+                        owner.getToWorking = 1f;
+                        movementBehavior = CustomMovementBehavior.ShowMedia;
+                        return;
+                    }
+                }
+            }
+            else if (action == NSHOracleBehaviorAction.MeetSpear_AfterAltEnd_2 ||
                      action == NSHOracleBehaviorAction.MeetSpear_AfterAltEnd_3)
             {
                 if (inActionCounter == 100)
@@ -235,7 +391,7 @@ namespace HunterExpansion.CustomOracle
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Are you..."), 10 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("The messenger of Suns."), 20 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Are you lost? The situation is urgent now, and we all need you to rush to Five Pebbles as soon as possible."), 100 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please set off quickly, I will guide you on the way."), 50 * extralingerfactor));
+                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please set off quickly."), 50 * extralingerfactor));
                 }
                 else if (id == NSHConversationID.Spear_Talk1)
                 {
@@ -245,6 +401,8 @@ namespace HunterExpansion.CustomOracle
                 else if (id == NSHConversationID.Spear_Talk2)
                 {
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Suns, what's wrong with your messenger?"), 40 * extralingerfactor));
+                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
+                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 40 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Little one, set off quickly, please."), 40 * extralingerfactor));
                 }
                 else if (id == NSHConversationID.Spear_AfterMeetPebbles_0)
@@ -256,11 +414,13 @@ namespace HunterExpansion.CustomOracle
                 }
                 else if (id == NSHConversationID.Spear_AfterMeetPebbles_1)
                 {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("......"), 10 * extralingerfactor));
+                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 10 * extralingerfactor));
                 }
                 else if (id == NSHConversationID.Spear_AfterAltEnd_0)
                 {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I received her... message."), 50 * extralingerfactor));
+                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I received her... message."), 50 * extralingerfactor)); 
+                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
+                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 40 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Did you do it, little messenger? Thank you."), 60 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Your mission has been completed and your return journey is smooth."), 80 * extralingerfactor));
                 }

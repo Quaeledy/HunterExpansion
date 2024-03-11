@@ -24,7 +24,7 @@ namespace HunterExpansion.CustomOracle
         public HRKarmaShrine shrineControl;
         public int finalGhostFade;
 
-        public SRSOracleRubicon(SRSOracleBehaviour owner) : base(owner, SRSOracleBehaviorSubBehavID.Rubicon, Conversation.ID.None)
+        public SRSOracleRubicon(SRSOracleBehaviour owner) : base(owner, SRSOracleBehaviorSubBehavID.Rubicon, NSHConversationID.NSH_Moon_Pebbles_SRS_HR)
         {
             Plugin.Log("SRS Oracle load Rubicon Behaviour!");
             noticedPlayer = false;

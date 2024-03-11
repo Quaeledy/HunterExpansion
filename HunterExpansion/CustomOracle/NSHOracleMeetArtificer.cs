@@ -101,6 +101,7 @@ namespace HunterExpansion.CustomOracle
                 {
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Hello! It seems that I have welcomed a citizen. Let me see... Surprisingly, you belongs to Five Pebbles."), 70 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Then we are enemies, please go back!"), 30 * extralingerfactor));
+                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Haha, it's just a joke~"), 20 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I am very dissatisfied with him, but I don't want to vent my anger on small animals yet."), 60 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You don't seem to have an easy time, but I can't help you. Nevertheless,<LINE>before you depart, you can rest here to your heart's content."), 100 * extralingerfactor));

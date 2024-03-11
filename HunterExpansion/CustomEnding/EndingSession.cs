@@ -1,19 +1,18 @@
-﻿using CustomDreamTx;
-using HunterExpansion.CustomOracle;
-using HunterExpansion.CustomSave;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using RWCustom;
 using MoreSlugcats;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Text;
-using Harmony;
-using SlugBase.Features;
 using System.Linq;
+using HunterExpansion.CustomOracle;
+using HunterExpansion.CustomSave;
 using HunterExpansion.CustomDream;
 using HunterExpansion.CustomEffects;
+using System;
+using JollyCoop;
+using Menu;
+using static MonoMod.InlineRT.MonoModRule;
+using Random = UnityEngine.Random;
+using Expedition;
 
 namespace HunterExpansion.CustomEnding
 {
@@ -30,6 +29,7 @@ namespace HunterExpansion.CustomEnding
         //进入结局cg前的准备
         private static bool isControled = false;
         public static FSprite blackRect = new FSprite("pixel");
+        private static CutsceneHunter obj = null;
 
         //结局后的结局
         public static bool goEnding = false;
@@ -38,6 +38,9 @@ namespace HunterExpansion.CustomEnding
         {
             On.Player.ctor += Player_ctor;
             On.Player.UpdateMSC += Player_EndUpdate;
+            //On.RainWorldGame.CommunicateWithUpcomingProcess += RainWorldGame_CommunicateWithUpcomingProcess;
+            //On.SaveState.SessionEnded += SaveState_SessionEnded;
+            //On.RegionState.AdaptRegionStateToWorld += RegionState_AdaptRegionStateToWorld;
         }
         private static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
@@ -59,7 +62,7 @@ namespace HunterExpansion.CustomEnding
                 return;
 
             //播放结局cg
-            if (self.room.IsGateRoom() && PearlFixedSave.pearlFixed && openGate &&
+            if (self.room.abstractRoom.name == "GATE_SB_OE" && PearlFixedSave.pearlFixed && openGate &&
                 self == self.room.game.Players[0].realizedCreature as Player)
             {
                 if (self.room.game.world.region.name == "NSH")
@@ -69,7 +72,8 @@ namespace HunterExpansion.CustomEnding
                         if (!isControled)
                         {
                             isControled = true;
-                            self.room.AddObject(new CutsceneHunter(self.room));
+                            obj = new CutsceneHunter(self.room);
+                            self.room.AddObject(obj);
                             self.room.game.manager.musicPlayer.FadeOutAllSongs(40f);
                             //添加黑幕
                             if (blackRect == null)
@@ -92,8 +96,49 @@ namespace HunterExpansion.CustomEnding
                         isControled = false;
                         openGate = false;
                         openCount = 0;
-                        WarpWithinTheSameRegion(self, "NSH_AI", 24, 34);
+                        if (obj != null)
+                        {
+                            self.room.RemoveObject(obj);
+                            obj = null;
+                        }
+                        //传送
+                        AbstractRoom room = self.abstractCreature.world.GetAbstractRoom("NSH_AI");
+                        if (ModManager.CoopAvailable)
+                        {
+                            List<PhysicalObject> list = (from x in self.room.physicalObjects.SelectMany((List<PhysicalObject> x) => x)
+                                                         where x is Player
+                                                         select x).ToList<PhysicalObject>();
+                            int num = list.Count<PhysicalObject>();
+                            foreach (AbstractCreature abstractCreature in self.room.game.Players)
+                            {
+                                if (abstractCreature.Room != room)
+                                {
+                                    try
+                                    {
+                                        WarpWithinTheSameRegion(abstractCreature.realizedCreature as Player, "NSH_AI", 24, 34);
+                                        //JollyCustom.WarpAndRevivePlayer(abstractCreature, room, self.room.LocalCoordinateOfNode(0));
+                                    }
+                                    catch (Exception arg)
+                                    {
+                                        Plugin.Log(string.Format("Could not warp and revive player {0} [{1}]", abstractCreature, arg), false);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                WarpWithinTheSameRegion(self, "NSH_AI", 24, 34);
+                                //WarpPlayer(self.room.game.Players[0], room, self.room.LocalCoordinateOfNode(0));
+                            }
+                            catch (Exception arg)
+                            {
+                                Plugin.Log(string.Format("Could not warp and revive player {0} [{1}]", self.abstractCreature, arg), false);
+                            }
+                        }
                         self.room.game.GoToRedsGameOver();
+                        return;
                     }
                 }
                 else
@@ -371,6 +416,584 @@ namespace HunterExpansion.CustomEnding
             }
             //}
         }
+
+        private static void RainWorldGame_CommunicateWithUpcomingProcess(On.RainWorldGame.orig_CommunicateWithUpcomingProcess orig, RainWorldGame self, MainLoopProcess nextProcess)
+        {
+            Debug.Log("NEXT PROCESS COMMUNICATION");
+            //base.CommunicateWithUpcomingProcess(nextProcess);
+            if (nextProcess is StoryGameStatisticsScreen)
+            {
+                (nextProcess as StoryGameStatisticsScreen).forceWatch = true;
+                if ((nextProcess as StoryGameStatisticsScreen).scene != null && (nextProcess as StoryGameStatisticsScreen).scene.sceneID == MenuScene.SceneID.RedsDeathStatisticsBkg)
+                {
+                    ((nextProcess as StoryGameStatisticsScreen).scene as InteractiveMenuScene).timer = 0;
+                }
+            }
+            if (nextProcess is KarmaLadderScreen || nextProcess is DreamScreen || (self.StoryCharacter == SlugcatStats.Name.Red && nextProcess is SlideShow) || (ModManager.MSC && (nextProcess is ScribbleDreamScreen || nextProcess is ScribbleDreamScreenOld || nextProcess is SlideShow || nextProcess is EndCredits)))
+            {
+                int karma = self.GetStorySession.saveState.deathPersistentSaveData.karma;
+                Debug.Log("savKarma: " + karma.ToString());
+                if (self.sawAGhost != null)
+                {
+                    Debug.Log("Ghost end of process stuff");
+                    self.manager.CueAchievement(GhostWorldPresence.PassageAchievementID(self.sawAGhost), 2f);
+                    if (self.GetStorySession.saveState.deathPersistentSaveData.karmaCap == 8)
+                    {
+                        self.manager.CueAchievement(RainWorld.AchievementID.AllGhostsEncountered, 10f);
+                    }
+                    self.GetStorySession.saveState.GhostEncounter(self.sawAGhost, self.rainWorld);
+                }
+                int num = karma;
+                if (nextProcess.ID == ProcessManager.ProcessID.DeathScreen && !self.GetStorySession.saveState.deathPersistentSaveData.reinforcedKarma)
+                {
+                    num = Custom.IntClamp(num - 1, 0, self.GetStorySession.saveState.deathPersistentSaveData.karmaCap);
+                }
+                Debug.Log("next screen MAP KARMA: " + num.ToString());
+                if (self.cameras[0].hud != null)
+                {
+                    self.cameras[0].hud.map.mapData.UpdateData(self.world, 1 + self.GetStorySession.saveState.deathPersistentSaveData.foodReplenishBonus, num, self.GetStorySession.saveState.deathPersistentSaveData.karmaFlowerPosition, true);
+                }
+                AbstractCreature abstractCreature = self.FirstAlivePlayer;
+                if (abstractCreature == null)
+                {
+                    abstractCreature = self.FirstAnyPlayer;
+                }
+                int num2 = -1;
+                Vector2 vector = Vector2.zero;
+                if (abstractCreature != null)
+                {
+                    num2 = abstractCreature.pos.room;
+                    vector = abstractCreature.pos.Tile.ToVector2() * 20f;
+                    if (nextProcess.ID == ProcessManager.ProcessID.DeathScreen && self.cameras[0].hud != null && self.cameras[0].hud.textPrompt != null)
+                    {
+                        num2 = self.cameras[0].hud.textPrompt.deathRoom;
+                        vector = self.cameras[0].hud.textPrompt.deathPos;
+                    }
+                    else if (abstractCreature.realizedCreature != null)
+                    {
+                        vector = abstractCreature.realizedCreature.mainBodyChunk.pos;
+                    }
+                    if (abstractCreature.realizedCreature != null && abstractCreature.realizedCreature.room != null && num2 == abstractCreature.realizedCreature.room.abstractRoom.index)
+                    {
+                        vector = Custom.RestrictInRect(vector, abstractCreature.realizedCreature.room.RoomRect.Grow(50f));
+                    }
+                }
+                KarmaLadderScreen.SleepDeathScreenDataPackage sleepDeathScreenDataPackage;
+                if (ModManager.MSC && self.wasAnArtificerDream)
+                {
+                    sleepDeathScreenDataPackage = self.manager.dataBeforeArtificerDream;
+                    self.manager.dataBeforeArtificerDream = null;
+                }
+                else
+                {
+                    sleepDeathScreenDataPackage = new KarmaLadderScreen.SleepDeathScreenDataPackage((nextProcess.ID == ProcessManager.ProcessID.SleepScreen || nextProcess.ID == ProcessManager.ProcessID.Dream) ? self.GetStorySession.saveState.food : self.cameras[0].hud.textPrompt.foodInStomach, new IntVector2(karma, self.GetStorySession.saveState.deathPersistentSaveData.karmaCap), self.GetStorySession.saveState.deathPersistentSaveData.reinforcedKarma, num2, vector, self.cameras[0].hud.map.mapData, self.GetStorySession.saveState, self.GetStorySession.characterStats, self.GetStorySession.playerSessionRecords[0], self.GetStorySession.saveState.lastMalnourished, self.GetStorySession.saveState.malnourished);
+                    if (ModManager.MSC && self.GetStorySession.saveState.saveStateNumber == MoreSlugcatsEnums.SlugcatStatsName.Artificer)
+                    {
+                        self.manager.dataBeforeArtificerDream = sleepDeathScreenDataPackage;
+                    }
+                    if (ModManager.CoopAvailable)
+                    {
+                        for (int i = 1; i < self.GetStorySession.playerSessionRecords.Length; i++)
+                        {/*
+                            Plugin.Log("self.GetStorySession.playerSessionRecords[{0}] == null? " + (self.GetStorySession.playerSessionRecords[i] == null));
+                            Plugin.Log("self.GetStorySession.playerSessionRecords[{0}].kills == null? {1}", i, (self.GetStorySession.playerSessionRecords[i].kills == null));
+                            if (self.GetStorySession.playerSessionRecords[i].kills != null)
+                            {
+                                Plugin.Log("self.GetStorySession.playerSessionRecords[{0}].kills.Count == null? {1}", i, (self.GetStorySession.playerSessionRecords[i].kills.Count));
+                            }*/
+                            if (self.GetStorySession.playerSessionRecords[i] != null && self.GetStorySession.playerSessionRecords[i].kills != null && self.GetStorySession.playerSessionRecords[i].kills.Count > 0)
+                            {
+                                sleepDeathScreenDataPackage.sessionRecord.kills.AddRange(self.GetStorySession.playerSessionRecords[i].kills);
+                            }
+                        }
+                    }
+                }
+                if (nextProcess is KarmaLadderScreen)
+                {
+                    (nextProcess as KarmaLadderScreen).GetDataFromGame(sleepDeathScreenDataPackage);
+                }
+                else if (nextProcess is DreamScreen)
+                {
+                    (nextProcess as DreamScreen).GetDataFromGame(self.GetStorySession.saveState.dreamsState.UpcomingDreamID, sleepDeathScreenDataPackage);
+                }
+                else if (self.StoryCharacter == SlugcatStats.Name.Red && nextProcess is SlideShow)
+                {
+                    (nextProcess as SlideShow).endGameStatsPackage = sleepDeathScreenDataPackage;
+                    (nextProcess as SlideShow).processAfterSlideShow = ProcessManager.ProcessID.Statistics;
+                }
+                if (nextProcess is ScribbleDreamScreen)
+                {
+                    (nextProcess as ScribbleDreamScreen).GetDataFromGame(self.GetStorySession.saveState.dreamsState.UpcomingDreamID, sleepDeathScreenDataPackage);
+                }
+                if (nextProcess is ScribbleDreamScreenOld)
+                {
+                    (nextProcess as ScribbleDreamScreenOld).GetDataFromGame(self.GetStorySession.saveState.dreamsState.UpcomingDreamID, sleepDeathScreenDataPackage);
+                }
+                if (nextProcess is EndCredits)
+                {
+                    (nextProcess as EndCredits).passthroughPackage = sleepDeathScreenDataPackage;
+                }
+                if (nextProcess is SlideShow)
+                {
+                    (nextProcess as SlideShow).passthroughPackage = sleepDeathScreenDataPackage;
+                }
+            }
+        }
+
+        public static void SaveState_SessionEnded(On.SaveState.orig_SessionEnded orig, SaveState self, RainWorldGame game, bool survived, bool newMalnourished)
+        {
+            self.lastMalnourished = self.malnourished;
+            self.malnourished = newMalnourished;
+            self.deathPersistentSaveData.sessionTrackRecord.Add(new DeathPersistentSaveData.SessionRecord(survived, game.GetStorySession.playerSessionRecords[0].wokeUpInRegion != game.world.region.name));
+            if (self.deathPersistentSaveData.sessionTrackRecord.Count > 20)
+            {
+                self.deathPersistentSaveData.sessionTrackRecord.RemoveAt(0);
+            }
+            for (int i = self.deathPersistentSaveData.deathPositions.Count - 1; i >= 0; i--)
+            {
+                if (self.deathPersistentSaveData.deathPositions[i].Valid)
+                {
+                    self.deathPersistentSaveData.deathPositions[i] = new WorldCoordinate(self.deathPersistentSaveData.deathPositions[i].room, self.deathPersistentSaveData.deathPositions[i].x, self.deathPersistentSaveData.deathPositions[i].y, self.deathPersistentSaveData.deathPositions[i].abstractNode + 1);
+                }
+                else
+                {
+                    self.deathPersistentSaveData.deathPositions[i] = new WorldCoordinate(self.deathPersistentSaveData.deathPositions[i].unknownName, self.deathPersistentSaveData.deathPositions[i].x, self.deathPersistentSaveData.deathPositions[i].y, self.deathPersistentSaveData.deathPositions[i].abstractNode + 1);
+                }
+                if (self.deathPersistentSaveData.deathPositions[i].abstractNode >= 7)
+                {
+                    self.deathPersistentSaveData.deathPositions.RemoveAt(i);
+                }
+            }
+            if (survived)
+            {
+                self.deathPersistentSaveData.foodReplenishBonus = 0;
+                if (RainWorld.ShowLogs)
+                {
+                    Debug.Log("resetting food rep bonus");
+                }
+                self.RainCycleTick(game, true);
+                self.cyclesInCurrentWorldVersion++;
+                if (ModManager.MMF && self.progression.miscProgressionData.returnExplorationTutorialCounter > 0)
+                {
+                    self.progression.miscProgressionData.returnExplorationTutorialCounter = 3;
+                }
+                self.food = 0;
+                if (ModManager.CoopAvailable)
+                {
+                    if (!(game.session.Players[0].state as PlayerState).permaDead && game.session.Players[0].realizedCreature != null && game.session.Players[0].realizedCreature.room != null)
+                    {
+                        self.food = (game.session.Players[0].realizedCreature as Player).FoodInRoom(true);
+                    }
+                    else if (game.AlivePlayers.Count > 0 && game.FirstAlivePlayer != null)
+                    {
+                        self.food = (game.FirstAlivePlayer.realizedCreature as Player).FoodInRoom(true);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < game.session.Players.Count; j++)
+                    {
+                        self.food += (game.session.Players[j].realizedCreature as Player).FoodInRoom(true);
+                    }
+                }
+                self.food = Custom.IntClamp(self.food, 0, game.GetStorySession.characterStats.maxFood);
+                if (self.malnourished)
+                {
+                    self.food -= game.GetStorySession.characterStats.foodToHibernate;
+                }
+                else if (self.lastMalnourished)
+                {
+                    if (game.devToolsActive && self.food < game.GetStorySession.characterStats.maxFood)
+                    {
+                        Debug.Log("FOOD COUNT ISSUE! " + self.food.ToString() + " " + game.GetStorySession.characterStats.maxFood.ToString());
+                    }
+                    self.food = 0;
+                }
+                else
+                {
+                    self.food -= game.GetStorySession.characterStats.foodToHibernate;
+                }
+                self.BringUpToDate(game);
+                for (int k = 0; k < game.GetStorySession.playerSessionRecords.Length; k++)
+                {
+                    if (game.GetStorySession.playerSessionRecords[k] != null && (!ModManager.CoopAvailable || game.world.GetAbstractRoom(game.Players[k].pos) != null))
+                    {
+                        game.GetStorySession.playerSessionRecords[k].pupCountInDen = 0;
+                        bool flag = false;
+                        game.GetStorySession.playerSessionRecords[k].wentToSleepInRegion = game.world.region.name;
+                        for (int l = 0; l < game.world.GetAbstractRoom(game.Players[k].pos).creatures.Count; l++)
+                        {
+                            if (game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state.alive && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state.socialMemory != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].realizedCreature != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI.RealAI != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI.RealAI.friendTracker != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI.RealAI.friendTracker.friend != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI.RealAI.friendTracker.friend == game.Players[k].realizedCreature && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state.socialMemory.GetLike(game.Players[k].ID) > 0f)
+                            {
+                                if (ModManager.MSC && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
+                                {
+                                    if ((game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state as PlayerNPCState).foodInStomach - ((game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state as PlayerNPCState).Malnourished ? SlugcatStats.SlugcatFoodMeter(MoreSlugcatsEnums.SlugcatStatsName.Slugpup).x : SlugcatStats.SlugcatFoodMeter(MoreSlugcatsEnums.SlugcatStatsName.Slugpup).y) >= 0)
+                                    {
+                                        game.GetStorySession.playerSessionRecords[k].pupCountInDen++;
+                                    }
+                                }
+                                else if (!flag)
+                                {
+                                    flag = true;
+                                    game.GetStorySession.playerSessionRecords[k].friendInDen = game.world.GetAbstractRoom(game.Players[k].pos).creatures[l];
+                                    SocialMemory.Relationship orInitiateRelationship = game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state.socialMemory.GetOrInitiateRelationship(game.Players[k].ID);
+                                    orInitiateRelationship.like = Mathf.Lerp(orInitiateRelationship.like, 1f, 0.5f);
+                                }
+                            }
+                        }
+                    }
+                }
+                self.AppendKills(game.GetStorySession.playerSessionRecords[0].kills);
+                if (ModManager.CoopAvailable)
+                {
+                    for (int m = 1; m < game.GetStorySession.playerSessionRecords.Length; m++)
+                    {
+                        self.AppendKills(game.GetStorySession.playerSessionRecords[m].kills);
+                    }
+                }
+                game.GetStorySession.AppendTimeOnCycleEnd(false);
+                self.deathPersistentSaveData.survives++;
+                self.deathPersistentSaveData.winState.CycleCompleted(game);
+                if (!ModManager.CoopAvailable)
+                {
+                    self.deathPersistentSaveData.friendsSaved += ((game.GetStorySession.playerSessionRecords[0].friendInDen != null) ? 1 : 0);
+                }
+                else
+                {
+                    List<AbstractCreature> list = new List<AbstractCreature>();
+                    foreach (PlayerSessionRecord playerSessionRecord in game.GetStorySession.playerSessionRecords)
+                    {
+                        if (!list.Contains(playerSessionRecord.friendInDen))
+                        {
+                            list.Add(playerSessionRecord.friendInDen);
+                        }
+                    }
+                    self.deathPersistentSaveData.friendsSaved += list.Count;
+                }
+                self.deathPersistentSaveData.karma++;
+                if (self.malnourished)
+                {
+                    self.deathPersistentSaveData.reinforcedKarma = false;
+                }
+                game.rainWorld.progression.SaveWorldStateAndProgression(self.malnourished);
+                return;
+            }
+            game.GetStorySession.AppendTimeOnCycleEnd(true);
+            self.deathPersistentSaveData.AddDeathPosition(game.cameras[0].hud.textPrompt.deathRoom, game.cameras[0].hud.textPrompt.deathPos);
+            self.deathPersistentSaveData.deaths++;
+            if (self.deathPersistentSaveData.karma == 0 || (self.saveStateNumber == SlugcatStats.Name.White && Random.value < 0.5f) || self.saveStateNumber == SlugcatStats.Name.Yellow)
+            {
+                self.deathPersistentSaveData.foodReplenishBonus++;
+                if (RainWorld.ShowLogs)
+                {
+                    Debug.Log("Ticking up food rep bonus to: " + self.deathPersistentSaveData.foodReplenishBonus.ToString());
+                }
+            }
+            else if (RainWorld.ShowLogs)
+            {
+                Debug.Log("death screen, no food bonus");
+            }
+            self.deathPersistentSaveData.TickFlowerDepletion(1);
+            if (ModManager.MMF && MMF.cfgExtraTutorials.Value)
+            {
+                if (RainWorld.ShowLogs)
+                {
+                    Debug.Log("Exploration tutorial counter : " + self.progression.miscProgressionData.returnExplorationTutorialCounter.ToString());
+                }
+                if (game.IsStorySession && (game.world.region.name == "SB" || game.world.region.name == "SL" || game.world.region.name == "UW" || self.deathPersistentSaveData.karmaCap > 8 || self.miscWorldSaveData.SSaiConversationsHad > 0))
+                {
+                    self.progression.miscProgressionData.returnExplorationTutorialCounter = -1;
+                    if (RainWorld.ShowLogs)
+                    {
+                        Debug.Log("CANCEL exploration counter");
+                    }
+                }
+                else if (game.IsStorySession && (game.world.region.name == "SH" || (ModManager.MSC && game.world.region.name == "VS") || game.world.region.name == "DS" || game.world.region.name == "CC" || game.world.region.name == "LF" || game.world.region.name == "SI"))
+                {
+                    if (RainWorld.ShowLogs)
+                    {
+                        Debug.Log("Exploration counter ticked to " + self.progression.miscProgressionData.returnExplorationTutorialCounter.ToString());
+                    }
+                    if (self.progression.miscProgressionData.returnExplorationTutorialCounter > 0)
+                    {
+                        PlayerProgression.MiscProgressionData miscProgressionData = self.progression.miscProgressionData;
+                        int n = miscProgressionData.returnExplorationTutorialCounter;
+                        miscProgressionData.returnExplorationTutorialCounter = n - 1;
+                    }
+                }
+                else if (self.progression.miscProgressionData.returnExplorationTutorialCounter > 0)
+                {
+                    self.progression.miscProgressionData.returnExplorationTutorialCounter = 3;
+                    if (RainWorld.ShowLogs)
+                    {
+                        Debug.Log("Reset exploration counter");
+                    }
+                }
+            }
+            if (ModManager.Expedition && game.rainWorld.ExpeditionMode)
+            {
+                ExpLog.Log("Loading previous cycle challenge progression");
+                Expedition.Expedition.coreFile.Load();
+                if (ExpeditionGame.expeditionComplete)
+                {
+                    ExpeditionGame.expeditionComplete = false;
+                }
+            }
+            game.rainWorld.progression.SaveProgressionAndDeathPersistentDataOfCurrentState(true, false);
+        }
+
+        public static void RegionState_AdaptRegionStateToWorld(On.RegionState.orig_AdaptRegionStateToWorld orig, RegionState self, int playerShelter, int activeGate)
+        {
+            if (RainWorld.ShowLogs)
+            {
+                Debug.Log("Adapt region state to world " + self.regionName);
+            }
+            self.savedObjects.Clear();
+            for (int i = 0; i < self.unrecognizedSavedObjects.Count; i++)
+            {
+                self.savedObjects.Add(self.unrecognizedSavedObjects[i]);
+            }
+            self.unrecognizedSavedObjects.Clear();
+            self.savedPopulation.Clear();
+            for (int j = 0; j < self.unrecognizedPopulation.Count; j++)
+            {
+                self.savedPopulation.Add(self.unrecognizedPopulation[j]);
+            }
+            self.unrecognizedPopulation.Clear();
+            self.saveState.pendingObjects.Clear();
+            //出错原因大概是 self.world == null
+            for (int k = 0; k < self.world.NumberOfRooms; k++)
+            {
+                AbstractRoom abstractRoom = self.world.GetAbstractRoom(self.world.firstRoomIndex + k);
+                for (int l = 0; l < abstractRoom.entities.Count; l++)
+                {
+                    if (abstractRoom.entities[l] is AbstractPhysicalObject && (abstractRoom.entities[l] as AbstractPhysicalObject).type != AbstractPhysicalObject.AbstractObjectType.KarmaFlower)
+                    {
+                        if (abstractRoom.entities[l] is AbstractSpear && (abstractRoom.entities[l] as AbstractSpear).stuckInWall)
+                        {
+                            self.savedObjects.Add(abstractRoom.entities[l].ToString());
+                        }
+                        else if (ModManager.MMF && ((abstractRoom.shelter && abstractRoom.index == playerShelter) || abstractRoom.name == SaveState.forcedEndRoomToAllowwSave) && (abstractRoom.entities[l] as AbstractPhysicalObject).type == AbstractPhysicalObject.AbstractObjectType.Creature)
+                        {
+                            AbstractCreature abstractCreature = (abstractRoom.entities[l] as AbstractPhysicalObject) as AbstractCreature;
+                            float num = -1f;
+                            foreach (AbstractCreature abstractCreature2 in self.world.game.Players)
+                            {
+                                if (abstractCreature != null && abstractCreature.state != null && abstractCreature.state.socialMemory != null)
+                                {
+                                    num = Mathf.Max(num, abstractCreature.state.socialMemory.GetLike(abstractCreature2.ID));
+                                }
+                            }
+                            if (ModManager.MSC && abstractCreature.creatureTemplate.TopAncestor().type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
+                            {
+                                if (RainWorld.ShowLogs)
+                                {
+                                    Debug.Log("Add pup to pendingFriendSpawns " + abstractCreature.ToString());
+                                }
+                                self.saveState.pendingFriendCreatures.Add(SaveState.AbstractCreatureToStringStoryWorld(abstractCreature));
+                                abstractCreature.LoseAllStuckObjects();
+                                abstractCreature.saveCreature = false;
+                            }
+                            else if (abstractCreature.creatureTemplate.TopAncestor().type == CreatureTemplate.Type.LizardTemplate && abstractCreature.state.alive && num > 0.5f)
+                            {
+                                if (RainWorld.ShowLogs)
+                                {
+                                    Debug.Log("Add lizard to pendingFriendSpawns " + abstractCreature.ToString());
+                                }
+                                self.saveState.pendingFriendCreatures.Add(SaveState.AbstractCreatureToStringStoryWorld(abstractCreature));
+                                abstractCreature.LoseAllStuckObjects();
+                                abstractCreature.saveCreature = false;
+                            }
+                            else if (RainWorld.ShowLogs)
+                            {
+                                Debug.Log("Ignoring unfriendable creature " + abstractCreature.ToString());
+                            }
+                        }
+                        else if (abstractRoom.shelter && (abstractRoom.entities[l] as AbstractPhysicalObject).type == AbstractPhysicalObject.AbstractObjectType.NeedleEgg)
+                        {
+                            self.savedPopulation.Add(self.AddHatchedNeedleFly((abstractRoom.entities[l] as AbstractPhysicalObject).pos));
+                            self.savedPopulation.Add(self.AddHatchedNeedleFly((abstractRoom.entities[l] as AbstractPhysicalObject).pos));
+                        }
+                        else if (abstractRoom.shelter && !(abstractRoom.entities[l] is AbstractCreature) && (abstractRoom.entities[l] as AbstractPhysicalObject).type != AbstractPhysicalObject.AbstractObjectType.Creature)
+                        {
+                            if (RainWorld.ShowLogs)
+                            {
+                                Debug.Log("Attempting to add " + abstractRoom.entities[l].GetType().ToString() + " object to pendingObjects");
+                            }
+                            if (ModManager.MMF && MMF.cfgKeyItemPassaging.Value && abstractRoom.index == playerShelter)
+                            {
+                                if ((abstractRoom.entities[l] as AbstractPhysicalObject).tracker != null)
+                                {
+                                    if (RainWorld.ShowLogs)
+                                    {
+                                        Debug.Log("Adding " + abstractRoom.entities[l].GetType().ToString() + " object to pendingObjects");
+                                    }
+                                    self.saveState.pendingObjects.Add(abstractRoom.entities[l].ToString());
+                                }
+                                else
+                                {
+                                    if (RainWorld.ShowLogs)
+                                    {
+                                        Debug.Log("Adding " + abstractRoom.entities[l].GetType().ToString() + " object to savedObjects instead of pending");
+                                    }
+                                    self.savedObjects.Add(abstractRoom.entities[l].ToString());
+                                }
+                            }
+                            else
+                            {
+                                if (RainWorld.ShowLogs)
+                                {
+                                    Debug.Log("Adding " + abstractRoom.entities[l].GetType().ToString() + " object to savedObjects");
+                                }
+                                self.savedObjects.Add(abstractRoom.entities[l].ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            for (int m = 0; m < self.world.NumberOfRooms; m++)
+            {
+                AbstractRoom abstractRoom2 = self.world.GetAbstractRoom(self.world.firstRoomIndex + m);
+                for (int n = 0; n < 2; n++)
+                {
+                    int num2 = (n == 0) ? abstractRoom2.creatures.Count : abstractRoom2.entitiesInDens.Count;
+                    for (int num3 = 0; num3 < num2; num3++)
+                    {
+                        AbstractWorldEntity abstractWorldEntity = (n == 0) ? abstractRoom2.creatures[num3] : abstractRoom2.entitiesInDens[num3];
+                        if (abstractWorldEntity is AbstractCreature && !(abstractWorldEntity as AbstractCreature).creatureTemplate.quantified && (abstractWorldEntity as AbstractCreature).creatureTemplate.saveCreature && (abstractWorldEntity as AbstractCreature).saveCreature)
+                        {
+                            string text = self.CreatureToStringInDenPos(abstractWorldEntity as AbstractCreature, playerShelter, activeGate);
+                            if (text != "")
+                            {
+                                self.savedPopulation.Add(text);
+                                for (int num4 = 0; num4 < self.loadedCreatures.Count; num4++)
+                                {
+                                    if (self.loadedCreatures[num4] == abstractWorldEntity as AbstractCreature)
+                                    {
+                                        self.loadedCreatures.RemoveAt(num4);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (int num5 = 0; num5 < self.loadedCreatures.Count; num5++)
+            {
+                if (RainWorld.ShowLogs)
+                {
+                    Debug.Log("Creature which was loaded but not saved");
+                    Debug.Log("-- " + self.loadedCreatures[num5].creatureTemplate.name + " " + self.loadedCreatures[num5].ID.ToString());
+                    Debug.Log("-- dead: " + self.loadedCreatures[num5].state.dead.ToString());
+                }
+                if (self.loadedCreatures[num5].state.dead)
+                {
+                    bool flag = false;
+                    int num6 = 0;
+                    while (num6 < self.saveState.respawnCreatures.Count && !flag)
+                    {
+                        if (self.loadedCreatures[num5].ID.spawner == self.saveState.respawnCreatures[num6])
+                        {
+                            flag = true;
+                        }
+                        num6++;
+                    }
+                    int num7 = 0;
+                    while (num7 < self.saveState.waitRespawnCreatures.Count && !flag)
+                    {
+                        if (self.loadedCreatures[num5].ID.spawner == self.saveState.waitRespawnCreatures[num7])
+                        {
+                            flag = true;
+                        }
+                        num7++;
+                    }
+                    if (RainWorld.ShowLogs)
+                    {
+                        Debug.Log(flag ? "-- is put up for respawn." : "-- is NOT put up for respawn!");
+                    }
+                    if (!flag)
+                    {
+                        if (RainWorld.ShowLogs)
+                        {
+                            Debug.Log("Added for respawn");
+                        }
+                        self.saveState.respawnCreatures.Add(self.loadedCreatures[num5].ID.spawner);
+                    }
+                }
+            }
+            self.savedSticks.Clear();
+            for (int num8 = 0; num8 < self.world.shelters.Length; num8++)
+            {
+                AbstractRoom abstractRoom3 = self.world.GetAbstractRoom(self.world.shelters[num8]);
+                for (int num9 = 0; num9 < abstractRoom3.entities.Count; num9++)
+                {
+                    if (abstractRoom3.entities[num9] is AbstractPhysicalObject)
+                    {
+                        for (int num10 = 0; num10 < (abstractRoom3.entities[num9] as AbstractPhysicalObject).stuckObjects.Count; num10++)
+                        {
+                            if ((abstractRoom3.entities[num9] as AbstractPhysicalObject).stuckObjects[num10].A == abstractRoom3.entities[num9])
+                            {
+                                self.savedSticks.Add((abstractRoom3.entities[num9] as AbstractPhysicalObject).stuckObjects[num10].SaveToString(abstractRoom3.index));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /*
+        public static void WarpPlayer(AbstractCreature absPlayer, AbstractRoom newRoom, WorldCoordinate position)
+        {
+            if ((absPlayer.state as PlayerState).permaDead && absPlayer.realizedCreature != null && absPlayer.realizedCreature.room != null)
+            {
+                Player player = absPlayer.realizedCreature as Player;
+                player.room.RemoveObject(absPlayer.realizedCreature);
+                if (player.grasps[0] != null)
+                {
+                    player.ReleaseGrasp(0);
+                }
+                if (player.grasps[1] != null)
+                {
+                    player.ReleaseGrasp(1);
+                }
+                List<AbstractPhysicalObject> allConnectedObjects = player.abstractCreature.GetAllConnectedObjects();
+                if (player.room != null)
+                {
+                    for (int i = 0; i < allConnectedObjects.Count; i++)
+                    {
+                        if (allConnectedObjects[i].realizedObject != null)
+                        {
+                            player.room.RemoveObject(allConnectedObjects[i].realizedObject);
+                        }
+                    }
+                }
+            }
+            if (absPlayer.realizedCreature == null || absPlayer.Room.realizedRoom == null || (absPlayer.state as PlayerState).permaDead || absPlayer.world != newRoom.world)
+            {
+                JollyCustom.Log("Reviving null player to " + newRoom.name, false);
+                if (absPlayer.world != newRoom.world)
+                {
+                    absPlayer.world = newRoom.world;
+                    absPlayer.pos = position;
+                    absPlayer.Room.RemoveEntity(absPlayer);
+                }
+                newRoom.AddEntity(absPlayer);
+                absPlayer.Move(position);
+                absPlayer.realizedCreature.PlaceInRoom(newRoom.realizedRoom);
+            }
+            else if (absPlayer.Room.name != newRoom.name)
+            {
+                JollyCustom.Log(string.Format("Moving dead player to {0}, reason: null [{1}], roomNull [{2}]", newRoom, absPlayer.realizedCreature == null, absPlayer.Room.realizedRoom == null), false);
+                JollyCustom.MovePlayerWithItems(absPlayer.realizedCreature as Player, absPlayer.Room.realizedRoom, newRoom.name, position);
+            }
+            (absPlayer.state as PlayerState).permaDead = false;
+            if (absPlayer.realizedCreature != null)
+            {
+                absPlayer.realizedCreature.Stun(100);
+            }
+        }*/
     }
 
     public class CutsceneHunter : UpdatableAndDeletable

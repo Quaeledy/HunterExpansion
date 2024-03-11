@@ -1,19 +1,49 @@
-﻿using HunterExpansion.CustomSave;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static CustomOracleTx.CustomOracleBehaviour;
+﻿using static CustomOracleTx.CustomOracleBehaviour;
 using MoreSlugcats;
 using UnityEngine;
+using HunterExpansion.CustomEffects;
+using OraclePanicDisplay = HunterExpansion.CustomEffects.OraclePanicDisplay;
 
 namespace HunterExpansion.CustomOracle
 {
     public class NSHOracleMeetSaint : CustomConversationBehaviour
     {
+        public OraclePanicDisplay panicObject; 
+        public int panicTimer;
+        public int timeUntilNextPanic;
+        public float lastGetToWork;
+        public float lowGravity;
+        public bool gravOn; 
+        public bool firstMetOnThisCycle;
+
+        public override bool Gravity
+        {
+            get
+            {
+                return this.gravOn;
+            }
+        }
+
+        public override float LowGravity
+        {
+            get
+            {
+                return this.lowGravity;
+            }
+        }
+
         public NSHOracleMeetSaint(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetSaint, NSHConversationID.Saint_Talk0)
         {
+            this.PickNextPanicTime();
+            this.lowGravity = -1f;
+            (this.owner as NSHOracleBehaviour).TurnOffSSMusic(true);
+            owner.getToWorking = 1f;
+            this.gravOn = true;
+            if (this.owner.conversation != null)
+            {
+                this.owner.conversation.Destroy();
+                this.owner.conversation = null;
+            }
         }
 
         public static bool SubBehaviourIsMeetSaint(CustomAction nextAction)
@@ -79,7 +109,57 @@ namespace HunterExpansion.CustomOracle
             if (oracle.health == 0)
             {
                 movementBehavior = CustomMovementBehavior.ShowMedia;
-                oracle.firstChunk.vel += 1.5f * Vector2.down;
+                //oracle.firstChunk.vel += 1.5f * Vector2.down;
+            }
+            if (this.panicObject == null || this.panicObject.slatedForDeletetion)
+            {
+                if (this.panicObject != null)
+                {
+                    this.owner.getToWorking = this.lastGetToWork;
+                }
+                this.panicObject = null;
+                this.lastGetToWork = this.owner.getToWorking;
+            }
+            else
+            {
+                this.owner.getToWorking = 1f;
+                /*
+                if (owner.conversation != null)
+                {
+                    owner.conversation.Interrupt(this.Translate("..."), 100);
+                    //this.conversation.RestartCurrent();//配套的恢复是这个方法
+                }*/
+                if (this.lowGravity < 0f)
+                {
+                    this.lowGravity = 0f;
+                }
+                if (this.panicObject.gravOn)
+                {
+                    this.lowGravity = Mathf.Lerp(this.lowGravity, 0.5f, 0.01f);
+                }
+                this.gravOn = this.panicObject.gravOn;
+                movementBehavior = CustomMovementBehavior.ShowMedia;
+                this.owner.SetNewDestination(base.oracle.firstChunk.pos);
+            }
+
+            if (this.panicObject == null)
+            {
+                this.lowGravity = -1f;
+                if (owner.conversation == null)
+                {
+                    this.panicTimer++;
+                    if (movementBehavior != CustomMovementBehavior.ShowMedia || movementBehavior != CustomMovementBehavior.Idle)
+                    {
+                        movementBehavior = CustomMovementBehavior.ShowMedia;
+                    }
+                }
+                if (this.panicTimer > this.timeUntilNextPanic)
+                {
+                    this.panicTimer = 0;
+                    this.PickNextPanicTime();
+                    this.panicObject = new OraclePanicDisplay(base.oracle);
+                    base.oracle.room.AddObject(this.panicObject);
+                }
             }
         }
 
@@ -114,7 +194,7 @@ namespace HunterExpansion.CustomOracle
             }
         }
 
-        //与矛大师的所有对话
+        //与圣徒的所有对话
         public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
@@ -137,6 +217,11 @@ namespace HunterExpansion.CustomOracle
             {
                 conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you want to stay a little longer? I am very welcome."), 50 * extralingerfactor));
             }
+        }
+
+        public void PickNextPanicTime()
+        {
+            this.timeUntilNextPanic = Random.Range(800, 2400);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace HunterExpansion.CustomCollections
 
         public static void InitIL()
         {
-            IL.MoreSlugcats.CollectionsMenu.ctor += CollectionsMenu_ctor;
+            IL.MoreSlugcats.CollectionsMenu.ctor += CollectionsMenu_ctorIL;
             IL.MoreSlugcats.CollectionsMenu.Singal += CollectionsMenu_SingalIL;
             IL.MoreSlugcats.CollectionsMenu.AddIteratorButtons += CollectionsMenu_AddIteratorButtonsIL;
         }
@@ -38,7 +38,7 @@ namespace HunterExpansion.CustomCollections
             On.RainWorldGame.ctor += RainWorldGame_ctor;
         }
         #region IL Hooks
-        public static void CollectionsMenu_ctor(ILContext il)
+        public static void CollectionsMenu_ctorIL(ILContext il)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace HunterExpansion.CustomCollections
                     (i) => i.Match(OpCodes.Ldelem_Ref),
                     (i) => i.MatchCallvirt<PlayerProgression.MiscProgressionData>("GetPebblesPearlDeciphered")))
                 {
-                    Plugin.Log("CollectionsMenu_ctor MatchFind");
+                    Plugin.Log("CollectionsMenu_ctorIL MatchFind");
                     c.Emit(OpCodes.Ldarg_1);//manager
                     c.Emit(OpCodes.Ldarg_0);//self
                     c.Emit(OpCodes.Ldloc_S, (byte)8);//j
@@ -82,6 +82,7 @@ namespace HunterExpansion.CustomCollections
                     (i) => i.Match(OpCodes.Stfld),
                     (i) => i.Match(OpCodes.Ldarg_2)))
                 {
+                    Plugin.Log("CollectionsMenu_SingalIL MatchFind");
                     c.Emit(OpCodes.Ldloc_S, (byte)7);
                     c.EmitDelegate<Func<string, CollectionsMenu.PearlReadContext, CollectionsMenu.PearlReadContext>>((message, a) =>
                     {
@@ -145,6 +146,7 @@ namespace HunterExpansion.CustomCollections
                     (i) => i.Match(OpCodes.Ldc_I4_0),
                     (i) => i.MatchStloc(10)))
                 {
+                    Plugin.Log("CollectionsMenu_AddIteratorButtonsIL MatchFind");
                     c.Emit(OpCodes.Ldarg_0);
                     c.Emit(OpCodes.Ldarg_1);
                     c.Emit(OpCodes.Ldloc_1);

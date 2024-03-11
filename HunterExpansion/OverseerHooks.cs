@@ -28,7 +28,7 @@ namespace HunterExpansion
             }
         }
 
-        public static void Inspector_InitiateGraphicsModule(On.MoreSlugcats.Inspector.orig_InitiateGraphicsModule orig, MoreSlugcats.Inspector self)
+        public static void Inspector_InitiateGraphicsModule(On.MoreSlugcats.Inspector.orig_InitiateGraphicsModule orig, Inspector self)
         {
             if (self.ownerIterator == -1 && self.room.game.IsStorySession && self.room.world.region != null && self.room.world.region.name == "NSH")
             {

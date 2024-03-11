@@ -5,7 +5,8 @@ using Random = UnityEngine.Random;
 using RWCustom;
 using CustomDreamTx;
 using HunterExpansion.CustomDream;
-using HunterExpansion;
+using CoralBrain;
+using Music;
 using HunterExpansion.CustomSave;
 using MoreSlugcats;
 
@@ -55,6 +56,13 @@ namespace HunterExpansion.CustomOracle
 
         //好感度相关
         public static bool generateKillingIntent = false;
+
+        //展示图像相关
+        public ProjectedImage showImage;
+        public Vector2 idealShowMediaPos;
+        public Vector2 showMediaPos;
+        public int consistentShowMediaPosCounter;
+        public OracleChatLabel chatLabel;
 
         public override int NotWorkingPalette => 25;
         public override int GetWorkingPalette => 39119;//39119 //26
@@ -144,11 +152,49 @@ namespace HunterExpansion.CustomOracle
             {
                 //这是更新NSH房间收藏的珍珠
                 this.UpdateStoryPearlCollection();
-                
+                //这个if判断是base.Update()的内容
+                if (this.timeSinceSeenPlayer >= 0)
+                {
+                    this.timeSinceSeenPlayer++;
+                }
+                //这是被拿房间里的演算珍珠
+                /*
+                if (this.pearlPickupReaction && this.timeSinceSeenPlayer > 300 && this.oracle.room.game.IsStorySession && this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark && (!(this.currSubBehavior is SSOracleBehavior.ThrowOutBehavior) || this.action == SSOracleBehavior.Action.ThrowOut_Polite_ThrowOut))
+                {
+                    bool flag = false;
+                    if (this.player != null)
+                    {
+                        for (int k = 0; k < this.player.grasps.Length; k++)
+                        {
+                            if (this.player.grasps[k] != null && this.player.grasps[k].grabbed is PebblesPearl)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (ModManager.MSC && this.oracle.room.game.GetStorySession.saveStateNumber == MoreSlugcatsEnums.SlugcatStatsName.Spear)
+                    {
+                        flag = false;
+                    }
+                    if (flag && !this.lastPearlPickedUp && (this.conversation == null || (this.conversation.age > 300 && !this.conversation.paused)))
+                    {
+                        if (this.conversation != null)
+                        {
+                            this.conversation.paused = true;
+                            this.restartConversationAfterCurrentDialoge = true;
+                        }
+                        this.dialogBox.Interrupt(this.Translate("Yes, help yourself. They are not edible."), 10);
+                        this.pearlPickupReaction = false;
+                    }
+                    this.lastPearlPickedUp = flag;
+                }
+                */
+                //这是对话
                 if (this.conversation != null)
                 {
-                    if (this.restartConversationAfterCurrentDialoge && this.conversation.paused && 
-                        this.action != CustomAction.General_GiveMark && this.dialogBox.messages.Count == 0 && 
+                    if (this.restartConversationAfterCurrentDialoge && this.conversation.paused &&
+                        this.action != CustomAction.General_GiveMark && this.dialogBox.messages.Count == 0 &&
                         (!ModManager.MSC || this.player.room == this.oracle.room))
                     {
                         this.conversation.paused = false;
@@ -180,7 +226,7 @@ namespace HunterExpansion.CustomOracle
                             this.lookPoint = this.player.firstChunk.pos;
                         }
                         //退出房间时this.player == null，所以base.Update(eu)要写在这一段下面？
-                        if (this.player == null || 
+                        if (this.player == null ||
                             (this.player.room != null && this.player.room != this.oracle.room) ||
                             this.inspectItem.grabbedBy.Count > 0)//算了我还是加一个this.player == null检查吧
                         {
@@ -203,7 +249,7 @@ namespace HunterExpansion.CustomOracle
                             this.restartConversationAfterCurrentDialoge = false;
                             this.itemConversation.Destroy();
                         }
-                        else if(this.itemConversation.paused && this.restartConversationAfterCurrentDialoge && this.dialogBox.messages.Count == 0)
+                        else if (this.itemConversation.paused && this.restartConversationAfterCurrentDialoge && this.dialogBox.messages.Count == 0)
                         {
                             this.itemConversation.paused = false;
                             this.restartConversationAfterCurrentDialoge = false;
@@ -216,7 +262,93 @@ namespace HunterExpansion.CustomOracle
                     this.restartConversationAfterCurrentDialoge = false;
                 }
 
-                base.Update(eu);
+                #region base.Update()
+                if (this.voice != null)
+                {
+                    this.voice.alive = true;
+                    if (this.voice.slatedForDeletetion)
+                    {
+                        this.voice = null;
+                    }
+                }
+                if (ModManager.MSC && this.oracle.room != null && this.oracle.room.game.rainWorld.safariMode)
+                {
+                    this.safariCreature = null;
+                    float num = float.MaxValue;
+                    for (int i = 0; i < this.oracle.room.abstractRoom.creatures.Count; i++)
+                    {
+                        if (this.oracle.room.abstractRoom.creatures[i].realizedCreature != null)
+                        {
+                            Creature realizedCreature = this.oracle.room.abstractRoom.creatures[i].realizedCreature;
+                            float num2 = Custom.Dist(this.oracle.firstChunk.pos, realizedCreature.mainBodyChunk.pos);
+                            if (num2 < num)
+                            {
+                                num = num2;
+                                this.safariCreature = realizedCreature;
+                            }
+                        }
+                    }
+                }
+                this.FindPlayer();
+
+                if (!this.oracle.Consious)
+                {
+                    return;
+                }
+                this.unconciousTick = 0f;
+                this.currSubBehavior.Update();
+                if (this.oracle.slatedForDeletetion)
+                {
+                    return;
+                }
+                if (this.conversation != null)
+                {
+                    this.conversation.Update();
+                }
+                if (!this.currSubBehavior.CurrentlyCommunicating)
+                {
+                    this.pathProgression = this.UpdatePathProgression();
+                }
+                this.currentGetTo = Custom.Bezier(this.lastPos, this.ClampVectorInRoom(this.lastPos + this.lastPosHandle), this.nextPos, this.ClampVectorInRoom(this.nextPos + this.nextPosHandle), this.pathProgression);
+                this.floatyMovement = false;
+                this.investigateAngle += this.invstAngSpeed;
+                this.inActionCounter++;
+                if (this.player != null && this.player.room == this.oracle.room)
+                {
+                    this.PlayerStayInRoomUpdate();
+                    this.playerOutOfRoomCounter = 0;
+                }
+                else
+                {
+                    this.PlayerOutOfRoomUpdate();
+                    this.killFac = 0f;
+                    this.playerOutOfRoomCounter++;
+                }
+                if (this.pathProgression >= 1f && this.consistentBasePosCounter > 100 && !this.oracle.arm.baseMoving)
+                {
+                    this.allStillCounter++;
+                }
+                else
+                {
+                    this.allStillCounter = 0;
+                }
+                this.lastKillFac = this.killFac;
+                this.GeneralActionUpdate();
+                this.Move();
+                if (this.working != this.getToWorking)
+                {
+                    this.working = Custom.LerpAndTick(this.working, this.getToWorking, 0.05f, 0.033333335f);
+                }
+                for (int i = 0; i < this.oracle.room.game.cameras.Length; i++)
+                {
+                    if (this.oracle.room.game.cameras[i].room == this.oracle.room &&
+                        !this.oracle.room.game.cameras[i].AboutToSwitchRoom &&
+                        this.oracle.room.game.cameras[i].paletteBlend != this.working)
+                    {
+                        this.oracle.room.game.cameras[i].ChangeBothPalettes(this.NotWorkingPalette, this.GetWorkingPalette, this.working);
+                    }
+                }
+                #endregion
 
                 //这是开始阅读珍珠
                 if (this.inspectItem != null)
@@ -266,36 +398,45 @@ namespace HunterExpansion.CustomOracle
                                     this.oracle.room.AddObject(new Explosion.ExplosionLight(weapon.firstChunk.pos, 150f, 1f, 8, Color.white));
                                     this.oracle.room.AddObject(new ShockWave(weapon.firstChunk.pos, 60f, 0.1f, 8, false));
                                     this.oracle.room.PlaySound(SoundID.SS_AI_Give_The_Mark_Boom, weapon.firstChunk, false, 1f, 1.5f + Random.value * 0.5f);
-                                    if(this.conversation != null)
+                                    if (this.conversation != null)
                                     {
                                         this.conversation.Interrupt(this.Translate("..."), 0);
                                         this.conversation = null;
                                     }
                                     if (State.GetOpinion == NSHOracleState.PlayerOpinion.Likes)
                                     {
-                                        this.dialogBox.NewMessage(this.Translate("What are you doing? Please don't attack me."), 20);
-                                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Attack_1, 10f, 1f, 1f);
+                                        if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+                                            this.dialogBox.NewMessage(this.Translate("What are you doing? Please don't attack me."), 20);
+                                        else
+                                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Attack_1, 10f, 1f, 1f);
                                         State.annoyances++;
                                         State.InfluenceLike(-0.4f);
                                     }
                                     else if (State.GetOpinion == NSHOracleState.PlayerOpinion.Neutral)
                                     {
-                                        this.dialogBox.NewMessage(this.Translate("Beast, stop your barbaric behavior."), 20);
-                                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Attack_1, 10f, 1f, 1f);
+                                        if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+                                            this.dialogBox.NewMessage(this.Translate("Beast, stop your barbaric behavior."), 20);
+                                        else
+                                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Attack_2, 10f, 1f, 1f);
                                         State.annoyances++;
                                         State.InfluenceLike(-0.5f);
                                     }
                                     else
                                     {
-                                        if(State.annoyances == 0)
+                                        if (State.annoyances == 0)
                                         {
-                                            this.dialogBox.NewMessage(this.Translate("Remember to be polite in the next cycle."), 20);
+                                            if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+                                                this.dialogBox.NewMessage(this.Translate("Remember to be polite in the next cycle."), 20);
+                                            else
+                                                this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Attack_3, 10f, 1f, 1f);
                                         }
                                         else
                                         {
-                                            this.dialogBox.NewMessage(this.Translate("I have already warned you."), 20);
+                                            if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+                                                this.dialogBox.NewMessage(this.Translate("I have already warned you."), 20);
+                                            else
+                                                this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Attack_4, 10f, 1f, 1f);
                                         }
-                                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Attack_2, 10f, 1f, 1f);
                                         State.annoyances++;
                                         State.likesPlayer = -1f;
                                         generateKillingIntent = true;
@@ -303,14 +444,14 @@ namespace HunterExpansion.CustomOracle
                                 }
                             }
                             bool flag3 = false;
-                            bool flag4 = this.action == CustomAction.General_Idle;
+                            bool flag4 = !(this.currSubBehavior is NSHOracleMeetSaint) || (this.currSubBehavior as NSHOracleMeetSaint).panicObject == null;
                             // && this.currSubBehavior is SSOracleBehavior.SSSleepoverBehavior && (this.currSubBehavior as SSOracleBehavior.SSSleepoverBehavior).panicObject == null
-                            if (this.oracle.ID == NSHOracleRegistry.NSHOracle)// && this.oracle.room.game.GetStorySession.saveStateNumber == MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Artificer && this.currSubBehavior is SSOracleBehavior.ThrowOutBehavior
-                            {
-                                flag4 = true;
-                                //flag3 = true;
-                            }
-                            if (this.inspectItem == null && (this.conversation == null || flag3) && flag4 
+                            //if (this.oracle.ID == NSHOracleRegistry.NSHOracle)// && this.oracle.room.game.GetStorySession.saveStateNumber == MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Artificer && this.currSubBehavior is SSOracleBehavior.ThrowOutBehavior
+                            //{
+                            //flag4 = true;
+                            //flag3 = true;
+                            //}
+                            if (this.inspectItem == null && (this.conversation == null || flag3) && flag4
                                 && !(physicalObject is NSHPearl) && !(physicalObject is Oracle) && !(physicalObject is Creature))
                             {
                                 //读珍珠
@@ -350,8 +491,8 @@ namespace HunterExpansion.CustomOracle
                                     }*/
                                 }
                                 //读物品
-                                else if (!(physicalObject is DataPearl) && 
-                                         physicalObject.grabbedBy.Count == 0 && 
+                                else if (!(physicalObject is DataPearl) &&
+                                         physicalObject.grabbedBy.Count == 0 &&
                                          !((physicalObject is Spear) && player.spearOnBack != null && player.spearOnBack.spear != null && physicalObject == player.spearOnBack.spear) && //不读玩家背上的矛
                                          !((physicalObject is SSOracleSwarmer) || (physicalObject is SLOracleSwarmer)) && //不读神经元
                                          !this.readItemOrbits.Contains(physicalObject.abstractPhysicalObject) &&
@@ -363,17 +504,11 @@ namespace HunterExpansion.CustomOracle
                         }
                     }
                 }
-            }
-            else
-            {
-                base.Update(eu);
-            }
-            
-            /*
+                /*
                 if (this.oracle.room.world.name == "HR")
                 {
-                    int num9 = 0;
-                    if (this.oracle.ID == MoreSlugcats.MoreSlugcatsEnums.OracleID.DM)
+                    int num9 = 0; 
+                    if (this.oracle.ID == MoreSlugcatsEnums.OracleID.DM)
                     {
                         num9 = 2;
                     }
@@ -382,18 +517,31 @@ namespace HunterExpansion.CustomOracle
                     {
                         this.baseIdeal = this.oracle.arm.cornerPositions[num9] + (this.baseIdeal - this.oracle.arm.cornerPositions[num9]).normalized * num10;
                     }
-                }
+                }*/
                 if (this.currSubBehavior.LowGravity >= 0f)
                 {
                     this.oracle.room.gravity = this.currSubBehavior.LowGravity;
                     return;
-                }*/
-            /*
-            if (!this.currSubBehavior.Gravity)
+                }
+                //这个if else判断是base.Update里的内容
+                if (!this.currSubBehavior.Gravity)
+                {
+                    this.oracle.room.gravity = Custom.LerpAndTick(this.oracle.room.gravity, 0f, 0.05f, 0.02f);
+                }
+                else
+                {
+                    if (!ModManager.MSC || this.oracle.room.world.name != "HR" ||
+                        !this.oracle.room.game.IsStorySession || !this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.ripMoon ||
+                        this.oracle.ID != Oracle.OracleID.SS)
+                    {
+                        this.oracle.room.gravity = 1f - this.working;
+                    }
+                }
+            }
+            else
             {
-                this.oracle.room.gravity = Custom.LerpAndTick(this.oracle.room.gravity, 0f, 0.05f, 0.02f);
-                return;
-            }*/
+                base.Update(eu);
+            }
         }
 
         #region 继承方法
@@ -581,7 +729,7 @@ namespace HunterExpansion.CustomOracle
         {
             if (action == CustomAction.General_Idle)
             {
-                if (movementBehavior != CustomMovementBehavior.Idle)
+                if (movementBehavior != CustomMovementBehavior.Idle || movementBehavior != NSHOracleMovementBehavior.Meditate)
                 {
                     movementBehavior = CustomMovementBehavior.Idle;
                 }
@@ -725,22 +873,19 @@ namespace HunterExpansion.CustomOracle
         {
             if (this.movementBehavior == CustomMovementBehavior.ShowMedia)
             {
-                if (this.currSubBehavior is NSHOracleMeetRivulet)
+                if (this.currSubBehavior is NSHOracleMeetRivulet || this.currSubBehavior is NSHOracleMeetSpear)
                 {
-                    (this.currSubBehavior as NSHOracleMeetRivulet).ShowMediaMovementBehavior();
+                    this.ShowMediaMovementBehavior();
                 }
             }
-            //不能转变，否则可能导致NSH提前开启下一次对话
-            /*
             else if (this.movementBehavior == CustomMovementBehavior.Idle)
             {
                 //主要内容在base里，这里写一下概率转变就行
                 if (Random.value < 0.001f && this.conversation == null && this.itemConversation == null)
                 {
-                    NewAction(NSHOracleBehaviorAction.General_Meditate);
                     this.movementBehavior = NSHOracleMovementBehavior.Meditate;
                 }
-            }*/
+            }
             else if (this.movementBehavior == NSHOracleMovementBehavior.Meditate)
             {
                 if (this.nextPos != this.oracle.room.MiddleOfTile(24, 17))
@@ -751,7 +896,6 @@ namespace HunterExpansion.CustomOracle
                 this.lookPoint = this.oracle.firstChunk.pos + new Vector2(0f, -40f);
                 if (Random.value < 0.001f && this.conversation == null && this.itemConversation == null)
                 {
-                    NewAction(CustomAction.General_Idle);
                     this.movementBehavior = CustomMovementBehavior.Idle;
                 }
             }
@@ -761,6 +905,45 @@ namespace HunterExpansion.CustomOracle
                     SetNewDestination(landPos);
             }
             base.Move();
+        }
+
+        public override void UnconciousUpdate()
+        {
+            base.UnconciousUpdate();
+            this.oracle.room.gravity = 1f;
+            this.oracle.setGravity(0.9f);
+            if (this.oracle.ID == Oracle.OracleID.SS)
+            {
+                for (int i = 0; i < this.oracle.room.game.cameras.Length; i++)
+                {
+                    if (this.oracle.room.game.cameras[i].room == this.oracle.room && !this.oracle.room.game.cameras[i].AboutToSwitchRoom)
+                    {
+                        this.oracle.room.game.cameras[i].ChangeBothPalettes(10, 26, 0.51f + Mathf.Sin(this.unconciousTick * 0.25707963f) * 0.35f);
+                    }
+                }
+                this.unconciousTick += 1f;
+            }
+            if (ModManager.MSC && this.oracle.ID == MoreSlugcatsEnums.OracleID.DM)
+            {
+                this.oracle.dazed = 320f;
+                float num = Mathf.Min(1f, this.unconciousTick / 320f);
+                float num2 = num * 2f;
+                if (num > 0.5f)
+                {
+                    num2 = 1f - (num - 0.5f) / 0.5f;
+                }
+                if (Random.value < 0.5f)
+                {
+                    for (int j = 0; j < this.oracle.room.game.cameras.Length; j++)
+                    {
+                        if (this.oracle.room.game.cameras[j].room == this.oracle.room && !this.oracle.room.game.cameras[j].AboutToSwitchRoom)
+                        {
+                            this.oracle.room.game.cameras[j].ChangeBothPalettes(10, 26, 1f - Mathf.Abs(Mathf.Sin(Random.value * 3.1415927f * 2f)) * num2 * 0.75f);
+                        }
+                    }
+                }
+                this.unconciousTick += 1f;
+            }
         }
         #endregion
 
@@ -786,7 +969,29 @@ namespace HunterExpansion.CustomOracle
                 {
                     id = NSHConversationID.RefusingToInterpretItems;
                 }
-                this.itemConversation = new NSHConversation(this, this.currSubBehavior as NSHOracleMeetHunter, id, this.dialogBox, itemType);
+                if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+                    this.itemConversation = new NSHConversation(this, this.currSubBehavior as NSHOracleMeetHunter, id, this.dialogBox, itemType);
+                else
+                {
+                    switch (Random.Range(0, 5))
+                    {
+                        case 0:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_1, 0f, 1f, 1.25f);
+                            break;
+                        case 1:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_2, 0f, 1f, 1.25f);
+                            break;
+                        case 2:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_3, 0f, 1f, 1.25f);
+                            break;
+                        case 3:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_1, 0f, 1f, 1.25f);
+                            break;
+                        case 4:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_2, 0f, 1f, 1.25f);
+                            break;
+                    }
+                }
             }
             else
             {
@@ -842,14 +1047,37 @@ namespace HunterExpansion.CustomOracle
                 if (State.likesPlayer >= 0f && ModManager.MSC && this.oracle.ID == NSHOracleRegistry.NSHOracle)
                 {
                     this.isRepeatedDiscussion = DecipheredNSHPearlsSave.GetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType);
-                    DecipheredNSHPearlsSave.SetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType, false);
+                    if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+                        DecipheredNSHPearlsSave.SetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType, false);
                 }
                 //如果讨厌玩家，则拒绝解读
                 if (State.likesPlayer < 0f || State.GetOpinion == NSHOracleState.PlayerOpinion.Dislikes || State.GetOpinion == NSHOracleState.PlayerOpinion.NotSpeaking)
                 {
                     id = NSHConversationID.RefusingToInterpretItems;
                 }
-                this.itemConversation = new NSHConversation(this, this.currSubBehavior as NSHOracleMeetHunter, id, this.dialogBox, SLOracleBehaviorHasMark.MiscItemType.NA);
+                if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+                    this.itemConversation = new NSHConversation(this, this.currSubBehavior as NSHOracleMeetHunter, id, this.dialogBox, SLOracleBehaviorHasMark.MiscItemType.NA);
+                else
+                {
+                    switch (Random.Range(0, 5))
+                    {
+                        case 0:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_1, 0f, 1f, 1.25f);
+                            break;
+                        case 1:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_2, 0f, 1f, 1.25f);
+                            break;
+                        case 2:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_3, 0f, 1f, 1.25f);
+                            break;
+                        case 3:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_1, 0f, 1f, 1.25f);
+                            break;
+                        case 4:
+                            this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_2, 0f, 1f, 1.25f);
+                            break;
+                    }
+                }
                 nshOracleState.totalPearlsBrought++;
                 if (RainWorld.ShowLogs)
                 {
@@ -1009,11 +1237,14 @@ namespace HunterExpansion.CustomOracle
                 {
                     this.readItemOrbits.Add(abstractWorldEntity);
                 }
+                AbstractPhysicalObject obj = abstractWorldEntity as AbstractPhysicalObject;
+                Plugin.Log("obj is {0}, obj.tracker == null? {1}", obj.type.ToString(), (obj.tracker == null));
             }
             int num = 0;
             foreach (DataPearl.AbstractDataPearl abstractDataPearl2 in this.readDataPearlOrbits)
             {
                 Vector2 pos = this.storedPearlOrbitLocation(num);
+                Plugin.Log("abstractDataPearl2.realizedObject != null? {0}", (abstractDataPearl2.realizedObject != null));
                 if (abstractDataPearl2.realizedObject != null)
                 {
                     abstractDataPearl2.realizedObject.firstChunk.pos = pos;
@@ -1107,7 +1338,7 @@ namespace HunterExpansion.CustomOracle
         }
         #endregion
 
-        #region 对话相关
+        #region 对话与展示图像相关
         public void PlayerEncountersAdd()
         {
             State.playerEncounters++;
@@ -1120,19 +1351,85 @@ namespace HunterExpansion.CustomOracle
         public void PlayerEncountersWithoutMark()
         {
             if (State.playerEncounters == 1)
-                this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_NoDialogue_1, 0f, 1f, 1.25f);
+                switch (Random.Range(0, 3))
+                {
+                    case 0:
+                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_1, 0f, 1f, 1.25f);
+                        break;
+                    case 1:
+                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_2, 0f, 1f, 1.25f);
+                        break;
+                    case 2:
+                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_3, 0f, 1f, 1.25f);
+                        break;
+                }
             else
             {
                 switch (Random.Range(0, 2))
                 {
                     case 0:
-                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_NoDialogue_2, 0f, 1f, 1.25f);
+                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_1, 0f, 1f, 1.25f);
                         break;
                     case 1:
-                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_NoDialogue_3, 0f, 1f, 1.25f);
+                        this.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_2, 0f, 1f, 1.25f);
                         break;
                 }
             }
+        }
+
+        //用于展示图像
+        public void ShowMediaMovementBehavior()
+        {/*
+            if (base.player != null)
+            {
+                this.lookPoint = base.player.DangerPos;
+            }*/
+            Vector2 vector = new Vector2(Random.value * base.oracle.room.PixelWidth, Random.value * base.oracle.room.PixelHeight);
+            if (this.CommunicatePosScore(vector) + 40f < this.CommunicatePosScore(this.nextPos) && !Custom.DistLess(vector, this.nextPos, 30f))
+            {
+                this.SetNewDestination(vector);
+            }
+            this.consistentShowMediaPosCounter += (int)Custom.LerpMap(Vector2.Distance(this.showMediaPos, this.idealShowMediaPos), 0f, 200f, 1f, 10f);
+            vector = new Vector2(Random.value * base.oracle.room.PixelWidth, Random.value * base.oracle.room.PixelHeight);
+            if (this.ShowMediaScore(vector) + 40f < this.ShowMediaScore(this.idealShowMediaPos))
+            {
+                this.idealShowMediaPos = vector;
+                this.consistentShowMediaPosCounter = 0;
+            }
+            vector = this.idealShowMediaPos + Custom.RNV() * Random.value * 40f;
+            if (this.ShowMediaScore(vector) + 20f < this.ShowMediaScore(this.idealShowMediaPos))
+            {
+                this.idealShowMediaPos = vector;
+                this.consistentShowMediaPosCounter = 0;
+            }
+            if (this.consistentShowMediaPosCounter > 300)
+            {
+                this.showMediaPos = Vector2.Lerp(this.showMediaPos, this.idealShowMediaPos, 0.1f);
+                this.showMediaPos = Custom.MoveTowards(this.showMediaPos, this.idealShowMediaPos, 10f);
+            }
+        }
+
+        private float ShowMediaScore(Vector2 tryPos)
+        {
+            if (base.oracle.room.GetTile(tryPos).Solid || base.player == null)
+            {
+                return float.MaxValue;
+            }
+            float num = Mathf.Abs(Vector2.Distance(tryPos, base.player.DangerPos) - 250f);
+            num -= Mathf.Min((float)base.oracle.room.aimap.getAItile(tryPos).terrainProximity, 9f) * 30f;
+            num -= Vector2.Distance(tryPos, this.nextPos) * 0.5f;
+            for (int i = 0; i < base.oracle.arm.joints.Length; i++)
+            {
+                num -= Mathf.Min(Vector2.Distance(tryPos, base.oracle.arm.joints[i].pos), 100f) * 10f;
+            }
+            if (base.oracle.graphicsModule != null)
+            {
+                for (int j = 0; j < (base.oracle.graphicsModule as OracleGraphics).umbCord.coord.GetLength(0); j += 3)
+                {
+                    num -= Mathf.Min(Vector2.Distance(tryPos, (base.oracle.graphicsModule as OracleGraphics).umbCord.coord[j, 0]), 100f);
+                }
+            }
+            return num;
         }
         #endregion
 
@@ -1199,6 +1496,23 @@ namespace HunterExpansion.CustomOracle
                 {
                     this.oracle.room.lockedShortcuts.Add(this.oracle.room.shortcutsIndex[i]);
                 }
+            }
+        }
+
+        public void TurnOffSSMusic(bool abruptEnd)
+        {
+            Plugin.Log("Fading out SS music " + abruptEnd.ToString());
+            for (int i = 0; i < this.oracle.room.updateList.Count; i++)
+            {
+                if (this.oracle.room.updateList[i] is SSMusicTrigger)
+                {
+                    this.oracle.room.updateList[i].Destroy();
+                    break;
+                }
+            }
+            if (abruptEnd && this.oracle.room.game.manager.musicPlayer != null && this.oracle.room.game.manager.musicPlayer.song != null && this.oracle.room.game.manager.musicPlayer.song is SSSong)
+            {
+                this.oracle.room.game.manager.musicPlayer.song.FadeOut(2f);
             }
         }
     }

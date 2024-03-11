@@ -29,7 +29,6 @@ namespace HunterExpansion.CustomOracle
             return new NSHPearl(abstractPhysicalObject, world);
         }
 
-
         public override void LoadSLPearlConversation(SLOracleBehaviorHasMark.MoonConversation self, SlugcatStats.Name saveFile, bool oneRandomLine, int randomSeed)
         {
             int extralingerfactor = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
@@ -179,7 +178,7 @@ namespace HunterExpansion.CustomOracle
             float orbitFlattenFac = this.orbitFlattenFac;
 
             //this.orbitFlattenAngle = 0.9f;
-            this.orbitFlattenFac = 0.99f;
+            //this.orbitFlattenFac = 0.99f;
 
             base.Update(eu);
             

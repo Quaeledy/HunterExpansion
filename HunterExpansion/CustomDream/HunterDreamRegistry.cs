@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using RWCustom;
 using Menu;
+using JollyCoop;
 using HunterExpansion.CustomSave;
 using HunterExpansion.CustomOracle;
 using HunterExpansion.CustomEnding;
@@ -32,7 +33,7 @@ namespace HunterExpansion.CustomDream
             ref bool guideHasShownMoonThisRound,
             ref int familyThread)
         {
-            if (dreamFinished) return;
+            if (dreamFinished || saveState.malnourished) return;
 
             upcomingDream = null;
             cyclesSinceLastFamilyDream = 0;//屏蔽FamilyDream计数，防止被原本的方法干扰

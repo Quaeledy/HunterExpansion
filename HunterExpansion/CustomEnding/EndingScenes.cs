@@ -7,6 +7,13 @@ using UnityEngine;
 using RWCustom;
 using HUD;
 using MoreSlugcats;
+using System.Text.RegularExpressions;
+using System.Linq;
+using DevInterface;
+using Expedition;
+using JollyCoop;
+using JollyCoop.JollyMenu;
+using Kittehface.Framework20;
 
 namespace HunterExpansion.CustomEnding
 {
@@ -160,7 +167,7 @@ namespace HunterExpansion.CustomEnding
         {
             orig.Invoke(self, menu, owner, folderName, fileName, pos, depth, shader);
             MenuScene menuScene = owner as MenuScene;
-            if (menuScene != null &&
+            if (menuScene != null && !menuScene.flatMode &&
                 (menuScene.sceneID == MenuSceneID.TheHunter_Outro1 ||
                 menuScene.sceneID == MenuSceneID.TheHunter_Outro2 ||
                 menuScene.sceneID == MenuSceneID.TheHunter_Outro3 ||
@@ -181,7 +188,7 @@ namespace HunterExpansion.CustomEnding
                 self.sprite.scaleX *= num;
                 self.sprite.scaleY *= num;
             }
-            if (menuScene != null &&
+            if (menuScene != null && (!menuScene.flatMode || menuScene.sceneID == MenuSceneID.TheHunter_Outro9_Dead || menuScene.sceneID == MenuSceneID.TheHunter_Outro10_Dead) &&
                 (menuScene.sceneID == MenuSceneID.TheHunter_Outro6 ||
                 menuScene.sceneID == MenuSceneID.TheHunter_Outro9 ||
                 menuScene.sceneID == MenuSceneID.TheHunter_Outro6_Dead ||
@@ -203,6 +210,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 1"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-1-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-1-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-1-2", new Vector2(-140f, -100f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-1-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -216,6 +228,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 2"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-2-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-2-1", new Vector2(-140f, -100f), 4.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-2-2", new Vector2(-140f, -100f), 2.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-2-3", new Vector2(-140f, -100f), 1.9f, MenuDepthIllustration.MenuShader.Basic));
@@ -226,7 +243,12 @@ namespace HunterExpansion.CustomEnding
                 self.sceneFolder = string.Concat(new string[]
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 3"
-                });
+                }); 
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-3-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-3-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-3-2", new Vector2(-140f, -100f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-3-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -239,6 +261,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 4"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-4-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-4-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-4-2", new Vector2(-140f, -100f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-4-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -253,6 +280,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 5"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-5-flat-he", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-5-1", new Vector2(-140f, -100f), 5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-5-2-he", new Vector2(-140f, -100f), 5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-5-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -266,6 +298,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 6"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-6-flat-he", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-6-1", new Vector2(-70f, -50f), 4.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-6-2-he-1", new Vector2(-70f, -50f), 2.2f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-6-2-he-2", new Vector2(-70f, -50f), 2.2f, MenuDepthIllustration.MenuShader.Basic));
@@ -277,6 +314,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 7"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-7-flat-he", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-7-1", new Vector2(-140f, -100f), 4.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-7-2-he", new Vector2(-140f, -100f), 2.2f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-7-3", new Vector2(-140f, -100f), 0.8f, MenuDepthIllustration.MenuShader.Basic));
@@ -287,6 +329,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 8"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-8-flat-he", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-8-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-8-2", new Vector2(-140f, -100f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-8-3", new Vector2(-140f, -100f), 2.0f, MenuDepthIllustration.MenuShader.Basic));
@@ -301,6 +348,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 9"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "HE-1-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-1-1", new Vector2(-70f, -50f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-1-2", new Vector2(-70f, -50f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-1-3", new Vector2(-70f, -50f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -315,6 +367,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 10"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "HE-2-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-2-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-2-2", new Vector2(-140f, -100f), 2.8f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-2-3", new Vector2(-140f, -100f), 3.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -330,6 +387,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 11"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "HE-3-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-3-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-3-2", new Vector2(-140f, -100f), 2.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-3-3", new Vector2(-140f, -100f), 1.8f, MenuDepthIllustration.MenuShader.Basic));
@@ -342,6 +404,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 12"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "HE-4-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-4-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-4-2", new Vector2(-140f, -100f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HE-4-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -363,6 +430,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "altend"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd - flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd - black", Vector2.zero, 100f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd - 3", Vector2.zero, 3f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd - 2 - Lighten", Vector2.zero, 2.5f, MenuDepthIllustration.MenuShader.Lighten));
@@ -374,6 +446,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "altend - final"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Final - flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Final - 3", Vector2.zero, 3f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Final - 2", Vector2.zero, 2.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Final - 1", Vector2.zero, 2f, MenuDepthIllustration.MenuShader.Basic));
@@ -385,6 +462,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 5"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-5-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-5-1", new Vector2(-140f, -100f), 5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-5-2", new Vector2(-140f, -100f), 5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-5-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -398,6 +480,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 6"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-6-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-6-1", new Vector2(-70f, -50f), 4.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-6-2-1", new Vector2(-70f, -50f), 2.2f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-6-2-2", new Vector2(-70f, -50f), 2.2f, MenuDepthIllustration.MenuShader.Basic));
@@ -409,6 +496,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 7"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-7-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-7-1", new Vector2(-140f, -100f), 4.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-7-2", new Vector2(-140f, -100f), 2.2f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-7-3", new Vector2(-140f, -100f), 0.8f, MenuDepthIllustration.MenuShader.Basic));
@@ -419,6 +511,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 8"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-8-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-8-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-8-2", new Vector2(-140f, -100f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "CG-8-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -451,6 +548,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 11 - dead"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "BE-4-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "BE-4-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "BE-4-2", new Vector2(-140f, -100f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "BE-4-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -464,6 +566,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 12 - dead"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "BE-5-flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "BE-5-1", new Vector2(-140f, -100f), 6.0f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "BE-5-2", new Vector2(-140f, -100f), 3.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "BE-5-3", new Vector2(-140f, -100f), 2.4f, MenuDepthIllustration.MenuShader.Basic));
@@ -475,6 +582,11 @@ namespace HunterExpansion.CustomEnding
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "altend - dead"
                 });
+                if (self.flatMode)
+                {
+                    self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Dead - flat", new Vector2(683f, 384f), false, true));
+                    return;
+                }
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Dead - 1", Vector2.zero, 2.8f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Dead - 2", Vector2.zero, 2.5f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Dead - 3", Vector2.zero, 2.2f, MenuDepthIllustration.MenuShader.Basic));
@@ -623,38 +735,48 @@ namespace HunterExpansion.CustomEnding
         {
             SaveState saveState = self.GetStorySession.saveState;
             if (saveState.saveStateNumber == Plugin.SlugName && PearlFixedSave.pearlFixed &&
-                self.world.region.name == "NSH" && !saveState.deathPersistentSaveData.altEnding)
+                self.world.region.name == "NSH" && self.manager.upcomingProcess == null)
             {
-                saveState.deathPersistentSaveData.altEnding = true;
-
-                if (self.manager.upcomingProcess == null)
+                if (!saveState.deathPersistentSaveData.altEnding)
                 {
-                    if (self.manager.musicPlayer != null)
-                    {
-                        self.manager.musicPlayer.FadeOutAllSongs(20f);
-                    }
-                    //分支结局：时间足够回去
-                    if (RedsIllness.RedsCycles(saveState.redExtraCycles) - saveState.cycleNumber >= 15)
-                    {
-                        Plugin.Log("Hunter AltEnd: Return!");
-                        saveState.deathPersistentSaveData.redsDeath = false;
-                        saveState.cycleNumber = RedsIllness.RedsCycles(saveState.redExtraCycles) - 3;
-                        self.manager.statsAfterCredits = false;
-                        self.manager.nextSlideshow = SlideShowID.HunterAltEnd;
-                    }
-                    //分支结局：时间不够回去
-                    else
-                    {
-                        Plugin.Log("Hunter AltEnd: Dead!");
-                        saveState.deathPersistentSaveData.redsDeath = true;
-                        saveState.cycleNumber += Mathf.Max(RedsIllness.RedsCycles(saveState.redExtraCycles) - saveState.cycleNumber, 10);
-                        self.manager.statsAfterCredits = false;
-                        self.manager.nextSlideshow = SlideShowID.HunterAltEnd_Dead;
-                    }
-                    saveState.SessionEnded(self, true, false);
-                    self.manager.RequestMainProcessSwitch(ProcessManager.ProcessID.SlideShow);
+                    saveState.deathPersistentSaveData.altEnding = true;
                 }
-                return;
+                //IL_167:
+                if (self.manager.musicPlayer != null)
+                {
+                    self.manager.musicPlayer.FadeOutAllSongs(20f);
+                }
+                //分支结局：时间足够回去
+                if (RedsIllness.RedsCycles(saveState.redExtraCycles) - saveState.cycleNumber >= 15)
+                {
+                    Plugin.Log("Hunter AltEnd: Return!");
+                    saveState.deathPersistentSaveData.redsDeath = false;
+                    saveState.cycleNumber = RedsIllness.RedsCycles(saveState.redExtraCycles) - 2;
+                    self.manager.statsAfterCredits = false;
+                    self.manager.nextSlideshow = SlideShowID.HunterAltEnd;
+                }
+                //分支结局：时间不够回去
+                else
+                {
+                    Plugin.Log("Hunter AltEnd: Dead!");
+                    saveState.deathPersistentSaveData.redsDeath = true;
+                    saveState.cycleNumber += 15;
+                    self.manager.statsAfterCredits = false;
+                    self.manager.nextSlideshow = SlideShowID.HunterAltEnd_Dead;
+                }
+                AbstractCreature abstractCreature = self.FirstAlivePlayer;
+                if (abstractCreature == null)
+                {
+                    abstractCreature = self.FirstAnyPlayer;
+                }
+                SaveState.forcedEndRoomToAllowwSave = abstractCreature.Room.name;
+                saveState.BringUpToDate(self);
+                SaveState.forcedEndRoomToAllowwSave = "";
+                //saveState.AppendCycleToStatistics(abstractCreature.realizedCreature as Player, self.GetStorySession, false, 0);
+                RainWorldGame.ForceSaveNewDenLocation(self, "NSH_AI", false);
+                self.manager.rainWorld.progression.SaveWorldStateAndProgression(false);
+                //saveState.SessionEnded(self, true, false);
+                self.manager.RequestMainProcessSwitch(ProcessManager.ProcessID.SlideShow);
             }
             orig.Invoke(self);
         }
@@ -684,9 +806,7 @@ namespace HunterExpansion.CustomEnding
             {
                 string text = "";
                 text = Region.GetRegionFullName(self.saveGameData.shelterName.Substring(0, 2), slugcatNumber);
-                if (self.saveGameData.shelterName.Substring(0, 2) == "NS" &&
-                    self.saveGameData.shelterName.Substring(0, 3) == "NSH" &&
-                    self.saveGameData.shelterName.Substring(0, 4) == "NSH_")
+                if (Regex.Split(self.saveGameData.shelterName, "_")[0] == "NSH")
                 {
                     text = Region.GetRegionFullName("NSH", slugcatNumber);
                 }

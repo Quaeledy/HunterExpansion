@@ -8,15 +8,9 @@ namespace HunterExpansion.CustomOracle
 {
     public class NSHOracleMeetRivulet : CustomConversationBehaviour
     {
-        public ProjectedImage showImage;
-        public Vector2 idealShowMediaPos;
-        public Vector2 showMediaPos;
-        public int consistentShowMediaPosCounter;
-        public OracleChatLabel chatLabel;
-        private ProjectionCircle myProjectionCircle;
-
         public NSHOracleMeetRivulet(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetRivulet, NSHConversationID.Rivulet_Talk0)
         {
+            this.communicationIndex = 0;
         }
 
         public static bool SubBehaviourIsMeetRivulet(CustomAction nextAction)
@@ -44,7 +38,7 @@ namespace HunterExpansion.CustomOracle
             {
                 movementBehavior = CustomMovementBehavior.Idle;
                 //现实行为
-                NSHOracleState state = (this.owner as NSHOracleBehaviour).State; 
+                NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
                 if (state.playerEncountersState != GetPlayerEncountersState())
                 {
                     state.playerEncountersState = GetPlayerEncountersState();
@@ -97,8 +91,80 @@ namespace HunterExpansion.CustomOracle
                 return;
             }
             //现实对话
-            else if (action == NSHOracleBehaviorAction.MeetRivulet_Talk1 ||
-                     action == NSHOracleBehaviorAction.MeetRivulet_Talk2 ||
+            else if (action == NSHOracleBehaviorAction.MeetRivulet_Talk1)
+            {
+                if (owner.conversation != null)
+                {
+                    if (owner.conversation.events.Count == 4 && this.communicationIndex == 0)
+                    {
+                        if ((this.owner as NSHOracleBehaviour).showImage != null)
+                        {
+                            (this.owner as NSHOracleBehaviour).showImage.Destroy();
+                            (this.owner as NSHOracleBehaviour).showImage = null;
+                        }
+                        (this.owner as NSHOracleBehaviour).showImage = base.oracle.myScreen.AddImage(new List<string>
+                        {
+                             "AIimg1_DM",
+                             "AIimg1_NSH"
+                        }, 15);
+                        (this.owner as NSHOracleBehaviour).showMediaPos = new Vector2(0.4f * base.oracle.room.PixelWidth, 0.4f * base.oracle.room.PixelHeight);
+                        base.oracle.room.PlaySound(SoundID.SS_AI_Image, 0f, 1f, 1f);
+                        (this.owner as NSHOracleBehaviour).showImage.lastPos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                        (this.owner as NSHOracleBehaviour).showImage.pos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                        (this.owner as NSHOracleBehaviour).showImage.lastAlpha = 0.91f + Random.value * 0.06f;
+                        (this.owner as NSHOracleBehaviour).showImage.alpha = 0.91f + Random.value * 0.06f;
+                        (this.owner as NSHOracleBehaviour).showImage.setAlpha = new float?(0.91f + Random.value * 0.06f);
+                        this.communicationIndex++;
+                        movementBehavior = CustomMovementBehavior.ShowMedia;
+                    }
+                    if (owner.conversation.events.Count == 2 && this.communicationIndex == 1)
+                    {
+                        if ((this.owner as NSHOracleBehaviour).showImage != null)
+                        {
+                            (this.owner as NSHOracleBehaviour).showImage.Destroy();
+                            (this.owner as NSHOracleBehaviour).showImage = null;
+                        }
+                        (this.owner as NSHOracleBehaviour).showImage = base.oracle.myScreen.AddImage(new List<string>
+                        {
+                             "AIimg1a_NSH",
+                             "AIimg1c_NSH"
+                        }, 15);
+                        (this.owner as NSHOracleBehaviour).showMediaPos = new Vector2(0.4f * base.oracle.room.PixelWidth, 0.4f * base.oracle.room.PixelHeight);
+                        base.oracle.room.PlaySound(SoundID.SS_AI_Image, 0f, 1f, 1f);
+                        (this.owner as NSHOracleBehaviour).showImage.lastPos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                        (this.owner as NSHOracleBehaviour).showImage.pos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                        (this.owner as NSHOracleBehaviour).showImage.lastAlpha = 0.91f + Random.value * 0.06f;
+                        (this.owner as NSHOracleBehaviour).showImage.alpha = 0.91f + Random.value * 0.06f;
+                        (this.owner as NSHOracleBehaviour).showImage.setAlpha = new float?(0.91f + Random.value * 0.06f);
+                        this.communicationIndex++;
+                        movementBehavior = CustomMovementBehavior.ShowMedia;
+                    }
+                    if ((this.owner as NSHOracleBehaviour).showImage != null)
+                    {
+                        if (Random.value < 0.033333335f)
+                        {
+                            (this.owner as NSHOracleBehaviour).idealShowMediaPos += Custom.RNV() * Random.value * 30f;
+                            (this.owner as NSHOracleBehaviour).showMediaPos += Custom.RNV() * Random.value * 30f;
+                        }
+                        (this.owner as NSHOracleBehaviour).showImage.setPos = new Vector2?((this.owner as NSHOracleBehaviour).showMediaPos);
+                        this.owner.lookPoint = (this.owner as NSHOracleBehaviour).showMediaPos;
+                    }
+                    if (owner.conversation.slatedForDeletion)
+                    {
+                        if ((this.owner as NSHOracleBehaviour).showImage != null)
+                        {
+                            (this.owner as NSHOracleBehaviour).showImage.Destroy();
+                            (this.owner as NSHOracleBehaviour).showImage = null;
+                        }
+                        owner.conversation = null;
+                        //说完继续工作
+                        owner.getToWorking = 1f;
+                        movementBehavior = CustomMovementBehavior.Idle;
+                        return;
+                    }
+                }
+            }
+            else if (action == NSHOracleBehaviorAction.MeetRivulet_Talk2 ||
                      action == NSHOracleBehaviorAction.MeetRivulet_Talk3 ||
                      action == NSHOracleBehaviorAction.MeetRivulet_AfterAltEnd_1 ||
                      action == NSHOracleBehaviorAction.MeetRivulet_AfterAltEnd_2)
@@ -120,42 +186,41 @@ namespace HunterExpansion.CustomOracle
                 if (owner.conversation != null)
                 {
                     //说话时不展示水猫图像
-                    if (this.showImage != null)
+                    if ((this.owner as NSHOracleBehaviour).showImage != null)
                     {
-                        this.showImage.Destroy();
-                        this.showImage = null;
+                        (this.owner as NSHOracleBehaviour).showImage.Destroy();
+                        (this.owner as NSHOracleBehaviour).showImage = null;
                     }
                     //说完展示水猫图像
                     if (owner.conversation.slatedForDeletion)
                     {
-                        this.showImage = base.oracle.myScreen.AddImage(new List<string>
+                        (this.owner as NSHOracleBehaviour).showImage = base.oracle.myScreen.AddImage(new List<string>
                         {
                              "AIimg1a_NSH",
                              "AIimg1b_NSH"
-                        }, 15); 
-                        this.showImage.lastPos = new Vector2(0.4f * base.oracle.room.PixelWidth, 0.4f * base.oracle.room.PixelHeight);
-                        this.showImage.pos = new Vector2(0.4f * base.oracle.room.PixelWidth, 0.4f * base.oracle.room.PixelHeight);
+                        }, 15);
+                        (this.owner as NSHOracleBehaviour).showMediaPos = new Vector2(0.4f * base.oracle.room.PixelWidth, 0.4f * base.oracle.room.PixelHeight);
 
                         owner.conversation = null;
                         owner.getToWorking = 1f;
                         movementBehavior = CustomMovementBehavior.ShowMedia;
                     }
                 }
-                if (this.showImage != null)
+                if ((this.owner as NSHOracleBehaviour).showImage != null)
                 {
                     if (Random.value < 0.033333335f)
                     {
-                        this.idealShowMediaPos += Custom.RNV() * Random.value * 30f;
-                        this.showMediaPos += Custom.RNV() * Random.value * 30f;
+                        (this.owner as NSHOracleBehaviour).idealShowMediaPos += Custom.RNV() * Random.value * 30f;
+                        (this.owner as NSHOracleBehaviour).showMediaPos += Custom.RNV() * Random.value * 30f;
                     }
                     base.oracle.room.PlaySound(SoundID.SS_AI_Image, 0f, 1f, 1f);
-                    this.showImage.lastPos = this.showMediaPos;
-                    this.showImage.pos = this.showMediaPos;
-                    this.showImage.lastAlpha = 0.91f + Random.value * 0.06f;
-                    this.showImage.alpha = 0.91f + Random.value * 0.06f;
-                    this.showImage.setAlpha = new float?(0.91f + Random.value * 0.06f);
-                    this.showImage.setPos = new Vector2?(this.showMediaPos);
-                    this.owner.lookPoint = this.showMediaPos;
+                    (this.owner as NSHOracleBehaviour).showImage.lastPos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                    (this.owner as NSHOracleBehaviour).showImage.pos = (this.owner as NSHOracleBehaviour).showMediaPos;
+                    (this.owner as NSHOracleBehaviour).showImage.lastAlpha = 0.91f + Random.value * 0.06f;
+                    (this.owner as NSHOracleBehaviour).showImage.alpha = 0.91f + Random.value * 0.06f;
+                    (this.owner as NSHOracleBehaviour).showImage.setAlpha = new float?(0.91f + Random.value * 0.06f);
+                    (this.owner as NSHOracleBehaviour).showImage.setPos = new Vector2?((this.owner as NSHOracleBehaviour).showMediaPos);
+                    this.owner.lookPoint = (this.owner as NSHOracleBehaviour).showMediaPos;
                 }
             }
         }
@@ -219,8 +284,10 @@ namespace HunterExpansion.CustomOracle
                 //现实对话
                 if (id == NSHConversationID.Rivulet_Talk0)
                 {
+                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Wow, what a surprise! The last time I saw your species was a long time ago, let alone how special you look."), 80 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I hope you don't mind me scanning your structure. As a passionate fan of slugcats,<LINE>I find it difficult to restrain my curiosity."), 90 * extralingerfactor));
+                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Let me see... you have a unique pair of gills, but your ancestors didn't. It seems that<LINE>your ethnic group has unique adaptability."), 90 * extralingerfactor));
                     conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Welcome to rest here with me. If you plan to visit the jurisdiction of<LINE>Looks To The Moon, please help me say hello to her."), 90 * extralingerfactor));
                 }
@@ -266,61 +333,6 @@ namespace HunterExpansion.CustomOracle
                 return 1;
             else
                 return 0;
-        }
-
-        //用于展示图像
-        public void ShowMediaMovementBehavior()
-        {/*
-            if (base.player != null)
-            {
-                this.owner.lookPoint = base.player.DangerPos;
-            }*/
-            Vector2 vector = new Vector2(Random.value * base.oracle.room.PixelWidth, Random.value * base.oracle.room.PixelHeight);
-            if (this.owner.CommunicatePosScore(vector) + 40f < this.owner.CommunicatePosScore(this.owner.nextPos) && !Custom.DistLess(vector, this.owner.nextPos, 30f))
-            {
-                this.owner.SetNewDestination(vector);
-            }
-            this.consistentShowMediaPosCounter += (int)Custom.LerpMap(Vector2.Distance(this.showMediaPos, this.idealShowMediaPos), 0f, 200f, 1f, 10f);
-            vector = new Vector2(Random.value * base.oracle.room.PixelWidth, Random.value * base.oracle.room.PixelHeight);
-            if (this.ShowMediaScore(vector) + 40f < this.ShowMediaScore(this.idealShowMediaPos))
-            {
-                this.idealShowMediaPos = vector;
-                this.consistentShowMediaPosCounter = 0;
-            }
-            vector = this.idealShowMediaPos + Custom.RNV() * Random.value * 40f;
-            if (this.ShowMediaScore(vector) + 20f < this.ShowMediaScore(this.idealShowMediaPos))
-            {
-                this.idealShowMediaPos = vector;
-                this.consistentShowMediaPosCounter = 0;
-            }
-            if (this.consistentShowMediaPosCounter > 300)
-            {
-                this.showMediaPos = Vector2.Lerp(this.showMediaPos, this.idealShowMediaPos, 0.1f);
-                this.showMediaPos = Custom.MoveTowards(this.showMediaPos, this.idealShowMediaPos, 10f);
-            }
-        }
-
-        private float ShowMediaScore(Vector2 tryPos)
-        {
-            if (base.oracle.room.GetTile(tryPos).Solid || base.player == null)
-            {
-                return float.MaxValue;
-            }
-            float num = Mathf.Abs(Vector2.Distance(tryPos, base.player.DangerPos) - 250f);
-            num -= Mathf.Min((float)base.oracle.room.aimap.getAItile(tryPos).terrainProximity, 9f) * 30f;
-            num -= Vector2.Distance(tryPos, this.owner.nextPos) * 0.5f;
-            for (int i = 0; i < base.oracle.arm.joints.Length; i++)
-            {
-                num -= Mathf.Min(Vector2.Distance(tryPos, base.oracle.arm.joints[i].pos), 100f) * 10f;
-            }
-            if (base.oracle.graphicsModule != null)
-            {
-                for (int j = 0; j < (base.oracle.graphicsModule as OracleGraphics).umbCord.coord.GetLength(0); j += 3)
-                {
-                    num -= Mathf.Min(Vector2.Distance(tryPos, (base.oracle.graphicsModule as OracleGraphics).umbCord.coord[j, 0]), 100f);
-                }
-            }
-            return num;
         }
     }
 }

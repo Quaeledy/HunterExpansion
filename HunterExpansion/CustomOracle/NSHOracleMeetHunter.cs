@@ -41,6 +41,7 @@ namespace HunterExpansion.CustomOracle
         public static int fadeCounter = 0;
         public static FSprite blackRect = new FSprite("pixel");
         public static Vector2 oraclePos = Vector2.zero;
+        public bool holdPlayer;
 
 
         public NSHOracleMeetHunter(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetHunter, NSHConversationID.Hunter_Talk0)
@@ -584,7 +585,21 @@ namespace HunterExpansion.CustomOracle
                 {
                     oracle.room.AddObject(new Explosion.ExplosionLight(oracle.firstChunk.pos, 450f, 1f, 12, Color.white));
                     oracle.room.AddObject(new ShockWave(oracle.firstChunk.pos, 180f, 0.1f, 12, false));
-                    oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Break, 0f, 1f, 1.25f);
+                    switch (Random.Range(0, 4))
+                    {
+                        case 0:
+                            oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_1, 0f, 1f, 1.25f);
+                            break;
+                        case 1:
+                            oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_2, 0f, 1f, 1.25f);
+                            break;
+                        case 2:
+                            oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_3, 0f, 1f, 1.25f);
+                            break;
+                        case 3:
+                            oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_4, 0f, 1f, 1.25f);
+                            break;
+                    }
                     //oracle.room.PlaySound(SoundID.SL_AI_Talk_1, 0f, 1f, 2f);
                     //oracle.room.PlaySound(MoreSlugcatsEnums.MSCSoundID.Moon_Panic_Attack, oracle.firstChunk.pos, 1f, 1f);
                     if (nshSwarmer != null && nshSwarmer.room != null && nshSwarmer.grabbedBy.Count > 0)
@@ -599,13 +614,25 @@ namespace HunterExpansion.CustomOracle
                         swarmerGrabber = player;
                     }
                 }
+                if (inActionCounter == 40)
+                {
+                    switch (Random.Range(0, 2))
+                    {
+                        case 0:
+                            oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Recover_1, 0f, 0.5f, 1.5f);
+                            break;
+                        case 1:
+                            oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_Recover_2, 0f, 0.5f, 1.5f);
+                            break;
+                    }
+                }
                 if (inActionCounter < 60)
                 {
                     oracle.room.gravity = 1f;
                     oracle.stun = Mathf.Max(oracle.stun, Random.Range(2, 5));
                     oracle.arm.isActive = false;
                     movementBehavior = CustomMovementBehavior.ShowMedia;
-                    oracle.firstChunk.vel += 1.5f * Vector2.down;
+                    //oracle.firstChunk.vel += 1.5f * Vector2.down;
                 }
                 //再次判断，找到谁拿走了神经元（以防玩家拿了神经元又丢开，导致NSH没有反应，也防止其他生物之后捡起来）
                 if (inActionCounter == 60 && nshSwarmer != null && swarmerGrabber == null &&
