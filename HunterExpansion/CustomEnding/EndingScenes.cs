@@ -629,6 +629,7 @@ namespace HunterExpansion.CustomEnding
                     self.playList[i].fadeInDoneAt += 0.6f;
                     self.playList[i].fadeOutStartAt += 0.6f;
                 }
+                self.manager.menuSetup.startGameCondition = ProcessManager.MenuSetup.StoryGameInitCondition.Load;
                 self.processAfterSlideShow = ProcessManager.ProcessID.Game;
                 self.preloadedScenes = new SlideShowMenuScene[self.playList.Count];
                 for (int j = 0; j < self.preloadedScenes.Length; j++)
@@ -773,8 +774,9 @@ namespace HunterExpansion.CustomEnding
                 saveState.BringUpToDate(self);
                 SaveState.forcedEndRoomToAllowwSave = "";
                 //saveState.AppendCycleToStatistics(abstractCreature.realizedCreature as Player, self.GetStorySession, false, 0);
-                RainWorldGame.ForceSaveNewDenLocation(self, "NSH_AI", false);
+                RainWorldGame.ForceSaveNewDenLocation(self, "NSH_AI", true);
                 self.manager.rainWorld.progression.SaveWorldStateAndProgression(false);
+                self.manager.rainWorld.progression.SaveProgressionAndDeathPersistentDataOfCurrentState(false, false);
                 //saveState.SessionEnded(self, true, false);
                 self.manager.RequestMainProcessSwitch(ProcessManager.ProcessID.SlideShow);
             }
@@ -789,6 +791,7 @@ namespace HunterExpansion.CustomEnding
                 int karma = self.GetStorySession.saveState.deathPersistentSaveData.karmaCap;
                 Debug.Log("Hunter AltEnding savKarma: " + karma.ToString());
                 self.GetStorySession.saveState.deathPersistentSaveData.redsDeath = false;
+                self.manager.menuSetup.startGameCondition = ProcessManager.MenuSetup.StoryGameInitCondition.Load;
                 (nextProcess as SlideShow).processAfterSlideShow = ProcessManager.ProcessID.Game;
             }
             /*

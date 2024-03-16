@@ -248,10 +248,12 @@ namespace HunterExpansion.CustomOracle
             MeetRivulet_AfterAltEnd_2 = new CustomAction("MeetRivulet_AfterAltEnd_2", true);
             MeetRivulet_AfterAltEnd_3 = new CustomAction("MeetRivulet_AfterAltEnd_3", true);
             //圣徒
+            MeetSaint_Idle = new CustomAction("NSHMeetSaint_Idle", true);
             MeetSaint_Talk1 = new CustomAction("NSHMeetSaint_Talk1", true);
             MeetSaint_Talk2 = new CustomAction("NSHMeetSaint_Talk2", true);
             MeetSaint_Talk3 = new CustomAction("NSHMeetSaint_Talk3", true);
             //怪猫
+            MeetSofanthiel_Idle = new CustomAction("NSHMeetSofanthiel_Idle", true);
             MeetSofanthiel_Talk1 = new CustomAction("NSHMeetSofanthiel_Talk1", true);
             MeetSofanthiel_Talk2 = new CustomAction("NSHMeetSofanthiel_Talk2", true);
             //其他蛞蝓猫
@@ -322,10 +324,12 @@ namespace HunterExpansion.CustomOracle
             HunterExpansionEnums.Unregister(MeetRivulet_AfterAltEnd_2);
             HunterExpansionEnums.Unregister(MeetRivulet_AfterAltEnd_3);
             //圣徒
+            HunterExpansionEnums.Unregister(MeetSaint_Idle);
             HunterExpansionEnums.Unregister(MeetSaint_Talk1);
             HunterExpansionEnums.Unregister(MeetSaint_Talk2);
             HunterExpansionEnums.Unregister(MeetSaint_Talk3);
             //怪猫
+            HunterExpansionEnums.Unregister(MeetSofanthiel_Idle);
             HunterExpansionEnums.Unregister(MeetSofanthiel_Talk1);
             HunterExpansionEnums.Unregister(MeetSofanthiel_Talk2);
             //其他蛞蝓猫
@@ -396,10 +400,12 @@ namespace HunterExpansion.CustomOracle
         public static CustomAction MeetRivulet_AfterAltEnd_2;
         public static CustomAction MeetRivulet_AfterAltEnd_3;
         //圣徒
+        public static CustomAction MeetSaint_Idle;
         public static CustomAction MeetSaint_Talk1;
         public static CustomAction MeetSaint_Talk2;
         public static CustomAction MeetSaint_Talk3;
-        //怪猫
+        //
+        public static CustomAction MeetSofanthiel_Idle;
         public static CustomAction MeetSofanthiel_Talk1;
         public static CustomAction MeetSofanthiel_Talk2;
         //其他蛞蝓猫
@@ -518,6 +524,9 @@ namespace HunterExpansion.CustomOracle
             OtherSlugcat_Talk1 = new Conversation.ID("NSH_OtherSlugcat_Talk1", true);
             //对话
             RefusingToInterpretItems = new Conversation.ID("NSH_RefusingToInterpretItems", true);
+            //珍珠
+            NSH_Pearl_NSH_Box = new Conversation.ID("NSH_Pearl_NSH_Box", true);
+            NSH_Pearl_NSH_Top = new Conversation.ID("NSH_Pearl_NSH_Top", true);
         }
 
         public static void UnregisterValues()
@@ -581,6 +590,9 @@ namespace HunterExpansion.CustomOracle
             HunterExpansionEnums.Unregister(OtherSlugcat_Talk1);
             //对话
             HunterExpansionEnums.Unregister(RefusingToInterpretItems);
+            //珍珠
+            HunterExpansionEnums.Unregister(NSH_Pearl_NSH_Top);
+            HunterExpansionEnums.Unregister(NSH_Pearl_NSH_Box);
         }
         //魔方节点
         public static Conversation.ID NSH_HR;
@@ -641,6 +653,9 @@ namespace HunterExpansion.CustomOracle
         public static Conversation.ID OtherSlugcat_Talk1;
         //对话
         public static Conversation.ID RefusingToInterpretItems;
+        //珍珠
+        public static Conversation.ID NSH_Pearl_NSH_Top;
+        public static Conversation.ID NSH_Pearl_NSH_Box;
     }
 
     public class NSHOracleMovementBehavior

@@ -36,11 +36,35 @@ namespace HunterExpansion.CustomOracle
         public NSHConversation(NSHOracleBehaviour owner, NSHOracleMeetHunter convBehav, Conversation.ID id, DialogBox dialogBox, SLOracleBehaviorHasMark.MiscItemType describeItem) : base(owner, id, dialogBox)
         {
             //EncryptAllDialogue();
-            this.owner = owner;
-            this.convBehav = convBehav;
-            this.describeItem = describeItem;
-            this.currentSaveFile = owner.oracle.room.game.GetStorySession.saveStateNumber;
-            this.AddEvents();
+            if ((owner as NSHOracleBehaviour).canSlugUnderstandlanguage())
+            {
+                this.owner = owner;
+                this.convBehav = convBehav;
+                this.describeItem = describeItem;
+                this.currentSaveFile = owner.oracle.room.game.GetStorySession.saveStateNumber;
+                this.AddEvents();
+            }
+            else
+            {
+                switch (Random.Range(0, 5))
+                {
+                    case 0:
+                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_1, 0f, 1f, 1.25f);
+                        break;
+                    case 1:
+                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_2, 0f, 1f, 1.25f);
+                        break;
+                    case 2:
+                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_3, 0f, 1f, 1.25f);
+                        break;
+                    case 3:
+                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_1, 0f, 1f, 1.25f);
+                        break;
+                    case 4:
+                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_2, 0f, 1f, 1.25f);
+                        break;
+                }
+            }
         }
         
         //用于加密文件
@@ -84,7 +108,7 @@ namespace HunterExpansion.CustomOracle
         public override void AddEvents()
         {
             //猫猫有语言印记才会读
-            if (this.owner.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+            if ((owner as NSHOracleBehaviour).canSlugUnderstandlanguage())
             {
                 if (this.id == NSHConversationID.RefusingToInterpretItems)
                 {
@@ -340,6 +364,20 @@ namespace HunterExpansion.CustomOracle
                 }
                 else
                 {
+                    //NSH区域独有珍珠
+                    if (this.id == NSHConversationID.NSH_Pearl_NSH_Top)
+                    {
+                        this.PearlIntro();
+                        LoadEventsFromFile(0, "NSH_Top-NSH");
+                        return;
+                    }
+                    if (this.id == NSHConversationID.NSH_Pearl_NSH_Box)
+                    {
+                        this.PearlIntro();
+                        LoadEventsFromFile(0, "NSH_Box-NSH");
+                        return;
+                    }
+                    //
                     if (this.id == Conversation.ID.Moon_Pearl_Misc)
                     {
                         this.PearlIntro();

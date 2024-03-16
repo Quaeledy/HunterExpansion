@@ -97,21 +97,23 @@ namespace HunterExpansion.CustomOracle
                     if (RipNSHSave.ripNSH && deathPersistentSaveData.ripMoon)
                     {
                         owner.InitateConversation(MoreSlugcatsEnums.ConversationID.Moon_HR, this);
-                        this.Interrupt(base.Translate("..."), 200);
+                        //this.Interrupt(base.Translate("..."), 200);
                         this.startedConversation = true;
                         return;
                     }
                     if (RipNSHSave.ripNSH && deathPersistentSaveData.ripPebbles)
                     {
                         owner.InitateConversation(MoreSlugcatsEnums.ConversationID.Pebbles_HR, this);
-                        this.Interrupt(base.Translate("..."), 200);
+                        //this.Interrupt(base.Translate("..."), 200);
                         this.startedConversation = true;
+                        return;
                     }
                     if (RipNSHSave.ripNSH)
                     {
                         owner.InitateConversation(NSHConversationID.NSH_HR, this);
-                        this.Interrupt(base.Translate("..."), 200);
+                        //this.Interrupt(base.Translate("..."), 200);
                         this.startedConversation = true;
+                        return;
                     }
                 }
                 if (ModManager.MSC && this.oracle.room.world.name == "HR")
@@ -293,26 +295,31 @@ namespace HunterExpansion.CustomOracle
             //四迭都在
             if (id == NSHConversationID.NSH_Moon_Pebbles_SRS_HR)
             {
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
                 LoadEventsFromFile(135, "NSH_Moon_Pebbles_SRS_HR", conv);
             }
             //NSH，Moon，FP都在
             else if (id == MoreSlugcatsEnums.ConversationID.Moon_Pebbles_HR)
             {
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
                 LoadEventsFromFile(135, "NSH_Moon_Pebbles_HR", conv);
             }
             //NSH，Moon
             else if (id == MoreSlugcatsEnums.ConversationID.Moon_HR)
             {
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
                 LoadEventsFromFile(133, "NSH_Moon_HR", conv);
             }
             //NSH，FP
             else if (id == MoreSlugcatsEnums.ConversationID.Pebbles_HR)
             {
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
                 LoadEventsFromFile(134, "NSH_Pebbles_HR", conv);
             }
             //只有NSH在
             else if (id == NSHConversationID.NSH_HR)
             {
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
                 LoadEventsFromFile(135, "NSH_HR", conv);
             }
         }

@@ -47,27 +47,19 @@ namespace HunterExpansion
         //NSH的内置小游戏
 
         //待测试：
-        //音效(等合作者做完）
-        //魔方结点是否有变化
-        //矛大师朝向出口的速度
+        //音效（已测圣猫倒地音效）
         //禁止猫崽在NSH区域生成
 
         //已测试：
-        //修复了NSH区域的其他业力门也能触发结局的问题
-        //多人联机时，播放结局cg后，无法传送到nsh，仍在业力门房间
-        //多人联机时，传送到nsh后不能进入结算界面
-        //多人联机时，梦境结束会卡在雨眠界面，雨眠cg疯狂抖动（应该是emgtx的问题）
-        //第一次睡觉以后，挨饿再睡一觉，见完nsh后会回到挨饿前，然后再挨饿睡会再次进这个梦境，然后nsh说完话不动
-        //修复了与亡命徒的冲突
+        //
 
         //已知bug：
-        //没有睡过避难所的情况下，触发结局会让玩家的位置回到最开头
-        //warp传送到sb_oe业力门时，先传送到oe区域，再想传送到sb区域，会传送不了
-        //红猫传送到NSH房间疑似会死亡
+        //
+
 
         //CRS:
         //加入了依赖项
-        //Landscape，标题，Safari图标，所有猫可选Safari
+        //Landscape，标题，Safari图标，所有猫可选Safari，广播，珍珠
 
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
@@ -106,6 +98,8 @@ namespace HunterExpansion
                 CollectionsMenuHooks.Init();
                 //墙顶城市和猫崽生成
                 WorldHooks.Init();
+                //房间特殊事件
+                RoomSpecificScript.Init();
 
                 //绿珍珠的特效
                 FixedDataPearlEffect.HooksOn();
@@ -118,7 +112,7 @@ namespace HunterExpansion
                 DeathPersistentSaveDataRx.AppplyTreatment(new PearlFixedSave(Plugin.SlugName));
                 DeathPersistentSaveDataRx.AppplyTreatment(new RipNSHSave(MoreSlugcatsEnums.SlugcatStatsName.Saint));
                 //这是附送的SRS
-                CustomOracleRx.ApplyTreatment(new SRSOracleRegistry());
+                //CustomOracleRx.ApplyTreatment(new SRSOracleRegistry());
 
                 HunterExpansionEnums.RegisterAllEnumExtensions();
                 this.LoadResources(self);

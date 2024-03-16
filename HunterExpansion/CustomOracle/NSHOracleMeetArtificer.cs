@@ -29,7 +29,7 @@ namespace HunterExpansion.CustomOracle
 
             if (action == NSHOracleBehaviorAction.MeetArtificer_Init)
             {
-                movementBehavior = CustomMovementBehavior.Idle;
+                movementBehavior = CustomMovementBehavior.KeepDistance;
                 //现实行为
                 NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
                 if (state.playerEncountersWithMark == 0 && inActionCounter > 20)
@@ -93,28 +93,20 @@ namespace HunterExpansion.CustomOracle
         public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
-            //猫猫有语言印记才会读
-            if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+            //现实对话
+            if (id == NSHConversationID.Artificer_Talk0)
             {
-                //现实对话
-                if (id == NSHConversationID.Artificer_Talk0)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Hello! It seems that I have welcomed a citizen. Let me see... Surprisingly, you belongs to Five Pebbles."), 70 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Then we are enemies, please go back!"), 30 * extralingerfactor));
-                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Haha, it's just a joke~"), 20 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I am very dissatisfied with him, but I don't want to vent my anger on small animals yet."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You don't seem to have an easy time, but I can't help you. Nevertheless,<LINE>before you depart, you can rest here to your heart's content."), 100 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Artificer_Talk1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything here that attracts you?"), 40 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Oh, of course, you can stay here. I have no intention of interfering with<LINE>your decision, as long as you don't disrupt my structure."), 90 * extralingerfactor));
-                }
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Hello! It seems that I have welcomed a citizen. Let me see... Surprisingly, you belongs to Five Pebbles."), 70 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Then we are enemies, please go back!"), 30 * extralingerfactor));
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Haha, it's just a joke~"), 20 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I am very dissatisfied with him, but I don't want to vent my anger on small animals yet."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You don't seem to have an easy time, but I can't help you. Nevertheless,<LINE>before you depart, you can rest here to your heart's content."), 100 * extralingerfactor));
             }
-            else
+            else if (id == NSHConversationID.Artificer_Talk1)
             {
-                (this.owner as NSHOracleBehaviour).PlayerEncountersWithoutMark();
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything here that attracts you?"), 40 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Oh, of course, you can stay here. I have no intention of interfering with<LINE>your decision, as long as you don't disrupt my structure."), 90 * extralingerfactor));
             }
         }
     }

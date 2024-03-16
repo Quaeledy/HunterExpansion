@@ -95,7 +95,7 @@ namespace HunterExpansion
                     fixCount = 0;
                     if (self.currentConversation != null)
                     {
-                        self.currentConversation.Interrupt("...", 0);
+                        self.currentConversation.Interrupt(self.Translate("..."), 0);
                     }
                     self.oracle.room.AddObject(new Explosion.ExplosionLight(pearl.firstChunk.pos, 100f, 1f, 5, Color.white));
                     self.oracle.room.AddObject(new ShockWave(pearl.firstChunk.pos, 30f, 0.1f, 5, false));
@@ -156,6 +156,7 @@ namespace HunterExpansion
             if (slOracleBehaviorHasMark.oracle.room.game.session.characterStats.name == Plugin.SlugName &&
                 slOracleBehaviorHasMark.oracle.room.abstractRoom.name == "SL_AI" &&
                 saveState.miscWorldSaveData.SLOracleState.neuronsLeft >= 4 &&
+                saveState.miscWorldSaveData.SLOracleState.GetOpinion == SLOrcacleState.PlayerOpinion.Likes &&
                 id == Conversation.ID.Moon_Pearl_Red_stomach && !PearlFixedSave.pearlFixed)
             {
                 startFix = true;

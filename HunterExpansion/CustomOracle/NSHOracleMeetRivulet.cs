@@ -36,7 +36,7 @@ namespace HunterExpansion.CustomOracle
 
             if (action == NSHOracleBehaviorAction.MeetRivulet_Init)
             {
-                movementBehavior = CustomMovementBehavior.Idle;
+                movementBehavior = CustomMovementBehavior.KeepDistance;
                 //现实行为
                 NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
                 if (state.playerEncountersState != GetPlayerEncountersState())
@@ -278,51 +278,43 @@ namespace HunterExpansion.CustomOracle
         public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
-            //猫猫有语言印记才会读
-            if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+            //现实对话
+            if (id == NSHConversationID.Rivulet_Talk0)
             {
-                //现实对话
-                if (id == NSHConversationID.Rivulet_Talk0)
-                {
-                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Wow, what a surprise! The last time I saw your species was a long time ago, let alone how special you look."), 80 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I hope you don't mind me scanning your structure. As a passionate fan of slugcats,<LINE>I find it difficult to restrain my curiosity."), 90 * extralingerfactor));
-                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Let me see... you have a unique pair of gills, but your ancestors didn't. It seems that<LINE>your ethnic group has unique adaptability."), 90 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Welcome to rest here with me. If you plan to visit the jurisdiction of<LINE>Looks To The Moon, please help me say hello to her."), 90 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Rivulet_Talk1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You can stay, but if I lose a dozen neurons again due to my hospitality..."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I swear I can be much more tricky than a bunch of angry scavengers."), 55 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Rivulet_Talk2)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you have any further questions?"), 30 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Rivulet_AfterAltEnd_0)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Hello, I am entangled in a strange matter. A while ago, the area of Five Pebbles stopped raining,<LINE>and after a few cycles, the rain clouds began to condense over Looks To The Moon."), 130 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It is obvious that someone installed his battery for Moon. Considering that her structure has<LINE>been submerged by water, this is almost an impossible task."), 100 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Now that I see you, everything has a clue. Did I guess correctly, the magical little one?<LINE>If you did this, please accept my gratitude."), 90 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I hope this means that Five Pebbles have already digested his anger. Anyway, what you<LINE>have accomplished has extraordinary significance."), 90 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Okay, you're the only slugcat worth enjoying the neuron buffet, just take it as my thank you."), 70 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Uh, be merciful under your tongue."), 30 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Rivulet_AfterAltEnd_1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I calculated your movement speed based on the time interval of battery installation.<LINE>You're really agile, aren't you?"), 80 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You can simply race against a frightened eggbug, and my fellows may even bet on you."), 60 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Rivulet_AfterAltEnd_2)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Of course you can stay, but I am planning to start studying your body structure."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you mind seeing your own scanned slices?"), 30 * extralingerfactor));
-                }
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Wow, what a surprise! The last time I saw your species was a long time ago, let alone how special you look."), 80 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I hope you don't mind me scanning your structure. As a passionate fan of slugcats,<LINE>I find it difficult to restrain my curiosity."), 90 * extralingerfactor));
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Let me see... you have a unique pair of gills, but your ancestors didn't. It seems that<LINE>your ethnic group has unique adaptability."), 90 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Welcome to rest here with me. If you plan to visit the jurisdiction of<LINE>Looks To The Moon, please help me say hello to her."), 90 * extralingerfactor));
             }
-            else
+            else if (id == NSHConversationID.Rivulet_Talk1)
             {
-                (this.owner as NSHOracleBehaviour).PlayerEncountersWithoutMark();
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You can stay, but if I lose a dozen neurons again due to my hospitality..."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I swear I can be much more tricky than a bunch of angry scavengers."), 55 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Rivulet_Talk2)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you have any further questions?"), 30 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Rivulet_AfterAltEnd_0)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Hello, I am entangled in a strange matter. A while ago, the area of Five Pebbles stopped raining,<LINE>and after a few cycles, the rain clouds began to condense over Looks To The Moon."), 130 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It is obvious that someone installed his battery for Moon. Considering that her structure has<LINE>been submerged by water, this is almost an impossible task."), 100 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Now that I see you, everything has a clue. Did I guess correctly, the magical little one?<LINE>If you did this, please accept my gratitude."), 90 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I hope this means that Five Pebbles have already digested his anger. Anyway, what you<LINE>have accomplished has extraordinary significance."), 90 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Okay, you're the only slugcat worth enjoying the neuron buffet, just take it as my thank you."), 70 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Uh, be merciful under your tongue."), 30 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Rivulet_AfterAltEnd_1)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I calculated your movement speed based on the time interval of battery installation.<LINE>You're really agile, aren't you?"), 80 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You can simply race against a frightened eggbug, and my fellows may even bet on you."), 60 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Rivulet_AfterAltEnd_2)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Of course you can stay, but I am planning to start studying your body structure."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you mind seeing your own scanned slices?"), 30 * extralingerfactor));
             }
         }
 

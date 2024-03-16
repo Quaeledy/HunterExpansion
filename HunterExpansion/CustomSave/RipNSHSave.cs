@@ -15,7 +15,7 @@ namespace HunterExpansion.CustomSave
         {
             get
             {
-                return "NOSAVEDHARASSMENT";
+                return "NOSURVIVEDHARASSMENT";
             }
         }
 

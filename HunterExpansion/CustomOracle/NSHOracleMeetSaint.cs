@@ -49,6 +49,7 @@ namespace HunterExpansion.CustomOracle
         public static bool SubBehaviourIsMeetSaint(CustomAction nextAction)
         {
             return nextAction == NSHOracleBehaviorAction.MeetSaint_Init ||
+                   nextAction == NSHOracleBehaviorAction.MeetSaint_Idle ||
                    nextAction == NSHOracleBehaviorAction.MeetSaint_Talk1 ||
                    nextAction == NSHOracleBehaviorAction.MeetSaint_Talk2 ||
                    nextAction == NSHOracleBehaviorAction.MeetSaint_Talk3;
@@ -63,9 +64,13 @@ namespace HunterExpansion.CustomOracle
             {
                 return;
             }
+            if (action == NSHOracleBehaviorAction.MeetSaint_Idle && (owner as NSHOracleBehaviour).IsSeePlayer())
+            {
+                owner.NewAction(NSHOracleBehaviorAction.MeetSaint_Init);
+            }
             if (action == NSHOracleBehaviorAction.MeetSaint_Init)
             {
-                movementBehavior = CustomMovementBehavior.Idle;
+                movementBehavior = CustomMovementBehavior.KeepDistance;
                 //现实行为
                 NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
                 if (state.playerEncountersWithMark == 0 && inActionCounter > 20)
@@ -106,11 +111,6 @@ namespace HunterExpansion.CustomOracle
                 }
             }
 
-            if (oracle.health == 0)
-            {
-                movementBehavior = CustomMovementBehavior.ShowMedia;
-                //oracle.firstChunk.vel += 1.5f * Vector2.down;
-            }
             if (this.panicObject == null || this.panicObject.slatedForDeletetion)
             {
                 if (this.panicObject != null)
@@ -138,7 +138,7 @@ namespace HunterExpansion.CustomOracle
                     this.lowGravity = Mathf.Lerp(this.lowGravity, 0.5f, 0.01f);
                 }
                 this.gravOn = this.panicObject.gravOn;
-                movementBehavior = CustomMovementBehavior.ShowMedia;
+                movementBehavior = NSHOracleMovementBehavior.Meditate;
                 this.owner.SetNewDestination(base.oracle.firstChunk.pos);
             }
 
@@ -148,9 +148,9 @@ namespace HunterExpansion.CustomOracle
                 if (owner.conversation == null)
                 {
                     this.panicTimer++;
-                    if (movementBehavior != CustomMovementBehavior.ShowMedia || movementBehavior != CustomMovementBehavior.Idle)
+                    if (movementBehavior != NSHOracleMovementBehavior.Meditate && movementBehavior != CustomMovementBehavior.Idle)
                     {
-                        movementBehavior = CustomMovementBehavior.ShowMedia;
+                        movementBehavior = NSHOracleMovementBehavior.Meditate;
                     }
                 }
                 if (this.panicTimer > this.timeUntilNextPanic)
@@ -204,8 +204,8 @@ namespace HunterExpansion.CustomOracle
             {
                 conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Ha, it's really strange! After the weather turns cold, have slugcats evolved hair?"), 70 * extralingerfactor));
                 conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Come on, although my room may not be warm, it can barely keep warm. I have always<LINE>loved the companionship of your kind, especially recently."), 110 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("To this day, this land of immortality is still being consumed day after day with us old folks..."), 80 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I hope you can leave anytime you want. You know, the void sea has always been open for you."), 80 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("To this day, this land is still trapped here with us..."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I hope you can leave when you want. You know, the void sea has always been open for you."), 80 * extralingerfactor));
             }
             else if (id == NSHConversationID.Saint_Talk1)
             {

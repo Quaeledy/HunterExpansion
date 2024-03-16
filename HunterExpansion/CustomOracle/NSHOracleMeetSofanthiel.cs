@@ -19,6 +19,7 @@ namespace HunterExpansion.CustomOracle
         public static bool SubBehaviourIsMeetSofanthiel(CustomAction nextAction)
         {
             return nextAction == NSHOracleBehaviorAction.MeetSofanthiel_Init ||
+                   nextAction == NSHOracleBehaviorAction.MeetSofanthiel_Idle ||
                    nextAction == NSHOracleBehaviorAction.MeetSofanthiel_Talk1 ||
                    nextAction == NSHOracleBehaviorAction.MeetSofanthiel_Talk2;
         }
@@ -46,10 +47,13 @@ namespace HunterExpansion.CustomOracle
                     }
                 }
             }
-
+            if (action == NSHOracleBehaviorAction.MeetSofanthiel_Idle && (owner as NSHOracleBehaviour).IsSeePlayer())
+            {
+                owner.NewAction(NSHOracleBehaviorAction.MeetSofanthiel_Init);
+            }
             if (action == NSHOracleBehaviorAction.MeetSofanthiel_Init)
             {
-                movementBehavior = CustomMovementBehavior.Idle;
+                movementBehavior = CustomMovementBehavior.KeepDistance;
 
                 NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
                 //现实行为
@@ -136,24 +140,16 @@ namespace HunterExpansion.CustomOracle
         public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
-            //猫猫有语言印记才会读
-            if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+            //现实对话
+            if (id == NSHConversationID.Sofanthiel_Talk0)
             {
-                //现实对话
-                if (id == NSHConversationID.Sofanthiel_Talk0)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You have come at last, my valiant visitor. As I witnessed your arduous journey<LINE>through the watchers, a firm idea took shape:"), 80 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I love you."), 20 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I've waited a long time for this, and I'm sure you have too! Come to me."), 45 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Sofanthiel_Talk1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Come here... don't be afraid..."), 30 * extralingerfactor));
-                }
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You have come at last, my valiant visitor. As I witnessed your arduous journey<LINE>through the watchers, a firm idea took shape:"), 80 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I love you."), 20 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I've waited a long time for this, and I'm sure you have too! Come to me."), 45 * extralingerfactor));
             }
-            else
+            else if (id == NSHConversationID.Sofanthiel_Talk1)
             {
-                (this.owner as NSHOracleBehaviour).PlayerEncountersWithoutMark();
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Come here... don't be afraid..."), 30 * extralingerfactor));
             }
         }
     }

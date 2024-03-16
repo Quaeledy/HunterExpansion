@@ -117,27 +117,27 @@ namespace HunterExpansion.HRTalk
                             switch (Random.Range(0, 4))
                             {
                                 case 0:
-                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_1, 0f, 1f, 1.5f);
+                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_1, 0f, 0.5f, 1.8f);
                                     break;
                                 case 1:
-                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_2, 0f, 1f, 1.5f);
+                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_2, 0f, 0.5f, 1.8f);
                                     break;
                                 case 2:
-                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_3, 0f, 1f, 1.5f);
+                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_3, 0f, 0.5f, 1.8f);
                                     break;
                                 case 3:
-                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_4, 0f, 1f, 1.5f);
+                                    self.room.PlaySound(NSHOracleSoundID.NSH_AI_Break_4, 0f, 0.5f, 1.8f);
                                     break;
                             }
                             Vector2 pos = (physicalObject as Oracle).bodyChunks[0].pos;
                             self.room.AddObject(new ShockWave(pos, 500f, 0.75f, 18, false));
                             self.room.AddObject(new Explosion.ExplosionLight(pos, 320f, 1f, 5, Color.white));
                             Plugin.Log("Ascend saint NSH");
-                            ((physicalObject as Oracle).oracleBehavior as SRSOracleBehaviour).dialogBox.Interrupt("...", 1);
-                            if (((physicalObject as Oracle).oracleBehavior as SRSOracleBehaviour).conversation != null)
+                            ((physicalObject as Oracle).oracleBehavior as NSHOracleBehaviour).dialogBox.Interrupt(((physicalObject as Oracle).oracleBehavior as NSHOracleBehaviour).Translate("..."), 1);
+                            if (((physicalObject as Oracle).oracleBehavior as NSHOracleBehaviour).conversation != null)
                             {
-                                ((physicalObject as Oracle).oracleBehavior as SRSOracleBehaviour).conversation.Destroy();
-                                ((physicalObject as Oracle).oracleBehavior as SRSOracleBehaviour).conversation = null;
+                                ((physicalObject as Oracle).oracleBehavior as NSHOracleBehaviour).conversation.Destroy();
+                                ((physicalObject as Oracle).oracleBehavior as NSHOracleBehaviour).conversation = null;
                             }
                             (physicalObject as Oracle).health = 0f;
                             flag2 = true;

@@ -10,7 +10,6 @@ using HunterExpansion.CustomOracle;
 using Menu;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace HunterExpansion
 {

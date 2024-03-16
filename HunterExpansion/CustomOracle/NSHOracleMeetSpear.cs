@@ -60,7 +60,7 @@ namespace HunterExpansion.CustomOracle
             NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
             if (action == NSHOracleBehaviorAction.MeetSpear_Init)
             {
-                movementBehavior = CustomMovementBehavior.Talk;
+                movementBehavior = CustomMovementBehavior.KeepDistance;
                 if (state.playerEncountersState != GetPlayerEncountersState())
                 {
                     state.playerEncountersState = GetPlayerEncountersState();
@@ -141,16 +141,26 @@ namespace HunterExpansion.CustomOracle
                 {
                     if (owner.conversation.slatedForDeletion)
                     {
-                        owner.conversation = null;
                         //说完继续工作
+                        owner.conversation = null;
                         owner.getToWorking = 1f;
-                        movementBehavior = NSHOracleMovementBehavior.Meditate;
                         //喂饱矛大师
                         if (player.FoodInStomach <= player.MaxFoodInStomach)
                         {
                             player.AddFood(player.MaxFoodInStomach);
                         } 
                         return;
+                    }
+                }
+                else
+                {
+                    //看矛大师
+                    owner.lookPoint = base.player.DangerPos;
+                    //给矛大师朝向出口的速度
+                    if (player != null && player.room != null && player.room == oracle.room)
+                    {
+                        player.firstChunk.vel *= Custom.LerpMap(player.firstChunk.vel.magnitude, 1f, 6f, 0.9f, 0.5f);
+                        player.firstChunk.vel += Vector2.ClampMagnitude(player.room.MiddleOfTile(24, 31) - player.firstChunk.pos, 100f) / 100f * 1f;
                     }
                 }
             }
@@ -204,26 +214,26 @@ namespace HunterExpansion.CustomOracle
                             base.player.bodyChunks[1].vel *= Custom.LerpMap((float)base.inActionCounter, 0f, 30f, 1f, 0.95f);
                             base.player.mainBodyChunk.vel += Custom.DirVec(base.player.mainBodyChunk.pos, this.holdPlayerPos) * Mathf.Lerp(0.5f, Custom.LerpMap(Vector2.Distance(base.player.mainBodyChunk.pos, this.holdPlayerPos), 30f, 150f, 2.5f, 7f), base.oracle.room.gravity) * Mathf.InverseLerp(0f, 10f, (float)base.inActionCounter) * Mathf.InverseLerp(0f, 30f, Vector2.Distance(base.player.mainBodyChunk.pos, this.holdPlayerPos));
                         }*/
-                        //owner.conversation = null;
                         //说完继续工作
+                        owner.conversation = null;
                         owner.getToWorking = 1f;
                         //喂饱矛大师
                         if (player.FoodInStomach <= player.MaxFoodInStomach)
                         {
                             player.AddFood(player.MaxFoodInStomach);
                         }
-                        //看矛大师
-                        owner.lookPoint = base.player.DangerPos;
                         return;
                     }
-                    if (owner.conversation.events.Count == 0)
+                }
+                else
+                {
+                    //看矛大师
+                    owner.lookPoint = base.player.DangerPos;
+                    //给矛大师朝向出口的速度
+                    if (player != null && player.room != null && player.room == oracle.room)
                     {
-                        //给矛大师朝向出口的速度
-                        if (player != null && player.room != null && player.room == oracle.room)
-                        {
-                            player.firstChunk.vel *= Custom.LerpMap(player.firstChunk.vel.magnitude, 1f, 6f, 0.9f, 0.5f);
-                            player.firstChunk.vel += 5f * Custom.DirVec(player.firstChunk.pos, player.room.MiddleOfTile(24, 28));
-                        }
+                        player.firstChunk.vel *= Custom.LerpMap(player.firstChunk.vel.magnitude, 1f, 6f, 0.9f, 0.5f);
+                        player.firstChunk.vel += Vector2.ClampMagnitude(player.room.MiddleOfTile(24, 31) - player.firstChunk.pos, 100f) / 100f * 1f;
                     }
                 }
             }
@@ -382,63 +392,55 @@ namespace HunterExpansion.CustomOracle
         public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
-            //猫猫有语言印记才会读
-            if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+            //现实对话
+            if (id == NSHConversationID.Spear_Talk0)
             {
-                //现实对话
-                if (id == NSHConversationID.Spear_Talk0)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Are you..."), 10 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("The messenger of Suns."), 20 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Are you lost? The situation is urgent now, and we all need you to rush to Five Pebbles as soon as possible."), 100 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please set off quickly."), 50 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Spear_Talk1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything I can do? I'm not the iterator you're looking for, little idiot."), 80 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("She doesn't have much time, please hurry up and get on the road."), 60 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Spear_Talk2)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Suns, what's wrong with your messenger?"), 40 * extralingerfactor));
-                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 40 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Little one, set off quickly, please."), 40 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Spear_AfterMeetPebbles_0)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Messenger? Come here and take a break. It's not easy to make this trip, is it."), 50 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I know that guy is hard to persuade, but I didn't expect it to end in this way."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Ha, he has already treated Moon like this, what's so unexpected?"), 80 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I will think of other methods."), 80 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Spear_AfterMeetPebbles_1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 10 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Spear_AfterAltEnd_0)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I received her... message."), 50 * extralingerfactor)); 
-                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 40 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Did you do it, little messenger? Thank you."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Your mission has been completed and your return journey is smooth."), 80 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Spear_AfterAltEnd_1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything you need?"), 50 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If not, do you mind leaving me alone for a while? I need to think."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Goodbye, excellent messenger."), 80 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.Spear_AfterAltEnd_2)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you still want to stay here and rest? I don't object."), 50 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("But don't forget that Suns is still waiting for you, messenger."), 60 * extralingerfactor));
-                }
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Are you..."), 10 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("The messenger of Suns."), 20 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Are you lost? The situation is urgent now, and we all need you to rush to Five Pebbles as soon as possible."), 100 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please set off quickly."), 50 * extralingerfactor));
             }
-            else
+            else if (id == NSHConversationID.Spear_Talk1)
             {
-                (this.owner as NSHOracleBehaviour).PlayerEncountersWithoutMark();
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything I can do? I'm not the iterator you're looking for, little idiot."), 80 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("She doesn't have much time, please hurry up and get on the road."), 60 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Spear_Talk2)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Suns, what's wrong with your messenger?"), 40 * extralingerfactor));
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 40 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Little one, set off quickly, please."), 40 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Spear_AfterMeetPebbles_0)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Messenger? Come here and take a break. It's not easy to make this trip, is it."), 50 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I know that guy is hard to persuade, but I didn't expect it to end in this way."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Ha, he has already treated Moon like this, what's so unexpected?"), 80 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I will think of other methods."), 80 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Spear_AfterMeetPebbles_1)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 10 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Spear_AfterAltEnd_0)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I received her... message."), 50 * extralingerfactor));
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 40 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Did you do it, little messenger? Thank you."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Your mission has been completed and your return journey is smooth."), 80 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Spear_AfterAltEnd_1)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything you need?"), 50 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If not, do you mind leaving me alone for a while? I need to think."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Goodbye, excellent messenger."), 80 * extralingerfactor));
+            }
+            else if (id == NSHConversationID.Spear_AfterAltEnd_2)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you still want to stay here and rest? I don't object."), 50 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("But don't forget that Suns is still waiting for you, messenger."), 60 * extralingerfactor));
             }
         }
 

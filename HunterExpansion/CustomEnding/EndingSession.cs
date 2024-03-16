@@ -13,6 +13,7 @@ using Menu;
 using static MonoMod.InlineRT.MonoModRule;
 using Random = UnityEngine.Random;
 using Expedition;
+using System.Reflection;
 
 namespace HunterExpansion.CustomEnding
 {
@@ -38,8 +39,6 @@ namespace HunterExpansion.CustomEnding
         {
             On.Player.ctor += Player_ctor;
             On.Player.UpdateMSC += Player_EndUpdate;
-            //On.RainWorldGame.CommunicateWithUpcomingProcess += RainWorldGame_CommunicateWithUpcomingProcess;
-            //On.SaveState.SessionEnded += SaveState_SessionEnded;
             //On.RegionState.AdaptRegionStateToWorld += RegionState_AdaptRegionStateToWorld;
         }
         private static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
@@ -60,7 +59,10 @@ namespace HunterExpansion.CustomEnding
             orig(self);
             if (self.room.game.session.characterStats.name != Plugin.SlugName)
                 return;
-
+            if (self.room.game.devToolsActive && Input.GetKey(KeyCode.LeftControl) && Input.GetKey("6"))
+            {
+                PearlFixedSave.pearlFixed = true;
+            }
             //播放结局cg
             if (self.room.abstractRoom.name == "GATE_SB_OE" && PearlFixedSave.pearlFixed && openGate &&
                 self == self.room.game.Players[0].realizedCreature as Player)
@@ -120,7 +122,7 @@ namespace HunterExpansion.CustomEnding
                                     }
                                     catch (Exception arg)
                                     {
-                                        Plugin.Log(string.Format("Could not warp and revive player {0} [{1}]", abstractCreature, arg), false);
+                                        Plugin.Log(string.Format("Could not warp player {0} [{1}]", abstractCreature, arg), false);
                                     }
                                 }
                             }
@@ -134,9 +136,18 @@ namespace HunterExpansion.CustomEnding
                             }
                             catch (Exception arg)
                             {
-                                Plugin.Log(string.Format("Could not warp and revive player {0} [{1}]", self.abstractCreature, arg), false);
+                                Plugin.Log(string.Format("Could not warp player {0} [{1}]", self.abstractCreature, arg), false);
                             }
                         }
+                        if (!self.room.game.rainWorld.progression.miscProgressionData.regionsVisited.ContainsKey(self.room.world.name))
+                        {
+                            self.room.game.rainWorld.progression.miscProgressionData.regionsVisited.Add(self.room.world.name, new List<string>());
+                        }
+                        if (!self.room.game.rainWorld.progression.miscProgressionData.regionsVisited[self.room.world.name].Contains(self.room.game.GetStorySession.saveStateNumber.value))
+                        {
+                            self.room.game.rainWorld.progression.miscProgressionData.regionsVisited[self.room.world.name].Add(self.room.game.GetStorySession.saveStateNumber.value);
+                        }
+                        Plugin.Log("Warp and End!");
                         self.room.game.GoToRedsGameOver();
                         return;
                     }
@@ -338,8 +349,13 @@ namespace HunterExpansion.CustomEnding
             }
             else
             {*/
+            AbstractRoom oldRoom = player.room.abstractRoom;
             AbstractRoom room = player.abstractCreature.world.GetAbstractRoom(newRoomName);
-            
+            AbstractPhysicalObject stomachObject = null;
+            if (player != null && player.objectInStomach != null)
+            {
+                stomachObject = player.objectInStomach;
+            }
             //放下矛
             if (player.spearOnBack != null && player.spearOnBack.spear != null)
             {
@@ -368,21 +384,50 @@ namespace HunterExpansion.CustomEnding
                         }
                     }
                 }
+                room.realizedRoom.aimap.NewWorld(room.index);
                 if (player.abstractCreature.realizedCreature != null)
                 {
-                    player.abstractCreature.realizedCreature.Destroy();
-                    player.abstractCreature.realizedCreature = null;
+                    oldRoom.realizedRoom.RemoveObject(player.abstractCreature.realizedCreature);
                 }
                 player.abstractCreature.Move(new WorldCoordinate(room.index, x, y, 0));
+                /*
+                if (ply.creatureTemplate.AI && ply.abstractAI.RealAI != null && ply.abstractAI.RealAI.pathFinder != null)
+			    {
+				ply.abstractAI.SetDestination(QuickConnectivity.DefineNodeOfLocalCoordinate(ply.abstractAI.destination, ply.world, ply.creatureTemplate));
+				ply.abstractAI.timeBuffer = 0;
+				if (ply.abstractAI.destination.room == ply.pos.room && ply.abstractAI.destination.abstractNode == ply.pos.abstractNode)
+				{
+					ply.abstractAI.path.Clear();
+				}
+				else
+				{
+					List<WorldCoordinate> list = ply.abstractAI.RealAI.pathFinder.CreatePathForAbstractreature(ply.abstractAI.destination);
+					if (list != null)
+					{
+						ply.abstractAI.path = list;
+					}
+					else
+					{
+						ply.abstractAI.FindPath(ply.abstractAI.destination);
+					}
+				}
+				ply.abstractAI.RealAI = null;
+			}
+                 */
+                /*
                 player.PlaceInRoom(room.realizedRoom);
                 player.abstractCreature.ChangeRooms(new WorldCoordinate(room.index, x, y, 0));
+                room.AddEntity(player.abstractCreature);*/
+                player.abstractCreature.RealizeInRoom();
                 /*
+                //矛
                 Player.SpearOnBack spearOnBack = player.spearOnBack;
                 if (((spearOnBack != null) ? spearOnBack.spear : null) != null)
                 {
                     player.spearOnBack.spear.PlaceInRoom(room.realizedRoom);
                     player.spearOnBack.spear.room = player.room;
                 }
+                //猫崽
                 Player.SlugOnBack slugOnBack = player.slugOnBack;
                 if (((slugOnBack != null) ? slugOnBack.slugcat : null) != null)
                 {
@@ -403,6 +448,48 @@ namespace HunterExpansion.CustomEnding
                     player.slugOnBack.slugcat.PlaceInRoom(room.realizedRoom);
                     player.slugOnBack.slugcat.room = player.room;
                 }*/
+                if (stomachObject != null && player.objectInStomach == null)
+                {
+                    player.objectInStomach = stomachObject;
+                }
+                /*
+                for (int i3 = game.shortcuts.transportVessels.Count - 1; i3 >= 0; i3--)
+                {
+                    if (!game.overWorld.activeWorld.region.IsRoomInRegion(game.shortcuts.transportVessels[i3].room.index))
+                    {
+                        game.shortcuts.transportVessels.RemoveAt(i3);
+                    }
+                }
+                for (int i4 = game.shortcuts.betweenRoomsWaitingLobby.Count - 1; i4 >= 0; i4--)
+                {
+                    if (!game.overWorld.activeWorld.region.IsRoomInRegion(game.shortcuts.betweenRoomsWaitingLobby[i4].room.index))
+                    {
+                        game.shortcuts.betweenRoomsWaitingLobby.RemoveAt(i4);
+                    }
+                }
+                for (int i5 = game.shortcuts.borderTravelVessels.Count - 1; i5 >= 0; i5--)
+                {
+                    if (!game.overWorld.activeWorld.region.IsRoomInRegion(game.shortcuts.borderTravelVessels[i5].room.index))
+                    {
+                        game.shortcuts.borderTravelVessels.RemoveAt(i5);
+                    }
+                }*/
+                /*
+                if (ply != null && ply.creatureTemplate.AI)
+                {
+                    ply.abstractAI.NewWorld(newWorld);
+                    ply.InitiateAI();
+                    ply.abstractAI.RealAI.NewRoom(newRoom.realizedRoom);
+                    if (ply.creatureTemplate.type == CreatureTemplate.Type.Overseer && (ply.abstractAI as OverseerAbstractAI).playerGuide)
+                    {
+                        MethodInfo kpginw = typeof(OverWorld).GetMethod("KillPlayerGuideInNewWorld", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                        kpginw.Invoke(game.overWorld, new object[]
+                        {
+                        newWorld,
+                        ply
+                        });
+                    }
+                }*/
                 if (game.cameras[0].followAbstractCreature == player.abstractCreature)
                 {
                     game.cameras[0].virtualMicrophone.AllQuiet();
@@ -416,332 +503,7 @@ namespace HunterExpansion.CustomEnding
             }
             //}
         }
-
-        private static void RainWorldGame_CommunicateWithUpcomingProcess(On.RainWorldGame.orig_CommunicateWithUpcomingProcess orig, RainWorldGame self, MainLoopProcess nextProcess)
-        {
-            Debug.Log("NEXT PROCESS COMMUNICATION");
-            //base.CommunicateWithUpcomingProcess(nextProcess);
-            if (nextProcess is StoryGameStatisticsScreen)
-            {
-                (nextProcess as StoryGameStatisticsScreen).forceWatch = true;
-                if ((nextProcess as StoryGameStatisticsScreen).scene != null && (nextProcess as StoryGameStatisticsScreen).scene.sceneID == MenuScene.SceneID.RedsDeathStatisticsBkg)
-                {
-                    ((nextProcess as StoryGameStatisticsScreen).scene as InteractiveMenuScene).timer = 0;
-                }
-            }
-            if (nextProcess is KarmaLadderScreen || nextProcess is DreamScreen || (self.StoryCharacter == SlugcatStats.Name.Red && nextProcess is SlideShow) || (ModManager.MSC && (nextProcess is ScribbleDreamScreen || nextProcess is ScribbleDreamScreenOld || nextProcess is SlideShow || nextProcess is EndCredits)))
-            {
-                int karma = self.GetStorySession.saveState.deathPersistentSaveData.karma;
-                Debug.Log("savKarma: " + karma.ToString());
-                if (self.sawAGhost != null)
-                {
-                    Debug.Log("Ghost end of process stuff");
-                    self.manager.CueAchievement(GhostWorldPresence.PassageAchievementID(self.sawAGhost), 2f);
-                    if (self.GetStorySession.saveState.deathPersistentSaveData.karmaCap == 8)
-                    {
-                        self.manager.CueAchievement(RainWorld.AchievementID.AllGhostsEncountered, 10f);
-                    }
-                    self.GetStorySession.saveState.GhostEncounter(self.sawAGhost, self.rainWorld);
-                }
-                int num = karma;
-                if (nextProcess.ID == ProcessManager.ProcessID.DeathScreen && !self.GetStorySession.saveState.deathPersistentSaveData.reinforcedKarma)
-                {
-                    num = Custom.IntClamp(num - 1, 0, self.GetStorySession.saveState.deathPersistentSaveData.karmaCap);
-                }
-                Debug.Log("next screen MAP KARMA: " + num.ToString());
-                if (self.cameras[0].hud != null)
-                {
-                    self.cameras[0].hud.map.mapData.UpdateData(self.world, 1 + self.GetStorySession.saveState.deathPersistentSaveData.foodReplenishBonus, num, self.GetStorySession.saveState.deathPersistentSaveData.karmaFlowerPosition, true);
-                }
-                AbstractCreature abstractCreature = self.FirstAlivePlayer;
-                if (abstractCreature == null)
-                {
-                    abstractCreature = self.FirstAnyPlayer;
-                }
-                int num2 = -1;
-                Vector2 vector = Vector2.zero;
-                if (abstractCreature != null)
-                {
-                    num2 = abstractCreature.pos.room;
-                    vector = abstractCreature.pos.Tile.ToVector2() * 20f;
-                    if (nextProcess.ID == ProcessManager.ProcessID.DeathScreen && self.cameras[0].hud != null && self.cameras[0].hud.textPrompt != null)
-                    {
-                        num2 = self.cameras[0].hud.textPrompt.deathRoom;
-                        vector = self.cameras[0].hud.textPrompt.deathPos;
-                    }
-                    else if (abstractCreature.realizedCreature != null)
-                    {
-                        vector = abstractCreature.realizedCreature.mainBodyChunk.pos;
-                    }
-                    if (abstractCreature.realizedCreature != null && abstractCreature.realizedCreature.room != null && num2 == abstractCreature.realizedCreature.room.abstractRoom.index)
-                    {
-                        vector = Custom.RestrictInRect(vector, abstractCreature.realizedCreature.room.RoomRect.Grow(50f));
-                    }
-                }
-                KarmaLadderScreen.SleepDeathScreenDataPackage sleepDeathScreenDataPackage;
-                if (ModManager.MSC && self.wasAnArtificerDream)
-                {
-                    sleepDeathScreenDataPackage = self.manager.dataBeforeArtificerDream;
-                    self.manager.dataBeforeArtificerDream = null;
-                }
-                else
-                {
-                    sleepDeathScreenDataPackage = new KarmaLadderScreen.SleepDeathScreenDataPackage((nextProcess.ID == ProcessManager.ProcessID.SleepScreen || nextProcess.ID == ProcessManager.ProcessID.Dream) ? self.GetStorySession.saveState.food : self.cameras[0].hud.textPrompt.foodInStomach, new IntVector2(karma, self.GetStorySession.saveState.deathPersistentSaveData.karmaCap), self.GetStorySession.saveState.deathPersistentSaveData.reinforcedKarma, num2, vector, self.cameras[0].hud.map.mapData, self.GetStorySession.saveState, self.GetStorySession.characterStats, self.GetStorySession.playerSessionRecords[0], self.GetStorySession.saveState.lastMalnourished, self.GetStorySession.saveState.malnourished);
-                    if (ModManager.MSC && self.GetStorySession.saveState.saveStateNumber == MoreSlugcatsEnums.SlugcatStatsName.Artificer)
-                    {
-                        self.manager.dataBeforeArtificerDream = sleepDeathScreenDataPackage;
-                    }
-                    if (ModManager.CoopAvailable)
-                    {
-                        for (int i = 1; i < self.GetStorySession.playerSessionRecords.Length; i++)
-                        {/*
-                            Plugin.Log("self.GetStorySession.playerSessionRecords[{0}] == null? " + (self.GetStorySession.playerSessionRecords[i] == null));
-                            Plugin.Log("self.GetStorySession.playerSessionRecords[{0}].kills == null? {1}", i, (self.GetStorySession.playerSessionRecords[i].kills == null));
-                            if (self.GetStorySession.playerSessionRecords[i].kills != null)
-                            {
-                                Plugin.Log("self.GetStorySession.playerSessionRecords[{0}].kills.Count == null? {1}", i, (self.GetStorySession.playerSessionRecords[i].kills.Count));
-                            }*/
-                            if (self.GetStorySession.playerSessionRecords[i] != null && self.GetStorySession.playerSessionRecords[i].kills != null && self.GetStorySession.playerSessionRecords[i].kills.Count > 0)
-                            {
-                                sleepDeathScreenDataPackage.sessionRecord.kills.AddRange(self.GetStorySession.playerSessionRecords[i].kills);
-                            }
-                        }
-                    }
-                }
-                if (nextProcess is KarmaLadderScreen)
-                {
-                    (nextProcess as KarmaLadderScreen).GetDataFromGame(sleepDeathScreenDataPackage);
-                }
-                else if (nextProcess is DreamScreen)
-                {
-                    (nextProcess as DreamScreen).GetDataFromGame(self.GetStorySession.saveState.dreamsState.UpcomingDreamID, sleepDeathScreenDataPackage);
-                }
-                else if (self.StoryCharacter == SlugcatStats.Name.Red && nextProcess is SlideShow)
-                {
-                    (nextProcess as SlideShow).endGameStatsPackage = sleepDeathScreenDataPackage;
-                    (nextProcess as SlideShow).processAfterSlideShow = ProcessManager.ProcessID.Statistics;
-                }
-                if (nextProcess is ScribbleDreamScreen)
-                {
-                    (nextProcess as ScribbleDreamScreen).GetDataFromGame(self.GetStorySession.saveState.dreamsState.UpcomingDreamID, sleepDeathScreenDataPackage);
-                }
-                if (nextProcess is ScribbleDreamScreenOld)
-                {
-                    (nextProcess as ScribbleDreamScreenOld).GetDataFromGame(self.GetStorySession.saveState.dreamsState.UpcomingDreamID, sleepDeathScreenDataPackage);
-                }
-                if (nextProcess is EndCredits)
-                {
-                    (nextProcess as EndCredits).passthroughPackage = sleepDeathScreenDataPackage;
-                }
-                if (nextProcess is SlideShow)
-                {
-                    (nextProcess as SlideShow).passthroughPackage = sleepDeathScreenDataPackage;
-                }
-            }
-        }
-
-        public static void SaveState_SessionEnded(On.SaveState.orig_SessionEnded orig, SaveState self, RainWorldGame game, bool survived, bool newMalnourished)
-        {
-            self.lastMalnourished = self.malnourished;
-            self.malnourished = newMalnourished;
-            self.deathPersistentSaveData.sessionTrackRecord.Add(new DeathPersistentSaveData.SessionRecord(survived, game.GetStorySession.playerSessionRecords[0].wokeUpInRegion != game.world.region.name));
-            if (self.deathPersistentSaveData.sessionTrackRecord.Count > 20)
-            {
-                self.deathPersistentSaveData.sessionTrackRecord.RemoveAt(0);
-            }
-            for (int i = self.deathPersistentSaveData.deathPositions.Count - 1; i >= 0; i--)
-            {
-                if (self.deathPersistentSaveData.deathPositions[i].Valid)
-                {
-                    self.deathPersistentSaveData.deathPositions[i] = new WorldCoordinate(self.deathPersistentSaveData.deathPositions[i].room, self.deathPersistentSaveData.deathPositions[i].x, self.deathPersistentSaveData.deathPositions[i].y, self.deathPersistentSaveData.deathPositions[i].abstractNode + 1);
-                }
-                else
-                {
-                    self.deathPersistentSaveData.deathPositions[i] = new WorldCoordinate(self.deathPersistentSaveData.deathPositions[i].unknownName, self.deathPersistentSaveData.deathPositions[i].x, self.deathPersistentSaveData.deathPositions[i].y, self.deathPersistentSaveData.deathPositions[i].abstractNode + 1);
-                }
-                if (self.deathPersistentSaveData.deathPositions[i].abstractNode >= 7)
-                {
-                    self.deathPersistentSaveData.deathPositions.RemoveAt(i);
-                }
-            }
-            if (survived)
-            {
-                self.deathPersistentSaveData.foodReplenishBonus = 0;
-                if (RainWorld.ShowLogs)
-                {
-                    Debug.Log("resetting food rep bonus");
-                }
-                self.RainCycleTick(game, true);
-                self.cyclesInCurrentWorldVersion++;
-                if (ModManager.MMF && self.progression.miscProgressionData.returnExplorationTutorialCounter > 0)
-                {
-                    self.progression.miscProgressionData.returnExplorationTutorialCounter = 3;
-                }
-                self.food = 0;
-                if (ModManager.CoopAvailable)
-                {
-                    if (!(game.session.Players[0].state as PlayerState).permaDead && game.session.Players[0].realizedCreature != null && game.session.Players[0].realizedCreature.room != null)
-                    {
-                        self.food = (game.session.Players[0].realizedCreature as Player).FoodInRoom(true);
-                    }
-                    else if (game.AlivePlayers.Count > 0 && game.FirstAlivePlayer != null)
-                    {
-                        self.food = (game.FirstAlivePlayer.realizedCreature as Player).FoodInRoom(true);
-                    }
-                }
-                else
-                {
-                    for (int j = 0; j < game.session.Players.Count; j++)
-                    {
-                        self.food += (game.session.Players[j].realizedCreature as Player).FoodInRoom(true);
-                    }
-                }
-                self.food = Custom.IntClamp(self.food, 0, game.GetStorySession.characterStats.maxFood);
-                if (self.malnourished)
-                {
-                    self.food -= game.GetStorySession.characterStats.foodToHibernate;
-                }
-                else if (self.lastMalnourished)
-                {
-                    if (game.devToolsActive && self.food < game.GetStorySession.characterStats.maxFood)
-                    {
-                        Debug.Log("FOOD COUNT ISSUE! " + self.food.ToString() + " " + game.GetStorySession.characterStats.maxFood.ToString());
-                    }
-                    self.food = 0;
-                }
-                else
-                {
-                    self.food -= game.GetStorySession.characterStats.foodToHibernate;
-                }
-                self.BringUpToDate(game);
-                for (int k = 0; k < game.GetStorySession.playerSessionRecords.Length; k++)
-                {
-                    if (game.GetStorySession.playerSessionRecords[k] != null && (!ModManager.CoopAvailable || game.world.GetAbstractRoom(game.Players[k].pos) != null))
-                    {
-                        game.GetStorySession.playerSessionRecords[k].pupCountInDen = 0;
-                        bool flag = false;
-                        game.GetStorySession.playerSessionRecords[k].wentToSleepInRegion = game.world.region.name;
-                        for (int l = 0; l < game.world.GetAbstractRoom(game.Players[k].pos).creatures.Count; l++)
-                        {
-                            if (game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state.alive && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state.socialMemory != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].realizedCreature != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI.RealAI != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI.RealAI.friendTracker != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI.RealAI.friendTracker.friend != null && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].abstractAI.RealAI.friendTracker.friend == game.Players[k].realizedCreature && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state.socialMemory.GetLike(game.Players[k].ID) > 0f)
-                            {
-                                if (ModManager.MSC && game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
-                                {
-                                    if ((game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state as PlayerNPCState).foodInStomach - ((game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state as PlayerNPCState).Malnourished ? SlugcatStats.SlugcatFoodMeter(MoreSlugcatsEnums.SlugcatStatsName.Slugpup).x : SlugcatStats.SlugcatFoodMeter(MoreSlugcatsEnums.SlugcatStatsName.Slugpup).y) >= 0)
-                                    {
-                                        game.GetStorySession.playerSessionRecords[k].pupCountInDen++;
-                                    }
-                                }
-                                else if (!flag)
-                                {
-                                    flag = true;
-                                    game.GetStorySession.playerSessionRecords[k].friendInDen = game.world.GetAbstractRoom(game.Players[k].pos).creatures[l];
-                                    SocialMemory.Relationship orInitiateRelationship = game.world.GetAbstractRoom(game.Players[k].pos).creatures[l].state.socialMemory.GetOrInitiateRelationship(game.Players[k].ID);
-                                    orInitiateRelationship.like = Mathf.Lerp(orInitiateRelationship.like, 1f, 0.5f);
-                                }
-                            }
-                        }
-                    }
-                }
-                self.AppendKills(game.GetStorySession.playerSessionRecords[0].kills);
-                if (ModManager.CoopAvailable)
-                {
-                    for (int m = 1; m < game.GetStorySession.playerSessionRecords.Length; m++)
-                    {
-                        self.AppendKills(game.GetStorySession.playerSessionRecords[m].kills);
-                    }
-                }
-                game.GetStorySession.AppendTimeOnCycleEnd(false);
-                self.deathPersistentSaveData.survives++;
-                self.deathPersistentSaveData.winState.CycleCompleted(game);
-                if (!ModManager.CoopAvailable)
-                {
-                    self.deathPersistentSaveData.friendsSaved += ((game.GetStorySession.playerSessionRecords[0].friendInDen != null) ? 1 : 0);
-                }
-                else
-                {
-                    List<AbstractCreature> list = new List<AbstractCreature>();
-                    foreach (PlayerSessionRecord playerSessionRecord in game.GetStorySession.playerSessionRecords)
-                    {
-                        if (!list.Contains(playerSessionRecord.friendInDen))
-                        {
-                            list.Add(playerSessionRecord.friendInDen);
-                        }
-                    }
-                    self.deathPersistentSaveData.friendsSaved += list.Count;
-                }
-                self.deathPersistentSaveData.karma++;
-                if (self.malnourished)
-                {
-                    self.deathPersistentSaveData.reinforcedKarma = false;
-                }
-                game.rainWorld.progression.SaveWorldStateAndProgression(self.malnourished);
-                return;
-            }
-            game.GetStorySession.AppendTimeOnCycleEnd(true);
-            self.deathPersistentSaveData.AddDeathPosition(game.cameras[0].hud.textPrompt.deathRoom, game.cameras[0].hud.textPrompt.deathPos);
-            self.deathPersistentSaveData.deaths++;
-            if (self.deathPersistentSaveData.karma == 0 || (self.saveStateNumber == SlugcatStats.Name.White && Random.value < 0.5f) || self.saveStateNumber == SlugcatStats.Name.Yellow)
-            {
-                self.deathPersistentSaveData.foodReplenishBonus++;
-                if (RainWorld.ShowLogs)
-                {
-                    Debug.Log("Ticking up food rep bonus to: " + self.deathPersistentSaveData.foodReplenishBonus.ToString());
-                }
-            }
-            else if (RainWorld.ShowLogs)
-            {
-                Debug.Log("death screen, no food bonus");
-            }
-            self.deathPersistentSaveData.TickFlowerDepletion(1);
-            if (ModManager.MMF && MMF.cfgExtraTutorials.Value)
-            {
-                if (RainWorld.ShowLogs)
-                {
-                    Debug.Log("Exploration tutorial counter : " + self.progression.miscProgressionData.returnExplorationTutorialCounter.ToString());
-                }
-                if (game.IsStorySession && (game.world.region.name == "SB" || game.world.region.name == "SL" || game.world.region.name == "UW" || self.deathPersistentSaveData.karmaCap > 8 || self.miscWorldSaveData.SSaiConversationsHad > 0))
-                {
-                    self.progression.miscProgressionData.returnExplorationTutorialCounter = -1;
-                    if (RainWorld.ShowLogs)
-                    {
-                        Debug.Log("CANCEL exploration counter");
-                    }
-                }
-                else if (game.IsStorySession && (game.world.region.name == "SH" || (ModManager.MSC && game.world.region.name == "VS") || game.world.region.name == "DS" || game.world.region.name == "CC" || game.world.region.name == "LF" || game.world.region.name == "SI"))
-                {
-                    if (RainWorld.ShowLogs)
-                    {
-                        Debug.Log("Exploration counter ticked to " + self.progression.miscProgressionData.returnExplorationTutorialCounter.ToString());
-                    }
-                    if (self.progression.miscProgressionData.returnExplorationTutorialCounter > 0)
-                    {
-                        PlayerProgression.MiscProgressionData miscProgressionData = self.progression.miscProgressionData;
-                        int n = miscProgressionData.returnExplorationTutorialCounter;
-                        miscProgressionData.returnExplorationTutorialCounter = n - 1;
-                    }
-                }
-                else if (self.progression.miscProgressionData.returnExplorationTutorialCounter > 0)
-                {
-                    self.progression.miscProgressionData.returnExplorationTutorialCounter = 3;
-                    if (RainWorld.ShowLogs)
-                    {
-                        Debug.Log("Reset exploration counter");
-                    }
-                }
-            }
-            if (ModManager.Expedition && game.rainWorld.ExpeditionMode)
-            {
-                ExpLog.Log("Loading previous cycle challenge progression");
-                Expedition.Expedition.coreFile.Load();
-                if (ExpeditionGame.expeditionComplete)
-                {
-                    ExpeditionGame.expeditionComplete = false;
-                }
-            }
-            game.rainWorld.progression.SaveProgressionAndDeathPersistentDataOfCurrentState(true, false);
-        }
-
+        /*
         public static void RegionState_AdaptRegionStateToWorld(On.RegionState.orig_AdaptRegionStateToWorld orig, RegionState self, int playerShelter, int activeGate)
         {
             if (RainWorld.ShowLogs)
@@ -941,7 +703,7 @@ namespace HunterExpansion.CustomEnding
                 }
             }
         }
-
+        */
 
         /*
         public static void WarpPlayer(AbstractCreature absPlayer, AbstractRoom newRoom, WorldCoordinate position)

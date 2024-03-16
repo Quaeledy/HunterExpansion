@@ -37,7 +37,7 @@ namespace HunterExpansion.CustomOracle
 
             if (action == NSHOracleBehaviorAction.MeetOtherSlugcat_Init)
             {
-                movementBehavior = CustomMovementBehavior.Idle;
+                movementBehavior = CustomMovementBehavior.KeepDistance;
                 //现实行为
                 NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
                 if (state.playerEncountersWithMark == 0 && inActionCounter > 20)
@@ -101,25 +101,17 @@ namespace HunterExpansion.CustomOracle
         public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
-            //猫猫有语言印记才会读
-            if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+            //现实对话
+            if (id == NSHConversationID.OtherSlugcat_Talk0)
             {
-                //现实对话
-                if (id == NSHConversationID.OtherSlugcat_Talk0)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Strange little guy, hello."), 20 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You are such an interesting little creature... different from the guests who used to come to my place."), 80 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Anyway, I welcome you to stay here and rest, as long as you don't intend to consume my neurons."), 70 * extralingerfactor));
-                }
-                else if (id == NSHConversationID.OtherSlugcat_Talk1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you want to stay a little longer?"), 25 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Of course you can! As long as you don't eat my neurons."), 40 * extralingerfactor));
-                }
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Strange little guy, hello."), 20 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You are such an interesting little creature... different from the guests who used to come to my place."), 80 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Anyway, I welcome you to stay here and rest, as long as you don't intend to consume my neurons."), 70 * extralingerfactor));
             }
-            else
+            else if (id == NSHConversationID.OtherSlugcat_Talk1)
             {
-                (this.owner as NSHOracleBehaviour).PlayerEncountersWithoutMark();
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you want to stay a little longer?"), 25 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Of course you can! As long as you don't eat my neurons."), 40 * extralingerfactor));
             }
         }
     }

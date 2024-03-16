@@ -95,7 +95,7 @@ namespace HunterExpansion.CustomOracle
             NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
             if (action == NSHOracleBehaviorAction.MeetHunter_Init)
             {
-                movementBehavior = CustomMovementBehavior.Idle; 
+                movementBehavior = CustomMovementBehavior.KeepDistance; 
                 if (state.playerEncountersState != GetPlayerEncountersState())
                 {
                     state.playerEncountersState = GetPlayerEncountersState();
@@ -178,6 +178,10 @@ namespace HunterExpansion.CustomOracle
                             return;
                         }
                     }
+                    else
+                    {
+                        owner.dialogBox.NewMessage(owner.Translate("..."), 60);
+                    }
                     return;
                 }
             }
@@ -211,6 +215,7 @@ namespace HunterExpansion.CustomOracle
                 //神经元特效！
                 swarmerReleased = true;
                 NSHSwarmer_Effects(player, oracle, owner);
+                movementBehavior = CustomMovementBehavior.Idle;
                 //如果看见了猎手
                 if (oracle.room.GetTilePosition(player.mainBodyChunk.pos).y < 32 && (inActionCounter > 20 || Custom.DistLess(player.mainBodyChunk.pos, oracle.firstChunk.pos, 150f) || !Custom.DistLess(player.mainBodyChunk.pos, oracle.room.MiddleOfTile(oracle.room.ShortcutLeadingToNode(1).StartTile), 150f)))
                 {
@@ -234,6 +239,7 @@ namespace HunterExpansion.CustomOracle
                     if (owner.conversation.slatedForDeletion)
                     {
                         owner.conversation = null;
+                        movementBehavior = CustomMovementBehavior.Idle;
                         //说完继续工作
                         owner.NewAction(NSHOracleBehaviorAction.MeetHunter_RunIntoHunter);
                     }
@@ -353,16 +359,26 @@ namespace HunterExpansion.CustomOracle
                 {
                     if (owner.conversation.slatedForDeletion)
                     {
+                        //说完继续工作
+                        owner.conversation = null;
+                        owner.getToWorking = 1f;
                         //喂饱红猫
                         if (player.FoodInStomach <= player.MaxFoodInStomach)
                         {
                             player.AddFood(player.MaxFoodInStomach);
                         }
-                        //说完继续工作
-                        owner.conversation = null;
-                        owner.getToWorking = 1f;
-                        movementBehavior = CustomMovementBehavior.Idle;
                         return;
+                    }
+                }
+                else
+                {
+                    //看红猫
+                    owner.lookPoint = base.player.DangerPos;
+                    //给红猫朝向出口的速度
+                    if (player != null && player.room != null && player.room == oracle.room)
+                    {
+                        player.firstChunk.vel *= Custom.LerpMap(player.firstChunk.vel.magnitude, 1f, 6f, 0.9f, 0.5f);
+                        player.firstChunk.vel += Vector2.ClampMagnitude(player.room.MiddleOfTile(24, 31) - player.firstChunk.pos, 100f) / 100f * 1f;
                     }
                 }
             }
@@ -502,6 +518,7 @@ namespace HunterExpansion.CustomOracle
                             {
                                 for (int k = 0; k < 20; k++)
                                 {
+                                    player.room.game.cameras[0].virtualMicrophone.AllQuiet();
                                     player.room.PlaySound(SoundID.SS_AI_Give_The_Mark_Boom, player.firstChunk.pos, 0.5f, 1f);
                                     oracle.room.AddObject(new Spark(player.mainBodyChunk.pos, Custom.RNV() * Random.value * 40f, new Color(1f, 1f, 1f), null, 30, 120));
                                 }
@@ -658,6 +675,7 @@ namespace HunterExpansion.CustomOracle
                     (nshSwarmer.room != null && nshSwarmer.grabbedBy.Count > 0) ||
                      player.objectInStomach == nshSwarmer.abstractPhysicalObject)
                 {
+                    oracle.stun = 0;
                     movementBehavior = CustomMovementBehavior.ShowMedia;
                     oracle.firstChunk.vel *= Custom.LerpMap(oracle.firstChunk.vel.magnitude, 1f, 6f, 0.999f, 0.9f);
                     oracle.firstChunk.vel += Vector2.ClampMagnitude(wantPos - oracle.firstChunk.pos, 100f) / 100f * 2f;
@@ -667,10 +685,15 @@ namespace HunterExpansion.CustomOracle
                 if (inActionCounter == 90 && swarmerGrabber != null)
                 {
                     swarmerReleased = true;
-                    bool nshShouldAttackPlayer =false;
+                    bool nshShouldAttackPlayer = false;
                     if (swarmerGrabber == player)
                     {
                         movementBehavior = CustomMovementBehavior.Talk;
+                        if (owner.conversation != null)
+                        {
+                            owner.conversation.Destroy();
+                            owner.conversation = null;
+                        }
                         owner.InitateConversation(NSHConversationID.WarnSlugcatReleaseSwarmer, this);
                         swarmerStolen++;//这个要写在对话后面，这样有没有松开神经元才有差分
                     }
@@ -942,6 +965,11 @@ namespace HunterExpansion.CustomOracle
                 else if (nshSwarmer.grabbedBy.Count > 0 && swarmerReleased)
                 {
                     swarmerReleased = false;
+                    if (owner.conversation != null)
+                    {
+                        owner.conversation.Destroy();
+                        owner.conversation = null;
+                    }
                     owner.NewAction(NSHOracleBehaviorAction.LetSlugcatReleaseSwarmer);
                     for (int i = 0; i < nshSwarmer.grabbedBy.Count; i++)
                     {
@@ -974,140 +1002,132 @@ namespace HunterExpansion.CustomOracle
                 }
             }
         }
-        
+
         //与红猫的所有对话
         public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
-            //猫猫有语言印记才会读
-            if (this.oracle.room.game.GetStorySession.saveState.deathPersistentSaveData.theMark)
+            //梦境对话
+            //第一场梦境，诞生
+            if (id == NSHConversationID.Hunter_DreamTalk0)
             {
-                //梦境对话
-                //第一场梦境，诞生
-                if (id == NSHConversationID.Hunter_DreamTalk0)
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Hear me?"), 10 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("We are in a hurry. Let's keep it simple and professional."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("As you see,I should be counted as a creator of you."), 50 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I would borrow your hand to accomplish something."), 50 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("As compensation, I will guide you on the path of ascension."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("But I know, this will always be a heartless invitation. Creating life should have not been such a hasty thing."), 90 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I'm sorry.Unfortunately, we don't have any other options."), 60 * extralingerfactor));
+            }
+            //第二场梦境，误入
+            else if (id == NSHConversationID.Hunter_DreamTalk1)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What are you doing here?"), 20 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Neither you nor I are ready for the upcoming tasks yet."), 50 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please go back and don't disturb my work."), 40 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If you just want to take a break, I don't object either."), 60 * extralingerfactor));
+            }
+            //第三场梦境的对话属于旁白，不在这里，在NSHConversation里
+            //第四场梦境，启程
+            else if (id == NSHConversationID.Hunter_DreamTalk3)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I entrusted it to you."), 20 * extralingerfactor));
+                giveSwarmerToHunter = true;
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Guess you have already known its importance."), 40 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If it's necessary, the pearl can be left, but the neuron must be delivered to it's destination."), 80 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("This will be your first time entering the natural environment, and the journey will not be easy, but I wish you a pleasant journey."), 100 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Take care, my little messenger."), 30 * extralingerfactor));
+            }
+            //美梦，夸夸
+            else if (id == NSHConversationID.Hunter_DreamTalk5)
+            {
+                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 30));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You have completed a very great job, messenger."), 40 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I am proud of you, and at the same time, I feel ashamed of myself."), 40 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You don't have much time left. Go deep underground and you will be saved."), 60 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Don't turn back."), 25 * extralingerfactor));
+            }
+            //现实对话
+            else if (id == NSHConversationID.Hunter_UnfulfilledMessager0)
+            {
+                LoadEventsFromFile(47, "NSH-1", conv);
+            }
+            else if (id == NSHConversationID.Hunter_UnfulfilledMessager1)
+            {
+                LoadEventsFromFile(47, "NSH-2", conv);
+            }
+            else if (id == NSHConversationID.Hunter_Talk0)
+            {
+                LoadEventsFromFile(0, "NSH-Ending", conv);
+            }
+            else if (id == NSHConversationID.Hunter_Talk1)
+            {
+                LoadEventsFromFile(1, "NSH-Ending", conv);
+            }
+            else if (id == NSHConversationID.Hunter_Talk2)
+            {
+                //conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 2));
+                LoadEventsFromFile(2, "NSH-Ending", conv);
+            }
+            else if (id == NSHConversationID.Hunter_Talk2_Wait)
+            {
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything you need, my little messenger?"), 40 * extralingerfactor));
+                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Willing to serve~"), 10 * extralingerfactor));
+            }
+            //特殊对话
+            else if (id == NSHConversationID.WarnSlugcatStayAwayFromSwarmer)
+            {
+                switch (NSHOracleMeetHunter.swarmerApproached)
                 {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Hear me?"), 10 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("We are in a hurry. Let's keep it simple and professional."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("As you see,I should be counted as a creator of you."), 50 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I would borrow your hand to accomplish something."), 50 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("As compensation, I will guide you on the path of ascension."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("But I know, this will always be a heartless invitation. Creating life should have not been such a hasty thing."), 90 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I'm sorry.Unfortunately, we don't have any other options."), 60 * extralingerfactor));
-                }
-                //第二场梦境，误入
-                else if (id == NSHConversationID.Hunter_DreamTalk1)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What are you doing here?"), 20 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Neither you nor I are ready for the upcoming tasks yet."), 50 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please go back and don't disturb my work."), 40 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If you just want to take a break, I don't object either."), 60 * extralingerfactor));
-                }
-                //第三场梦境的对话属于旁白，不在这里，在NSHConversation里
-                //第四场梦境，启程
-                else if (id == NSHConversationID.Hunter_DreamTalk3)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I entrusted it to you."), 20 * extralingerfactor));
-                    giveSwarmerToHunter = true;
-                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Guess you have already known its importance."), 40 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If it's necessary, the pearl can be left, but the neuron must be delivered to it's destination."), 80 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("This will be your first time entering the natural environment, and the journey will not be easy, but I wish you a pleasant journey."), 100 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Take care, my little messenger."), 30 * extralingerfactor));
-                }
-                //美梦，夸夸
-                else if (id == NSHConversationID.Hunter_DreamTalk5)
-                {
-                    conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 30));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You have completed a very great job, messenger."), 40 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I am proud of you, and at the same time, I feel ashamed of myself."), 40 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You don't have much time left. Go deep underground and you will be saved."), 60 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Don't turn back."), 25 * extralingerfactor));
-                }
-                //现实对话
-                else if (id == NSHConversationID.Hunter_UnfulfilledMessager0)
-                {
-                    LoadEventsFromFile(47, "NSH-1", conv);
-                }
-                else if (id == NSHConversationID.Hunter_UnfulfilledMessager1)
-                {
-                    LoadEventsFromFile(47, "NSH-2", conv);
-                }
-                else if (id == NSHConversationID.Hunter_Talk0)
-                {
-                    LoadEventsFromFile(0, "NSH-Ending", conv);
-                }
-                else if (id == NSHConversationID.Hunter_Talk1)
-                {
-                    LoadEventsFromFile(1, "NSH-Ending", conv);
-                }
-                else if (id == NSHConversationID.Hunter_Talk2)
-                {
-                    //conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 2));
-                    LoadEventsFromFile(2, "NSH-Ending", conv);
-                }
-                else if (id == NSHConversationID.Hunter_Talk2_Wait)
-                {
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything you need, my little messenger?"), 40 * extralingerfactor));
-                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Willing to serve~"), 10 * extralingerfactor));
-                }
-                //特殊对话
-                else if (id == NSHConversationID.WarnSlugcatStayAwayFromSwarmer)
-                {
-                    switch (NSHOracleMeetHunter.swarmerApproached)
-                    {
-                        case 0:
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please stay away; I don't want anything to go wrong in this process."), 60 * extralingerfactor));
-                            break;
-                        case 1:
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It seems you're curious about it? I'll hand it over to you at the right time, but not now."), 80 * extralingerfactor));
-                            break;
-                        case 2:
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What are you doing, messenger? Please don't attempt to touch it."), 60 * extralingerfactor));
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It will interrupt my process and potentially result in errors and irreversible damage."), 70 * extralingerfactor));
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It's an unpleasant experience for any iterator, so please stop your attempts."), 65 * extralingerfactor));
-                            break;
-                        default:
-                            switch (Random.Range(0, 8))
-                            {
-                                case 0:
-                                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please do not approach it."), 30 * extralingerfactor));
-                                    break;
-                                case 1:
-                                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("May I hope you don't interfere with my work?"), 20 * extralingerfactor));
-                                    break;
-                                default:
-                                    conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("......"), 20 * extralingerfactor));
-                                    break;
-                            }
-                            break;
-                    }
-                }
-                else if (id == NSHConversationID.WarnSlugcatReleaseSwarmer)
-                {
-                    switch (NSHOracleMeetHunter.swarmerStolen)
-                    {
-                        case 0:
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("......"), 20 * extralingerfactor));
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I don't know how you did it, but I hope this kind of thing won't happen again."), 60 * extralingerfactor));
-                            break;
-                        case 1:
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you seem unwilling to follow orders?"), 45 * extralingerfactor));
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What a pity! I have to remind you that my patience is limited."), 55 * extralingerfactor));
-                            break;
-                        default:
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("An disobedient messenger~"), 25 * extralingerfactor));
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Congratulations! You are free now."), 30 * extralingerfactor));
-                            break;
-                    }
+                    case 0:
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please stay away; I don't want anything to go wrong in this process."), 60 * extralingerfactor));
+                        break;
+                    case 1:
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It seems you're curious about it? I'll hand it over to you at the right time, but not now."), 80 * extralingerfactor));
+                        break;
+                    case 2:
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What are you doing, messenger? Please don't attempt to touch it."), 60 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It will interrupt my process and potentially result in errors and irreversible damage."), 70 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It's an unpleasant experience for any iterator, so please stop your attempts."), 65 * extralingerfactor));
+                        break;
+                    default:
+                        switch (Random.Range(0, 8))
+                        {
+                            case 0:
+                                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please do not approach it."), 30 * extralingerfactor));
+                                break;
+                            case 1:
+                                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("May I hope you don't interfere with my work?"), 20 * extralingerfactor));
+                                break;
+                            default:
+                                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("......"), 20 * extralingerfactor));
+                                break;
+                        }
+                        break;
                 }
             }
-            else
+            else if (id == NSHConversationID.WarnSlugcatReleaseSwarmer)
             {
-                (this.owner as NSHOracleBehaviour).PlayerEncountersWithoutMark();
+                switch (NSHOracleMeetHunter.swarmerStolen)
+                {
+                    case 0:
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("......"), 20 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I don't know how you did it, but I hope this kind of thing won't happen again."), 60 * extralingerfactor));
+                        break;
+                    case 1:
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you seem unwilling to follow orders?"), 45 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What a pity! I have to remind you that my patience is limited."), 55 * extralingerfactor));
+                        break;
+                    default:
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("An disobedient messenger~"), 25 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Congratulations! You are free now."), 30 * extralingerfactor));
+                        break;
+                }
             }
         }
 
