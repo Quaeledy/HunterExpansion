@@ -20,7 +20,7 @@ namespace HunterExpansion.CustomEffects
         private static void DataPearl_InitiateSprites(On.DataPearl.orig_InitiateSprites orig, DataPearl self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig.Invoke(self, sLeaser, rCam);
-            if(self.AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Red_stomach && PearlFixedSave.pearlFixed)
+            if(self.AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Red_stomach && PearlFixedSave.pearlFixed && self.room != null)
             {
                 self.room.AddObject(new FixedDataPearlEffect(self, self.room));
             }

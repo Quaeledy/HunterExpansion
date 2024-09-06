@@ -13,6 +13,7 @@ using System;
 using Mono.Cecil.Cil;
 using System.Runtime.Remoting.Messaging;
 using HunterExpansion.CustomOracle;
+using Debug = UnityEngine.Debug;
 
 namespace HunterExpansion.CustomCollections
 {
@@ -63,7 +64,7 @@ namespace HunterExpansion.CustomCollections
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
         }
 
@@ -97,7 +98,7 @@ namespace HunterExpansion.CustomCollections
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
             try
             {
@@ -130,7 +131,7 @@ namespace HunterExpansion.CustomCollections
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
         }
 
@@ -179,7 +180,7 @@ namespace HunterExpansion.CustomCollections
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
             try
             {
@@ -254,7 +255,7 @@ namespace HunterExpansion.CustomCollections
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
         }
         #endregion
@@ -277,7 +278,7 @@ namespace HunterExpansion.CustomCollections
             if (saveFile == NSH)
             {
                 CollectionsMenu.ConversationLoader conversationLoader = new CollectionsMenu.ConversationLoader(self);
-                LoadEventsFromFile(conversationLoader, id, "NSH-Hunter");
+                NSHConversation.LoadEventsFromFile(conversationLoader, id, "NSH", saveFile, "Red");
                 List<string> list = new List<string>();
                 for (int i = 0; i < conversationLoader.events.Count; i++)
                 {
@@ -289,7 +290,7 @@ namespace HunterExpansion.CustomCollections
                 self.InitLabelsFromChatlog(list.ToArray());
                 return;
             }
-            orig(self, id,saveFile);
+            orig(self, id, saveFile);
         }
 
         public static string CollectionsMenu_UpdateInfoText(On.MoreSlugcats.CollectionsMenu.orig_UpdateInfoText orig, CollectionsMenu self)
@@ -327,146 +328,5 @@ namespace HunterExpansion.CustomCollections
                 }
             }
         }
-
-        #region 读取文件
-        public static void LoadEventsFromFile(CollectionsMenu.ConversationLoader self, int fileName, string suffix)
-        {
-            Debug.Log("~~~LOAD CONVO " + fileName.ToString());
-            InGameTranslator.LanguageID languageID = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage;
-            string text;
-            for (; ; )
-            {
-                text = AssetManager.ResolveFilePath(self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + ".txt");
-                if (suffix != null)
-                {
-                    string text2 = text;
-                    text = AssetManager.ResolveFilePath(string.Concat(new string[]
-                    {
-                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
-                    Path.DirectorySeparatorChar.ToString(),
-                    fileName.ToString(),
-                    "-",
-                    suffix,
-                    ".txt"
-                    }));
-
-                    if (!File.Exists(text) && suffix == "NSH-Hunter")
-                    {
-                        suffix = "NSH";
-                        text = text2;
-                        text = AssetManager.ResolveFilePath(string.Concat(new string[]
-                        {
-                            self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
-                            Path.DirectorySeparatorChar.ToString(),
-                            fileName.ToString(),
-                            "-",
-                            suffix,
-                            ".txt"
-                        }));
-                    }
-
-                    if (!File.Exists(text))
-                    {
-                        text = text2;
-                    }
-                }
-                if (File.Exists(text))
-                {
-                    goto IL_117;
-                }
-                Debug.Log("NOT FOUND " + text);
-                if (!(languageID != InGameTranslator.LanguageID.English))
-                {
-                    break;
-                }
-                Debug.Log("RETRY WITH ENGLISH");
-                languageID = InGameTranslator.LanguageID.English;
-            }
-            return;
-            IL_117:
-            string text3 = File.ReadAllText(text, Encoding.UTF8);
-            //这里是文本加密？
-            if (text3[0] != '0')
-            {
-                text3 = Custom.xorEncrypt(text3, 54 + fileName + (int)self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage * 7);
-            }
-            string[] array = Regex.Split(text3, "\r\n");
-            try
-            {
-                if (Regex.Split(array[0], "-")[1] == fileName.ToString())
-                {
-                    for (int j = 1; j < array.Length; j++)
-                    {// j是行数
-                        //string[] array3 = LocalizationTranslator.ConsolidateLineInstructions(array[j]);
-                        string[] array3 = LocalizationTranslator.ConsolidateLineInstructions(ReplaceParts(self, array[j]));
-                        if (array3.Length == 3)
-                        {
-                            int num;
-                            int num2;
-                            if (ModManager.MSC && !int.TryParse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture, out num) && int.TryParse(array3[2], NumberStyles.Any, CultureInfo.InvariantCulture, out num2))
-                            {
-                                self.events.Add(new Conversation.TextEvent(self, int.Parse(array3[0], NumberStyles.Any, CultureInfo.InvariantCulture), array3[1], int.Parse(array3[2], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                            else
-                            {
-                                self.events.Add(new Conversation.TextEvent(self, int.Parse(array3[0], NumberStyles.Any, CultureInfo.InvariantCulture), array3[2], int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                        }
-                        else if (array3.Length == 2)
-                        {
-                            if (array3[0] == "SPECEVENT")
-                            {
-                                self.events.Add(new Conversation.SpecialEvent(self, 0, array3[1]));
-                            }
-                            else if (array3[0] == "PEBBLESWAIT")
-                            {
-                                self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, null, int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                        }
-                        else if (array3.Length == 1 && array3[0].Length > 0)
-                        {
-                            self.events.Add(new Conversation.TextEvent(self, 0, array3[0], 0));
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                Debug.Log("TEXT ERROR");
-                self.events.Add(new Conversation.TextEvent(self, 0, "TEXT ERROR", 100));
-            }
-        }
-
-        public static string ReplaceParts(CollectionsMenu.ConversationLoader self, string s)
-        {
-            s = Regex.Replace(s, "<PlayerName>", NameForPlayer(self, false));
-            s = Regex.Replace(s, "<CapPlayerName>", NameForPlayer(self, true));
-            s = Regex.Replace(s, "<ItemPlayerName>", ItemNameForPlayer(self, false));
-            s = Regex.Replace(s, "<CapItemPlayerName>", ItemNameForPlayer(self, true));
-            return s;
-        }
-
-        public static string NameForPlayer(CollectionsMenu.ConversationLoader self, bool capitalized)
-        {
-            string text = "little";
-            string str = "one";
-            if (capitalized && InGameTranslator.LanguageID.UsesCapitals(self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage))
-            {
-                text = char.ToUpper(text[0]).ToString() + text.Substring(1);
-            }
-            return self.interfaceOwner.rainWorld.inGameTranslator.Translate(text + " " + str);
-        }
-
-        public static string ItemNameForPlayer(CollectionsMenu.ConversationLoader self, bool capitalized)
-        {
-            string text = "little";
-            string str = "one";
-            if (capitalized && InGameTranslator.LanguageID.UsesCapitals(self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage))
-            {
-                text = char.ToUpper(text[0]).ToString() + text.Substring(1);
-            }
-            return self.interfaceOwner.rainWorld.inGameTranslator.Translate(text + " " + str);
-        }
-        #endregion
     }
 }

@@ -10,7 +10,6 @@ using RWCustom;
 using static CustomOracleTx.CustomOracleBehaviour;
 using CustomDreamTx;
 using HunterExpansion.CustomDream;
-using SlugBase.DataTypes;
 using static UnityEngine.RectTransform;
 
 namespace HunterExpansion.CustomOracle
@@ -33,6 +32,9 @@ namespace HunterExpansion.CustomOracle
         {
             int extralingerfactor = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //开场白
+            int i = Random.Range(0, 100000);
+            NSHConversation.LoadEventsFromFile(self, 201, null, true, i);
+            /*
             switch (Random.Range(0, 2))
             {
                 case 0:
@@ -44,15 +46,24 @@ namespace HunterExpansion.CustomOracle
                 default:
                     self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Let's see... A pearl..."), 20 * extralingerfactor));
                     break;
-            }
+            }*/
             //正式内容
+            int j = (self.myBehavior is SLOracleBehaviorHasMark && (self.myBehavior as SLOracleBehaviorHasMark).holdingObject != null) ? (self.myBehavior as SLOracleBehaviorHasMark).holdingObject.abstractPhysicalObject.ID.RandomSeed : Random.Range(0, 100000);
+            if (ModManager.MSC && self.myBehavior.oracle.room.game.IsMoonHeartActive())
+            {
+                NSHConversation.LoadEventsFromFile(self, 202, "MoonHeartActive", true, j);
+            }
+            else
+            {
+                NSHConversation.LoadEventsFromFile(self, 202, null, true, j);//注意，矛大师线应该去改DM迭代器的对话，而不是SL的
+            }/*
             switch (Random.Range(0, 5))
             {
                 case 0:
                     if (ModManager.MSC && self.myBehavior.oracle.room.game.IsMoonHeartActive())
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Its data writing style is very familiar... I think it comes from No Significant Harassement."), 100 * extralingerfactor));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Its data compiling style is very familiar... I think it comes from No Significant Harassement."), 100 * extralingerfactor));
                     else
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Its data writing style is very familiar... I think it comes from a member of local group."), 100 * extralingerfactor));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Its data compiling style is very familiar... I think it comes from a member of the local group."), 100 * extralingerfactor));
                     self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("There isn't much left inside. I think this is a part of the unstructured grid of a physical field, but I lack information to further interpret it."), 140 * extralingerfactor));
                     break;
 
@@ -63,42 +74,42 @@ namespace HunterExpansion.CustomOracle
 
                 case 2:
                     self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Strange... This data clearly comes from an iterator. But there are several small errors inside, even though they have been carefully corrected, traces can still be seen."), 180 * extralingerfactor));
-                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("We rarely make mistakes in calculations, so its writers are certainly absent-minded."), 90 * extralingerfactor));
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("We rarely make mistakes in calculations, so its creator was certainly not paying attention."), 90 * extralingerfactor));
                     break;
 
                 case 3:
-                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("This is a working memory, but I can only understand a few words."), 60 * extralingerfactor));
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("This is a log of a working memory, but I can only interpret a few words."), 60 * extralingerfactor));
                     self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("It is obvious that the compiler used some method to compress his information, in order to store it in a short period of time and perform more operations."), 150 * extralingerfactor));
                     self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("This iterator used to handle an urgent matter, which overwhelmed them, but their calculations were still well-organized."), 120 * extralingerfactor));
                     if (ModManager.MSC && self.myBehavior.oracle.room.game.IsMoonHeartActive())
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("This makes me feel familiar. If I were to speculate on my own, little creature, I would guess that it comes from the jurisdiction of No Significant Harassment."), 160 * extralingerfactor));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("A faintly familiar feeling. If I were to speculate on my own, little creature, I would guess that it comes from the region of No Significant Harassment."), 160 * extralingerfactor));
                     else
                         self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("Ah, this makes me feel familiar..."), 160 * extralingerfactor));
                     break;
 
                 case 4:
-                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("This is a biological notebook, and its owner has observed and recorded the evolution of nearly a hundred species of organisms within its jurisdiction."), 150 * extralingerfactor));
-                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("......"), 20 * extralingerfactor));
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("This is a biome log, and its owner has observed and recorded the evolution of nearly a hundred species of organisms within their region."), 150 * extralingerfactor));
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("..."), 20 * extralingerfactor));
                     if (ModManager.MSC && self.myBehavior.oracle.room.game.IsMoonHeartActive())
                     {
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I saw a species unique to the jurisdiction of No Significant Harassment."), 80 * extralingerfactor));
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I hope you didn't steal it, little creature. The time span for rewriting text is significant, and he persisted in updating its data until a long time ago."), 150 * extralingerfactor));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I saw a species unique to No Significant Harassment's region."), 80 * extralingerfactor));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I hope you didn't steal it, little creature. The time span of the edits is dramatic, and he persisted in updating its data until a long time ago."), 150 * extralingerfactor));
                         self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("But for a long time recently, he seems to have forgotten it."), 60 * extralingerfactor));
                     }
                     else
                     {
-                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I hope you didn't steal it, little creature. The time span for rewriting text is significant, and its owner persisted in updating its data until a long time ago."), 150 * extralingerfactor));
+                        self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I hope you didn't steal it, little creature. The time span of the edits is dramatic, and its owner persisted in updating its data until a long time ago."), 150 * extralingerfactor));
                         self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("But for a long time recently, the writer seems to have forgotten it."), 60 * extralingerfactor));
                     }
                     break;
 
                 default:
                     self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("This is a special qualia... it's a dying experience."), 60 * extralingerfactor));
-                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("We all know that the near death of ancient people was not accompanied by fear, so obviously, this feeling is extracted from a simple creature."), 140 * extralingerfactor));
-                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I can distinguish the chaotic desire for survival - perhaps from the brain of a squidcada."), 100 * extralingerfactor));
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("We all know that the near death experience of the ancients was not accompanied by fear, so obviously, this data is extracted from a simple creature."), 140 * extralingerfactor));
+                    self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I can distinguish the primordial desire for survival - perhaps it's from the brain of a squidcada."), 100 * extralingerfactor));
                     self.events.Add(new Conversation.TextEvent(self, 0, self.Translate("I find it difficult to imagine whether it will have any practical use."), 60 * extralingerfactor));
                     break;
-            }
+            }*/
         }
     }
 
@@ -159,6 +170,27 @@ namespace HunterExpansion.CustomOracle
                     newCycle = 2;
                     newDist = 275f;
 
+                }
+                if(this.oracle == null)
+                {
+                    if (this != null && this.room.abstractRoom.name == "NSH_AI")
+                    {
+                        List<PhysicalObject>[] physicalObjects = this.room.physicalObjects;
+                        for (int i = 0; i < physicalObjects.Length; i++)
+                        {
+                            for (int j = 0; j < physicalObjects[i].Count; j++)
+                            {
+                                PhysicalObject physicalObject = physicalObjects[i][j];
+                                if (physicalObject is Oracle)
+                                {
+                                    if ((physicalObject as Oracle).ID == NSHOracleRegistry.NSHOracle)
+                                    {
+                                        this.oracle = physicalObject as Oracle;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 NSHOracleRegistry.ChangeMarble(this, oracle, swarmer, ps_origin, newCycle, newDist, color_origin);
                 this.oracle.marbleOrbiting = true;

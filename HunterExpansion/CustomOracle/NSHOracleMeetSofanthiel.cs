@@ -5,12 +5,12 @@ using RWCustom;
 
 namespace HunterExpansion.CustomOracle
 {
-    public class NSHOracleMeetSofanthiel : CustomConversationBehaviour
+    public class NSHOracleMeetSofanthiel : NSHConversationBehaviour
     {
         private bool hasTempt = false;
         private bool hasSatisfied = false;
 
-        public NSHOracleMeetSofanthiel(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetSofanthiel, NSHConversationID.Sofanthiel_Talk0)
+        public NSHOracleMeetSofanthiel(NSHOracleBehaviour owner) : base(owner)
         {
             hasTempt = false;
             hasSatisfied = false;
@@ -40,10 +40,15 @@ namespace HunterExpansion.CustomOracle
             {
                 if (oracle.room.abstractRoom.creatures[i].realizedCreature != null)
                 {
-                    if (oracle.room.abstractRoom.creatures[i].realizedCreature is DaddyLongLegs && !oracle.room.abstractRoom.creatures[i].realizedCreature.dead)
+                    if (oracle.room.abstractRoom.creatures[i].realizedCreature is DaddyLongLegs)// && !oracle.room.abstractRoom.creatures[i].realizedCreature.dead
                     {
                         oracle.firstChunk.pos = oracle.room.abstractRoom.creatures[i].realizedCreature.DangerPos + new Vector2(18f, 18f);
                         oracle.bodyChunks[1].pos = Vector2.Lerp(oracle.bodyChunks[1].pos, oracle.firstChunk.pos, 0.999f);
+
+                        if (oracle.room.abstractRoom.creatures[i].realizedCreature.dead)
+                        {
+                            oracle.health = 0f;
+                        }
                     }
                 }
             }
@@ -136,20 +141,17 @@ namespace HunterExpansion.CustomOracle
             }
         }
 
-        //与矛大师的所有对话
-        public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
+        //与怪猫的所有对话
+        public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
-            int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //现实对话
             if (id == NSHConversationID.Sofanthiel_Talk0)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You have come at last, my valiant visitor. As I witnessed your arduous journey<LINE>through the watchers, a firm idea took shape:"), 80 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I love you."), 20 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I've waited a long time for this, and I'm sure you have too! Come to me."), 45 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-0");
             }
             else if (id == NSHConversationID.Sofanthiel_Talk1)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Come here... don't be afraid..."), 30 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-1");
             }
         }
     }

@@ -7,7 +7,6 @@ using UnityEngine;
 using RWCustom;
 using HunterExpansion.CustomOracle;
 using Random = UnityEngine.Random;
-using static MonoMod.InlineRT.MonoModRule;
 
 namespace HunterExpansion
 {

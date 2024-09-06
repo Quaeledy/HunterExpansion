@@ -14,6 +14,7 @@ using Expedition;
 using JollyCoop;
 using JollyCoop.JollyMenu;
 using Kittehface.Framework20;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HunterExpansion.CustomEnding
 {
@@ -33,6 +34,7 @@ namespace HunterExpansion.CustomEnding
             On.Menu.SlugcatSelectMenu.ComingFromRedsStatistics += SlugcatSelectMenu_ComingFromRedsStatistics;
             On.Menu.SlugcatSelectMenu.MineForSaveData += SlugcatSelectMenu_MineForSaveData;
             On.Menu.SlugcatSelectMenu.SlugcatPage.AddAltEndingImage += SlugcatPage_AddAltEndingImage;
+            //On.Menu.SlugcatSelectMenu.SlugcatPage.ctor += SlugcatPage_ctor;
             On.Menu.SlugcatSelectMenu.SlugcatPageContinue.ctor += SlugcatPageContinue_ctor;
             //修改统计页面
             On.Menu.StoryGameStatisticsScreen.AddBkgIllustration += StoryGameStatisticsScreen_AddBkgIllustration;
@@ -69,25 +71,52 @@ namespace HunterExpansion.CustomEnding
             }
             if (result != null && manager.rainWorld.progression.currentSaveState != null &&
                 manager.rainWorld.progression.currentSaveState.saveStateNumber == slugcat &&
-                result.altEnding && slugcat == Plugin.SlugName)
+                result.altEnding)
             {
                 SaveState saveState = manager.rainWorld.progression.currentSaveState;
-                if (saveState.cycleNumber < RedsIllness.RedsCycles(saveState.redExtraCycles))//saveState.deathPersistentSaveData.redsDeath && 
+                if (slugcat == Plugin.SlugName)
                 {
-                    saveState.deathPersistentSaveData.redsDeath = false;
+                    if (saveState.cycleNumber < RedsIllness.RedsCycles(saveState.redExtraCycles))//saveState.deathPersistentSaveData.redsDeath && 
+                    {
+                        saveState.deathPersistentSaveData.redsDeath = false;
+                    }
+                    else
+                    {
+                        saveState.deathPersistentSaveData.redsDeath = true;
+                    }
+                    result.redsDeath = saveState.deathPersistentSaveData.redsDeath;
+                    /*
+                    if (result != null)
+                        Plugin.Log("0 result.redsDeath: " + result.redsDeath);*/
                 }
-                else
-                {
-                    saveState.deathPersistentSaveData.redsDeath = true;
-                }
-                result.redsDeath = saveState.deathPersistentSaveData.redsDeath;
                 /*
-                if (result != null)
-                    Plugin.Log("0 result.redsDeath: " + result.redsDeath);*/
+                //修改其他猫的选猫的区域名问题
+                if (result.shelterName == "GATE_NSH_DGL" && saveState.denPosition == "GATE_NSH_DGL")
+                {
+                    result.shelterName = "NSH_S01";
+                }
+                //这两个需要注意一下怎么不和其他mod冲突，最好是能判断蛞蝓猫现在所处的区域名
+                if (result.shelterName == "GATE_SB_OE" && saveState.denPosition == "GATE_SB_OE" && 
+                    saveState.progression.miscProgressionData.regionsVisited.ContainsKey("NSH"))
+                {
+                    result.shelterName = "SB_S01";
+                }
+                if (result.shelterName == "GATE_OE_SU" && saveState.denPosition == "GATE_OE_SU" && 
+                    saveState.progression.miscProgressionData.regionsVisited.ContainsKey("NSH"))
+                {
+                    result.shelterName = "SU_S01";
+                }*/
             }
+
             return result;
         }
-
+        /*
+        public static void SlugcatPage_ctor(On.Menu.SlugcatSelectMenu.SlugcatPage.orig_ctor orig, SlugcatSelectMenu.SlugcatPage self, Menu.Menu menu, MenuObject owner, int pageIndex, SlugcatStats.Name slugcatNumber)
+        {
+            orig(self, menu, owner, pageIndex, slugcatNumber);
+            FixRegionName(self, menu, slugcatNumber);
+        }
+        */
         public static void SlugcatPageContinue_ctor(On.Menu.SlugcatSelectMenu.SlugcatPageContinue.orig_ctor orig, SlugcatSelectMenu.SlugcatPageContinue self, Menu.Menu menu, MenuObject owner, int pageIndex, SlugcatStats.Name slugcatNumber)
         {
             orig(self, menu, owner, pageIndex, slugcatNumber);
@@ -184,7 +213,7 @@ namespace HunterExpansion.CustomEnding
                 menuScene.sceneID == MenuSceneID.TheHunter_Outro11_Dead ||
                 menuScene.sceneID == MenuSceneID.TheHunter_Outro12_Dead))
             {
-                float num = (float)Screen.width / 2180f * 1.2f;
+                float num = menu.manager.rainWorld.options.ScreenSize.x / 1635f * 1.2f;
                 self.sprite.scaleX *= num;
                 self.sprite.scaleY *= num;
             }
@@ -195,7 +224,7 @@ namespace HunterExpansion.CustomEnding
                 menuScene.sceneID == MenuSceneID.TheHunter_Outro9_Dead ||
                 menuScene.sceneID == MenuSceneID.TheHunter_Outro10_Dead))
             {
-                float num = (float)Screen.width / 2180f * 1.1f;
+                float num = menu.manager.rainWorld.options.ScreenSize.x / 1635f * 1.1f;
                 self.sprite.scaleX *= num;
                 self.sprite.scaleY *= num;
             }
@@ -592,6 +621,27 @@ namespace HunterExpansion.CustomEnding
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Dead - 3", Vector2.zero, 2.2f, MenuDepthIllustration.MenuShader.Basic));
                 self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, "HunterAltEnd_Dead - 4", Vector2.zero, 2f, MenuDepthIllustration.MenuShader.Basic));
             }
+            //去NSH和从NSH回来的过场cg
+            else if (self.sceneID == MenuSceneID.GoToNSH)
+            {
+                self.sceneFolder = string.Concat(new string[]
+                {
+                    "Scenes", Path.DirectorySeparatorChar.ToString(), "cutscenes - go to nsh"
+                });
+                //self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, ResolveSceneName(self, "Background"), Vector2.zero, 2.8f, MenuDepthIllustration.MenuShader.Basic));
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, ResolveSceneName(self, "Slugcat"), Vector2.zero, 2f, MenuDepthIllustration.MenuShader.Basic));
+                //self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, ResolveSceneName(self, "Foreground"), Vector2.zero, 1.8f, MenuDepthIllustration.MenuShader.Basic));
+            }
+            else if (self.sceneID == MenuSceneID.LeaveNSH)
+            {
+                self.sceneFolder = string.Concat(new string[]
+                {
+                    "Scenes", Path.DirectorySeparatorChar.ToString(), "cutscenes - leave nsh"
+                });
+                //self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, ResolveSceneName(self, "Background"), Vector2.zero, 2.8f, MenuDepthIllustration.MenuShader.Basic));
+                self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, ResolveSceneName(self, "Slugcat"), Vector2.zero, 2f, MenuDepthIllustration.MenuShader.Basic));
+                //self.AddIllustration(new MenuDepthIllustration(self.menu, self, self.sceneFolder, ResolveSceneName(self, "Foreground"), Vector2.zero, 1.8f, MenuDepthIllustration.MenuShader.Basic));
+            }
         }
 
         private static void SlideShow_ctor(On.Menu.SlideShow.orig_ctor orig, SlideShow self, ProcessManager manager, SlideShow.SlideShowID slideShowID)
@@ -735,12 +785,22 @@ namespace HunterExpansion.CustomEnding
         private static void RainWorldGame_GoToRedsGameOver(On.RainWorldGame.orig_GoToRedsGameOver orig, RainWorldGame self)
         {
             SaveState saveState = self.GetStorySession.saveState;
-            if (saveState.saveStateNumber == Plugin.SlugName && PearlFixedSave.pearlFixed &&
-                self.world.region.name == "NSH" && self.manager.upcomingProcess == null)
+            if (saveState.saveStateNumber == Plugin.SlugName && PearlFixedSave.pearlFixed && self.world.region != null &&
+                self.world.region.name == "NSH" && self.manager.upcomingProcess == null && !saveState.deathPersistentSaveData.altEnding)
             {
-                if (!saveState.deathPersistentSaveData.altEnding)
+                saveState.deathPersistentSaveData.altEnding = true;
+                //帮忙喂猫崽
+                for (int l = 0; l < self.world.GetAbstractRoom(self.Players[0].pos).creatures.Count; l++)
                 {
-                    saveState.deathPersistentSaveData.altEnding = true;
+                    if (ModManager.MSC && self.world.GetAbstractRoom(self.Players[0].pos).creatures[l].creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
+                    {
+                        PlayerNPCState slugpup = self.world.GetAbstractRoom(self.Players[0].pos).creatures[l].state as PlayerNPCState;
+                        Plugin.Log("Slugpup foodInStomach (old): " + slugpup.foodInStomach);
+                        Plugin.Log("Slugpup MaxFoodInStomach: " + (slugpup.player.realizedCreature as Player).MaxFoodInStomach);
+                        slugpup.foodInStomach = (slugpup.player.realizedCreature as Player).MaxFoodInStomach;
+                        Plugin.Log("Help to feed slugpup! creature index: " + l);
+                        Plugin.Log("Slugpup foodInStomach (new): " + slugpup.foodInStomach);
+                    }
                 }
                 //IL_167:
                 if (self.manager.musicPlayer != null)
@@ -752,7 +812,8 @@ namespace HunterExpansion.CustomEnding
                 {
                     Plugin.Log("Hunter AltEnd: Return!");
                     saveState.deathPersistentSaveData.redsDeath = false;
-                    saveState.cycleNumber = RedsIllness.RedsCycles(saveState.redExtraCycles) - 2;
+                    saveState.deathPersistentSaveData.karma = saveState.deathPersistentSaveData.karmaCap;
+                    saveState.cycleNumber = RedsIllness.RedsCycles(saveState.redExtraCycles) - 1;
                     self.manager.statsAfterCredits = false;
                     self.manager.nextSlideshow = SlideShowID.HunterAltEnd;
                 }
@@ -761,6 +822,7 @@ namespace HunterExpansion.CustomEnding
                 {
                     Plugin.Log("Hunter AltEnd: Dead!");
                     saveState.deathPersistentSaveData.redsDeath = true;
+                    saveState.deathPersistentSaveData.karma = saveState.deathPersistentSaveData.karmaCap;
                     saveState.cycleNumber += 15;
                     self.manager.statsAfterCredits = false;
                     self.manager.nextSlideshow = SlideShowID.HunterAltEnd_Dead;
@@ -789,7 +851,7 @@ namespace HunterExpansion.CustomEnding
             if (self.StoryCharacter == SlugcatStats.Name.Red && nextProcess is SlideShow && self.manager.nextSlideshow == SlideShowID.HunterAltEnd)
             {
                 int karma = self.GetStorySession.saveState.deathPersistentSaveData.karmaCap;
-                Debug.Log("Hunter AltEnding savKarma: " + karma.ToString());
+                Plugin.Log("Hunter AltEnding savKarma: " + karma.ToString());
                 self.GetStorySession.saveState.deathPersistentSaveData.redsDeath = false;
                 self.manager.menuSetup.startGameCondition = ProcessManager.MenuSetup.StoryGameInitCondition.Load;
                 (nextProcess as SlideShow).processAfterSlideShow = ProcessManager.ProcessID.Game;
@@ -807,12 +869,8 @@ namespace HunterExpansion.CustomEnding
         {
             if (self.saveGameData.shelterName != null && self.saveGameData.shelterName.Length > 2)
             {
-                string text = "";
-                text = Region.GetRegionFullName(self.saveGameData.shelterName.Substring(0, 2), slugcatNumber);
-                if (Regex.Split(self.saveGameData.shelterName, "_")[0] == "NSH")
-                {
-                    text = Region.GetRegionFullName("NSH", slugcatNumber);
-                }
+                string[] array = Regex.Split(self.saveGameData.shelterName, "_");
+                string text = Region.GetRegionFullName(array[0], slugcatNumber);
                 if (text.Length > 0)
                 {
                     text = menu.Translate(text);
@@ -835,6 +893,72 @@ namespace HunterExpansion.CustomEnding
                 self.subObjects.Add(self.regionLabel);
             }
         }
+
+        private static string ResolveSceneName(MenuScene self, string sceneName)
+        {
+            string text = AssetManager.ResolveFilePath(self.sceneFolder + Path.DirectorySeparatorChar.ToString() + sceneName + ".png");
+            string text2 = text;
+            text = AssetManager.ResolveFilePath(string.Concat(new string[]
+            {
+                self.sceneFolder,
+                Path.DirectorySeparatorChar.ToString(),
+                sceneName,
+                " - ",
+                EndingScenes.slugName.ToString(),
+                ".png"
+            }));
+            if (!File.Exists(text))
+            {
+                Plugin.Log("NOT FOUND " + text);
+                text = text2;
+                if (!File.Exists(text))
+                {
+                    Plugin.Log("NOT FOUND " + text);
+                    Plugin.Log("Error: Can't find scene path: " + text);
+                }
+                else
+                {
+                    text = sceneName;
+                }
+            }
+            else
+            {
+                text = sceneName + " - " + EndingScenes.slugName.ToString();
+            }
+            return text;
+        }
+
+        public static SlugcatStats.Name slugName = SlugcatStats.Name.White;
+
+        /*
+        private static void FixRegionName(SlugcatSelectMenu.SlugcatPage self, Menu.Menu menu, SlugcatStats.Name slugcatNumber)
+        {
+            if (self.saveGameData.shelterName != null && self.saveGameData.shelterName.Length > 2)
+            {
+                string[] array = Regex.Split(self.saveGameData.shelterName, "_");
+                string text = Region.GetRegionFullName(array[0], slugcatNumber);
+                if (text.Length > 0)
+                {
+                    text = menu.Translate(text);
+                    text = string.Concat(new string[]
+                    {
+                            text,
+                            " - ",
+                            menu.Translate("Cycle"),
+                            " ",
+                            ((slugcatNumber == SlugcatStats.Name.Red) ? (RedsIllness.RedsCycles(self.saveGameData.redsExtraCycles) - self.saveGameData.cycle) : self.saveGameData.cycle).ToString()
+                    });
+                    if (ModManager.MMF)
+                    {
+                        TimeSpan timeSpan = TimeSpan.FromSeconds((double)self.saveGameData.gameTimeAlive + (double)self.saveGameData.gameTimeDead);
+                        text = text + " (" + SpeedRunTimer.TimeFormat(timeSpan) + ")";
+                    }
+                }
+                self.regionLabel = new MenuLabel(menu, self, text, new Vector2(-1000f, self.imagePos.y - 249f), new Vector2(200f, 30f), true, null);
+                self.regionLabel.label.alignment = FLabelAlignment.Center;
+                self.subObjects.Add(self.regionLabel);
+            }
+        }*/
     }
 
     public class SlideShowID
@@ -884,6 +1008,9 @@ namespace HunterExpansion.CustomEnding
             TheHunter_AltEndScene = new MenuScene.SceneID("TheHunter_AltEndScene", true);
             TheHunter_AltEndScene_Final = new MenuScene.SceneID("TheHunter_AltEndScene_Final", true);
             TheHunter_AltEndScene_Dead = new MenuScene.SceneID("TheHunter_AltEndScene_Dead", true);
+
+            GoToNSH = new MenuScene.SceneID("GoToNSH", true);
+            LeaveNSH = new MenuScene.SceneID("LeaveNSH", true);
         }
 
         public static void UnregisterValues()
@@ -913,6 +1040,9 @@ namespace HunterExpansion.CustomEnding
             HunterExpansionEnums.Unregister(TheHunter_AltEndScene);
             HunterExpansionEnums.Unregister(TheHunter_AltEndScene_Final);
             HunterExpansionEnums.Unregister(TheHunter_AltEndScene_Dead);
+
+            HunterExpansionEnums.Unregister(GoToNSH);
+            HunterExpansionEnums.Unregister(LeaveNSH);
         }
 
         public static MenuScene.SceneID TheHunter_Outro1;
@@ -940,5 +1070,8 @@ namespace HunterExpansion.CustomEnding
         public static MenuScene.SceneID TheHunter_AltEndScene;
         public static MenuScene.SceneID TheHunter_AltEndScene_Final;
         public static MenuScene.SceneID TheHunter_AltEndScene_Dead;
+
+        public static MenuScene.SceneID GoToNSH;
+        public static MenuScene.SceneID LeaveNSH;
     }
 }

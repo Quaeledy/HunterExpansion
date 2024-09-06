@@ -28,8 +28,9 @@ namespace HunterExpansion
         public static void DaddyLongLegs_Update(On.DaddyLongLegs.orig_Update orig, DaddyLongLegs self, bool eu)
         {
             orig(self, eu);
-
-            if (self.room != null && self.room.world.region.name == "NSH")
+            DaddyLongLegs dc = self;
+            bool flag = dc.room != null && dc.room.world.region != null && dc.room.world.region.name == "NSH";
+            if (flag)
             {
                 self.effectColor = new Color(0.57255f, 0.11373f, 0.22745f);
                 self.eyeColor = self.effectColor;
@@ -39,8 +40,9 @@ namespace HunterExpansion
         public static void DaddyGraphics_ApplyPalette(On.DaddyGraphics.orig_ApplyPalette orig, DaddyGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
-
-            if (self.owner.room != null && self.owner.room.world.region.name == "NSH")
+            PhysicalObject dc = self.owner;
+            bool flag = dc.room != null && dc.room.world.region != null && dc.room.world.region.name == "NSH";
+            if (flag)
             {
                 for (int i = 0; i < self.daddy.bodyChunks.Length; i++)
                 {
@@ -52,8 +54,9 @@ namespace HunterExpansion
         public static void DaddyTubeGraphic_ApplyPalette(On.DaddyGraphics.DaddyTubeGraphic.orig_ApplyPalette orig, DaddyGraphics.DaddyTubeGraphic self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
-
-            if (self.owner.owner.room != null && self.owner.owner.room.world.region.name == "NSH")
+            PhysicalObject dc = self.owner.owner;
+            bool flag = dc.room != null && dc.room.world.region != null && dc.room.world.region.name == "NSH";
+            if (flag)
             {
                 Color color = Color.Lerp(PlayerGraphics.DefaultSlugcatColor(SlugcatStats.Name.Red), Color.gray, 0.4f);
                 Color EffectColor = new Color(0.57255f, 0.11373f, 0.22745f);
@@ -78,8 +81,9 @@ namespace HunterExpansion
         public static void DaddyDangleTube_ApplyPalette(On.DaddyGraphics.DaddyDangleTube.orig_ApplyPalette orig, DaddyGraphics.DaddyDangleTube self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
-
-            if (self.owner.owner.room != null && self.owner.owner.room.world.region.name == "NSH")
+            PhysicalObject dc = self.owner.owner;
+            bool flag = dc.room != null && dc.room.world.region != null && dc.room.world.region.name == "NSH";
+            if (flag)
             {
                 Color color = Color.Lerp(PlayerGraphics.DefaultSlugcatColor(SlugcatStats.Name.Red), Color.gray, 0.4f);
                 Color EffectColor = new Color(0.57255f, 0.11373f, 0.22745f);
@@ -99,8 +103,9 @@ namespace HunterExpansion
         public static void DaddyDeadLeg_ApplyPalette(On.DaddyGraphics.DaddyDeadLeg.orig_ApplyPalette orig, DaddyGraphics.DaddyDeadLeg self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
-
-            if (self.owner.owner.room != null && self.owner.owner.room.world.region.name == "NSH")
+            PhysicalObject dc = self.owner.owner;
+            bool flag = dc.room != null && dc.room.world.region != null && dc.room.world.region.name == "NSH";
+            if (flag)
             {
                 Color color = Color.Lerp(PlayerGraphics.DefaultSlugcatColor(SlugcatStats.Name.Red), Color.gray, 0.4f);
                 Color EffectColor = new Color(0.57255f, 0.11373f, 0.22745f);
@@ -127,8 +132,9 @@ namespace HunterExpansion
         public static void DaddyCorruption_Update(On.DaddyCorruption.orig_Update orig, DaddyCorruption self, bool eu)
         {
             orig(self, eu);
-
-            if (self.room != null && self.room.world.region.name == "NSH")
+            DaddyCorruption dc = self;
+            bool flag = dc.room != null && dc.room.world.region != null && dc.room.world.region.name == "NSH";
+            if (flag)
             {
                 self.effectColor = new Color(0.57255f, 0.11373f, 0.22745f);
                 self.eyeColor = self.effectColor;
@@ -138,7 +144,9 @@ namespace HunterExpansion
         public static void CorruptionTube_ApplyPalette(On.DaddyCorruption.CorruptionTube.TubeGraphic.orig_ApplyPalette orig, DaddyCorruption.CorruptionTube.TubeGraphic self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
-            if (self.owner.room != null && self.owner.room.world.region.name == "NSH")
+            DaddyCorruption dc = self.owner.owner;
+            bool flag = dc.room != null && dc.room.world.region != null && dc.room.world.region.name == "NSH";
+            if (flag)
             {
                 Color color = Color.Lerp(PlayerGraphics.DefaultSlugcatColor(SlugcatStats.Name.Red), Color.gray, 0.4f);
                 Color effectColor = new Color(0.57255f, 0.11373f, 0.22745f); 
@@ -163,7 +171,10 @@ namespace HunterExpansion
         public static void Bulb_ApplyPalette(On.DaddyCorruption.Bulb.orig_ApplyPalette orig, DaddyCorruption.Bulb self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
-            if (self.owner.room != null && self.owner.room.world.region.name == "NSH")
+
+            DaddyCorruption dc = self.owner;
+            bool flag = dc.room != null && dc.room.world.region != null && dc.room.world.region.name == "NSH";
+            if (flag)
             {
                 sLeaser.sprites[self.firstSprite].color = Color.Lerp(PlayerGraphics.DefaultSlugcatColor(SlugcatStats.Name.Red), Color.gray, 0.4f);
             }

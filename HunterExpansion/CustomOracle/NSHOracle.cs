@@ -38,7 +38,6 @@ namespace HunterExpansion.CustomOracle
         public override Oracle.OracleID OracleID => NSHOracle;
         public override Oracle.OracleID InheritOracleID => Oracle.OracleID.SS;
 
-
         //腐化相关
         public static bool isCorrupted;
 
@@ -525,8 +524,10 @@ namespace HunterExpansion.CustomOracle
             //对话
             RefusingToInterpretItems = new Conversation.ID("NSH_RefusingToInterpretItems", true);
             //珍珠
-            NSH_Pearl_NSH_Box = new Conversation.ID("NSH_Pearl_NSH_Box", true);
-            NSH_Pearl_NSH_Top = new Conversation.ID("NSH_Pearl_NSH_Top", true);
+            //NSH_Pearl_NSH_Box = new Conversation.ID("NSH_Pearl_NSH_Box", true);
+            //NSH_Pearl_NSH_Top = new Conversation.ID("NSH_Pearl_NSH_Top", true);
+            //带着朋友来对话
+            NSHMeetSlugcatFriends = new Conversation.ID("NSH_Meet_Slugcat_Friends", true);
         }
 
         public static void UnregisterValues()
@@ -591,8 +592,10 @@ namespace HunterExpansion.CustomOracle
             //对话
             HunterExpansionEnums.Unregister(RefusingToInterpretItems);
             //珍珠
-            HunterExpansionEnums.Unregister(NSH_Pearl_NSH_Top);
-            HunterExpansionEnums.Unregister(NSH_Pearl_NSH_Box);
+            //HunterExpansionEnums.Unregister(NSH_Pearl_NSH_Top);
+            //HunterExpansionEnums.Unregister(NSH_Pearl_NSH_Box);
+            //带着朋友来对话
+            HunterExpansionEnums.Unregister(NSHMeetSlugcatFriends);
         }
         //魔方节点
         public static Conversation.ID NSH_HR;
@@ -651,11 +654,13 @@ namespace HunterExpansion.CustomOracle
         //其他蛞蝓猫
         public static Conversation.ID OtherSlugcat_Talk0;
         public static Conversation.ID OtherSlugcat_Talk1;
-        //对话
+        //拒绝对话
         public static Conversation.ID RefusingToInterpretItems;
         //珍珠
-        public static Conversation.ID NSH_Pearl_NSH_Top;
-        public static Conversation.ID NSH_Pearl_NSH_Box;
+        //public static Conversation.ID NSH_Pearl_NSH_Top;
+        //public static Conversation.ID NSH_Pearl_NSH_Box;
+        //带着朋友来对话
+        public static Conversation.ID NSHMeetSlugcatFriends;
     }
 
     public class NSHOracleMovementBehavior
@@ -680,14 +685,32 @@ namespace HunterExpansion.CustomOracle
     {
         public static void RegisterValues()
         {
+            DataPearl = new SLOracleBehaviorHasMark.MiscItemType("DataPearl", true);
             NSHSwarmer = new SLOracleBehaviorHasMark.MiscItemType("NSHSwarmer", true);
+            SLOracleSwarmer = new SLOracleBehaviorHasMark.MiscItemType("SLOracleSwarmer", true);
+            SSOracleSwarmer = new SLOracleBehaviorHasMark.MiscItemType("SSOracleSwarmer", true);
+            NSHOracleSwarmer = new SLOracleBehaviorHasMark.MiscItemType("NSHOracleSwarmer", true);
+            SporePlant = new SLOracleBehaviorHasMark.MiscItemType("SporePlant", true);
+            FlyLure = new SLOracleBehaviorHasMark.MiscItemType("FlyLure", true);
         }
 
         public static void UnregisterValues()
         {
+            HunterExpansionEnums.Unregister(DataPearl);
             HunterExpansionEnums.Unregister(NSHSwarmer);
+            HunterExpansionEnums.Unregister(SLOracleSwarmer);
+            HunterExpansionEnums.Unregister(SSOracleSwarmer);
+            HunterExpansionEnums.Unregister(NSHOracleSwarmer);
+            HunterExpansionEnums.Unregister(SporePlant);
+            HunterExpansionEnums.Unregister(FlyLure);
         }
 
+        public static SLOracleBehaviorHasMark.MiscItemType DataPearl;
         public static SLOracleBehaviorHasMark.MiscItemType NSHSwarmer;
+        public static SLOracleBehaviorHasMark.MiscItemType SLOracleSwarmer;
+        public static SLOracleBehaviorHasMark.MiscItemType SSOracleSwarmer;
+        public static SLOracleBehaviorHasMark.MiscItemType NSHOracleSwarmer;
+        public static SLOracleBehaviorHasMark.MiscItemType SporePlant;
+        public static SLOracleBehaviorHasMark.MiscItemType FlyLure;
     }
 }

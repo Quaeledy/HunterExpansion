@@ -28,7 +28,7 @@ namespace HunterExpansion.CustomOracle
 
         public override void Update(bool eu)
         {
-            if (player != null && player.room != null && player.room.world.region.name == "HR" && !(subBehavior is SRSOracleRubicon))
+            if (player != null && player.room != null && player.room.world.region != null && player.room.world.region.name == "HR" && !(subBehavior is SRSOracleRubicon))
                 NewAction(SRSOracleBehaviorAction.Rubicon_Init);
 
             if (this.oracle.health == 0f)

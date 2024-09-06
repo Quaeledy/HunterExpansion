@@ -63,7 +63,6 @@ namespace HunterExpansion.CustomSave
         private static void MiscWorldSaveData_FromString(On.MiscWorldSaveData.orig_FromString orig, MiscWorldSaveData self, string s)
         {
             orig(self, s);
-            self.unrecognizedSaveStrings.Clear();
             string[] array = Regex.Split(s, "<mwA>");
             int i = 0;
             while (i < array.Length)

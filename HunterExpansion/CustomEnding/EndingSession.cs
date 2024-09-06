@@ -10,7 +10,6 @@ using HunterExpansion.CustomEffects;
 using System;
 using JollyCoop;
 using Menu;
-using static MonoMod.InlineRT.MonoModRule;
 using Random = UnityEngine.Random;
 using Expedition;
 using System.Reflection;
@@ -57,14 +56,25 @@ namespace HunterExpansion.CustomEnding
         public static void Player_EndUpdate(On.Player.orig_UpdateMSC orig, Player self)
         {
             orig(self);
-            if (self.room.game.session.characterStats.name != Plugin.SlugName)
-                return;
+            if (self.room.game.devToolsActive && Input.GetKey(KeyCode.LeftControl))
+            {
+                Plugin.Log("Player Pos: " + self.DangerPos);
+            }
             if (self.room.game.devToolsActive && Input.GetKey(KeyCode.LeftControl) && Input.GetKey("6"))
             {
                 PearlFixedSave.pearlFixed = true;
             }
+            if (self.room.game.devToolsActive && Input.GetKey(KeyCode.LeftControl) && Input.GetKey("7"))
+            {
+                self.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft = 5;
+            }
+            /*
+            if (self.room.game.session.characterStats.name != Plugin.SlugName)
+                return;
+
             //播放结局cg
-            if (self.room.abstractRoom.name == "GATE_SB_OE" && PearlFixedSave.pearlFixed && openGate &&
+            if (self.room.game.session.characterStats.name == Plugin.SlugName && 
+                self.room.abstractRoom.name == "GATE_SB_OE" && PearlFixedSave.pearlFixed && openGate &&
                 self == self.room.game.Players[0].realizedCreature as Player)
             {
                 if (self.room.game.world.region.name == "NSH")
@@ -76,7 +86,9 @@ namespace HunterExpansion.CustomEnding
                             isControled = true;
                             obj = new CutsceneHunter(self.room);
                             self.room.AddObject(obj);
-                            self.room.game.manager.musicPlayer.FadeOutAllSongs(40f);
+                            if (self.room != null && self.room.game != null && self.room.game.manager != null && self.room.game.manager.musicPlayer != null)
+                            //下面这一行在结局时NullReferenceException: Object reference not set to an instance of an object
+                                self.room.game.manager.musicPlayer.FadeOutAllSongs(40f);
                             //添加黑幕
                             if (blackRect == null)
                             {
@@ -161,7 +173,7 @@ namespace HunterExpansion.CustomEnding
                     }
                 }
             }
-
+            */
             //开门动画
             if (self.room.IsGateRoom() && PearlFixedSave.pearlFixed && !openGate && self.room.regionGate.EnergyEnoughToOpen &&
                 self == self.room.game.Players[0].realizedCreature as Player)//这一条是确保只对一个玩家更新
@@ -185,6 +197,10 @@ namespace HunterExpansion.CustomEnding
                     self.room.ScreenMovement(new Vector2?(fixedPearl.firstChunk.pos), new Vector2(0f, 0f), Mathf.Min(Custom.LerpMap((float)openCount, 40f, 300f, 0f, 1.5f, 1.2f), Custom.LerpMap((float)openCount, 40f, 300f, 1.5f, 0f)));
                     //珍珠移动
                     Vector2 wantPos = (self.firstChunk.pos.x > 480f) ? new Vector2(570f, 295f) : new Vector2(390f, 295f);
+                    if (self.room.abstractRoom.name == "GATE_SB_NSH")
+                    {
+                        wantPos = (self.firstChunk.pos.x > 560f) ? new Vector2(650f, 640f) : new Vector2(470f, 640f);
+                    }
                     fixedPearl.firstChunk.vel *= Custom.LerpMap(fixedPearl.firstChunk.vel.magnitude, 1f, 6f, 0.999f, 0.9f);
                     fixedPearl.firstChunk.vel += Vector2.ClampMagnitude(wantPos - fixedPearl.firstChunk.pos, 100f) / 100f * 0.4f;
                     //抵消重力
@@ -229,7 +245,7 @@ namespace HunterExpansion.CustomEnding
                     openGateName = self.room.abstractRoom.name;
                 }
                 //生成监视者
-                if (openCount == 50 || openCount == 100)
+                if ((openCount == 50 || openCount == 100) && self.room.game.session.characterStats.name == Plugin.SlugName)
                 {
                     PlayerHooks.SpawnOverseerInRoom(self.room, "GATE_SB_OE", CreatureTemplate.Type.Overseer, 2);
                 }
@@ -256,17 +272,27 @@ namespace HunterExpansion.CustomEnding
                 }
                 if (openCount == 220 && fixedPearl != null)
                 {
-                    self.room.PlaySound(SoundID.Moon_Wake_Up_Green_Swarmer_Flash, fixedPearl.firstChunk.pos, 0.5f, 1f);
-                    self.room.PlaySound(SoundID.Fire_Spear_Explode, fixedPearl.firstChunk.pos, 0.5f, 1f);
-                    self.room.AddObject(new ElectricFullScreen.SparkFlash(fixedPearl.firstChunk.pos, 50f));
-                    self.room.AddObject(new Spark(fixedPearl.firstChunk.pos, Custom.RNV() * Random.value * 40f, new Color(0f, 1f, 0f), null, 30, 120));
-                    fixedPearl.Destroy();
+                    if (Random.value > 0.75f && self.room.game.session.characterStats.name == Plugin.SlugName)
+                    {
+                        self.room.PlaySound(SoundID.Moon_Wake_Up_Green_Swarmer_Flash, fixedPearl.firstChunk.pos, 0.5f, 1f);
+                        self.room.AddObject(new ElectricFullScreen.SparkFlash(fixedPearl.firstChunk.pos, 20f));
+                        self.room.AddObject(new Spark(fixedPearl.firstChunk.pos, Custom.RNV() * Random.value * 40f, new Color(0f, 1f, 0f), null, 30, 120));
+                    }
+                    else
+                    {
+                        self.room.PlaySound(SoundID.Moon_Wake_Up_Green_Swarmer_Flash, fixedPearl.firstChunk.pos, 0.5f, 1f);
+                        self.room.PlaySound(SoundID.Fire_Spear_Explode, fixedPearl.firstChunk.pos, 0.5f, 1f);
+                        self.room.AddObject(new ElectricFullScreen.SparkFlash(fixedPearl.firstChunk.pos, 50f));
+                        self.room.AddObject(new Spark(fixedPearl.firstChunk.pos, Custom.RNV() * Random.value * 40f, new Color(0f, 1f, 0f), null, 30, 120));
+                        fixedPearl.Destroy();
+                    }
                 }
                 if (openCount == 300)
                 {
                     openCount = 0;
                     openGate = true;
-                    fixedPearl = null;
+                    if(fixedPearl.slatedForDeletetion)
+                        fixedPearl = null;
                     for (int k = greenSparks.Count - 1; k >= 0; k--)
                     {
                         GreenSparks spark = greenSparks[k];
@@ -278,12 +304,13 @@ namespace HunterExpansion.CustomEnding
             }
 
             //结局后的结局
-            if (goEnding)
+            if (self.room.game.session.characterStats.name == Plugin.SlugName && goEnding)
             {
                 if (!isControled)
                 {
                     isControled = true;
                     self.room.AddObject(new EndingCutsceneHunter(self.room));
+                    /*
                     //将玩家图层置于迭代器上方
                     List<PhysicalObject>[] physicalObjects = self.room.physicalObjects;
                     for (int i = 0; i < physicalObjects.Length; i++)
@@ -303,7 +330,7 @@ namespace HunterExpansion.CustomEnding
                                 //self.graphicsModule.AddObjectToInternalContainer(physicalObject as IDrawable, 0);
                             }
                         }
-                    }
+                    }*/
                 }
                 if (self.dead)
                 {
@@ -312,197 +339,7 @@ namespace HunterExpansion.CustomEnding
                 }
             }
         }
-        
-        public static void WarpWithinTheSameRegion(Player player, string newRoomName, int x, int y)
-        {
-            RainWorldGame game = player.abstractCreature.world.game;
-            /*//这是跨区域传送
-            if (data.name.Split(new char[]{'_'})[0] != player.abstractCreature.world.region.name)
-            {
-                for (int i = 0; i < game.AlivePlayers.Count; i++)
-                {
-                    AbstractCreature absPly = game.AlivePlayers[i];
-                    if (absPly != null)
-                    {
-                        AbstractRoom oldRoom = absPly.Room;
-                        try
-                        {
-                            World oldWorld = game.overWorld.activeWorld;
-                            game.overWorld.LoadWorld(data.name.Split(new char[]
-                            {
-                                '_'
-                            })[0], game.overWorld.PlayerCharacterNumber, false);
-                            this.WorldLoaded(game, oldRoom, oldWorld, data.name, new IntVector2(data.x, data.y));
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogException(e);
-                        }
-                    }
-                    TimeBackCreatureModule module;
-                    bool flag3 = TimeBackHooks.creatureModules.TryGetValue(absPly, out module);
-                    if (flag3)
-                    {
-                        module.Clear();
-                    }
-                }
-            }
-            else
-            {*/
-            AbstractRoom oldRoom = player.room.abstractRoom;
-            AbstractRoom room = player.abstractCreature.world.GetAbstractRoom(newRoomName);
-            AbstractPhysicalObject stomachObject = null;
-            if (player != null && player.objectInStomach != null)
-            {
-                stomachObject = player.objectInStomach;
-            }
-            //放下矛
-            if (player.spearOnBack != null && player.spearOnBack.spear != null)
-            {
-                player.spearOnBack.DropSpear();
-            }
-            //放下猫崽
-            if ((ModManager.MSC || ModManager.CoopAvailable) && player.slugOnBack != null && player.slugOnBack.slugcat != null)
-            {
-                player.slugOnBack.DropSlug();
-            }
-            //更换房间
-            if (room.realizedRoom == null)
-            {
-                room.RealizeRoom(game.world, game);
-            }
-            if (player.room.abstractRoom != room)// && !player.isSlugpup
-            {
-                if (player.grasps != null)
-                {
-                    for (int g = 0; g < player.grasps.Length; g++)
-                    {
-                        if (player.grasps[g] != null && player.grasps[g].grabbed != null && !player.grasps[g].discontinued &&
-                            player.grasps[g].grabbed is Creature && (!(player.grasps[g].grabbed is Player) || !(player.grasps[g].grabbed as Player).isSlugpup))// 
-                        {
-                            player.ReleaseGrasp(g);
-                        }
-                    }
-                }
-                room.realizedRoom.aimap.NewWorld(room.index);
-                if (player.abstractCreature.realizedCreature != null)
-                {
-                    oldRoom.realizedRoom.RemoveObject(player.abstractCreature.realizedCreature);
-                }
-                player.abstractCreature.Move(new WorldCoordinate(room.index, x, y, 0));
-                /*
-                if (ply.creatureTemplate.AI && ply.abstractAI.RealAI != null && ply.abstractAI.RealAI.pathFinder != null)
-			    {
-				ply.abstractAI.SetDestination(QuickConnectivity.DefineNodeOfLocalCoordinate(ply.abstractAI.destination, ply.world, ply.creatureTemplate));
-				ply.abstractAI.timeBuffer = 0;
-				if (ply.abstractAI.destination.room == ply.pos.room && ply.abstractAI.destination.abstractNode == ply.pos.abstractNode)
-				{
-					ply.abstractAI.path.Clear();
-				}
-				else
-				{
-					List<WorldCoordinate> list = ply.abstractAI.RealAI.pathFinder.CreatePathForAbstractreature(ply.abstractAI.destination);
-					if (list != null)
-					{
-						ply.abstractAI.path = list;
-					}
-					else
-					{
-						ply.abstractAI.FindPath(ply.abstractAI.destination);
-					}
-				}
-				ply.abstractAI.RealAI = null;
-			}
-                 */
-                /*
-                player.PlaceInRoom(room.realizedRoom);
-                player.abstractCreature.ChangeRooms(new WorldCoordinate(room.index, x, y, 0));
-                room.AddEntity(player.abstractCreature);*/
-                player.abstractCreature.RealizeInRoom();
-                /*
-                //矛
-                Player.SpearOnBack spearOnBack = player.spearOnBack;
-                if (((spearOnBack != null) ? spearOnBack.spear : null) != null)
-                {
-                    player.spearOnBack.spear.PlaceInRoom(room.realizedRoom);
-                    player.spearOnBack.spear.room = player.room;
-                }
-                //猫崽
-                Player.SlugOnBack slugOnBack = player.slugOnBack;
-                if (((slugOnBack != null) ? slugOnBack.slugcat : null) != null)
-                {
-                    AbstractCreature slug = player.slugOnBack.slugcat.abstractCreature;
-                    if (slug.abstractAI != null)
-                    {
-                        if (player.abstractCreature.world != slug.world)
-                        {
-                            player.slugOnBack.DropSlug();
-                            slug.realizedCreature = null;
-                            slug.world = player.abstractCreature.world;
-                            slug.abstractAI.NewWorld(player.room.world);
-                            slug.ChangeRooms(new WorldCoordinate(room.index, x, y, -1));
-                            player.slugOnBack.SlugToBack(slug.realizedCreature as Player);
-                        }
-                        player.slugOnBack.slugcat.AI.NewRoom(room.realizedRoom);
-                    }
-                    player.slugOnBack.slugcat.PlaceInRoom(room.realizedRoom);
-                    player.slugOnBack.slugcat.room = player.room;
-                }*/
-                if (stomachObject != null && player.objectInStomach == null)
-                {
-                    player.objectInStomach = stomachObject;
-                }
-                /*
-                for (int i3 = game.shortcuts.transportVessels.Count - 1; i3 >= 0; i3--)
-                {
-                    if (!game.overWorld.activeWorld.region.IsRoomInRegion(game.shortcuts.transportVessels[i3].room.index))
-                    {
-                        game.shortcuts.transportVessels.RemoveAt(i3);
-                    }
-                }
-                for (int i4 = game.shortcuts.betweenRoomsWaitingLobby.Count - 1; i4 >= 0; i4--)
-                {
-                    if (!game.overWorld.activeWorld.region.IsRoomInRegion(game.shortcuts.betweenRoomsWaitingLobby[i4].room.index))
-                    {
-                        game.shortcuts.betweenRoomsWaitingLobby.RemoveAt(i4);
-                    }
-                }
-                for (int i5 = game.shortcuts.borderTravelVessels.Count - 1; i5 >= 0; i5--)
-                {
-                    if (!game.overWorld.activeWorld.region.IsRoomInRegion(game.shortcuts.borderTravelVessels[i5].room.index))
-                    {
-                        game.shortcuts.borderTravelVessels.RemoveAt(i5);
-                    }
-                }*/
-                /*
-                if (ply != null && ply.creatureTemplate.AI)
-                {
-                    ply.abstractAI.NewWorld(newWorld);
-                    ply.InitiateAI();
-                    ply.abstractAI.RealAI.NewRoom(newRoom.realizedRoom);
-                    if (ply.creatureTemplate.type == CreatureTemplate.Type.Overseer && (ply.abstractAI as OverseerAbstractAI).playerGuide)
-                    {
-                        MethodInfo kpginw = typeof(OverWorld).GetMethod("KillPlayerGuideInNewWorld", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                        kpginw.Invoke(game.overWorld, new object[]
-                        {
-                        newWorld,
-                        ply
-                        });
-                    }
-                }*/
-                if (game.cameras[0].followAbstractCreature == player.abstractCreature)
-                {
-                    game.cameras[0].virtualMicrophone.AllQuiet();
-                    game.cameras[0].MoveCamera(player.room, 0);
-                    game.cameras[0].GetCameraBestIndex();
-                }
-            }
-            else
-            {
-                player.SuperHardSetPosition(new Vector2((float)(x * 20), (float)(y * 20)) + new Vector2(10f, 10f));
-            }
-            //}
-        }
+
         /*
         public static void RegionState_AdaptRegionStateToWorld(On.RegionState.orig_AdaptRegionStateToWorld orig, RegionState self, int playerShelter, int activeGate)
         {

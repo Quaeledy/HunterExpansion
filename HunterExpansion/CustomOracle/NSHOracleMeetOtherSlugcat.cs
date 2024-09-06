@@ -1,12 +1,17 @@
 ﻿using MoreSlugcats;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Text;
 using UnityEngine;
 using static CustomOracleTx.CustomOracleBehaviour;
 
 namespace HunterExpansion.CustomOracle
 {
-    public class NSHOracleMeetOtherSlugcat : CustomConversationBehaviour
+    public class NSHOracleMeetOtherSlugcat : NSHConversationBehaviour
     {
-        public NSHOracleMeetOtherSlugcat(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetOtherSlugcat, NSHConversationID.OtherSlugcat_Talk0)
+        public NSHOracleMeetOtherSlugcat(NSHOracleBehaviour owner) : base(owner)
         {
         }
 
@@ -97,22 +102,100 @@ namespace HunterExpansion.CustomOracle
             }
         }
 
-        //与矛大师的所有对话
-        public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
+        //与其他蛞蝓猫的所有对话
+        public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
-            int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
-            //现实对话
-            if (id == NSHConversationID.OtherSlugcat_Talk0)
+            NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
+            string name = oracle.room.world.game.session.characterStats.name.value;
+            int suffix = state.playerEncountersWithMark;
+            Plugin.Log("Should Find Events File: " + "0-" + name + "-" + suffix.ToString());
+            //如果找不到指定文件
+            if (TryFindEventsFile(conv, 0, "NSH", name + "-" + suffix.ToString()))
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Strange little guy, hello."), 20 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You are such an interesting little creature... different from the guests who used to come to my place."), 80 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Anyway, I welcome you to stay here and rest, as long as you don't intend to consume my neurons."), 70 * extralingerfactor));
+                Plugin.Log("Load Events File: " + "0-" + name + "-" + suffix.ToString());
             }
-            else if (id == NSHConversationID.OtherSlugcat_Talk1)
+            //有对应蛞蝓猫，没有对应编号
+            else if (TryFindEventsFile(conv, 0, "NSH", name + "-" + "0") &&
+                !TryFindEventsFile(conv, 0, "NSH", name + "-" + suffix.ToString()))
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you want to stay a little longer?"), 25 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Of course you can! As long as you don't eat my neurons."), 40 * extralingerfactor));
+                //则找到编号最大的同蛞蝓猫名文件
+                for (int i = 1; ; i++)
+                {
+                    if (!TryFindEventsFile(conv, 0, "NSH", name + "-" + i.ToString()))
+                    {
+                        suffix = i - 1;
+                        break;
+                    }
+                }
             }
+            //没有对应蛞蝓猫，有对应编号
+            else if (!TryFindEventsFile(conv, 0, "NSH", name + "-" + "0") &&
+                      TryFindEventsFile(conv, 0, "NSH", suffix.ToString()))
+            {
+                name = "";
+            }
+            //既没有对应蛞蝓猫，也没有对应编号
+            else
+            {
+                //则找到编号最大的无名文件
+                for (int i = 1; ; i++)
+                {
+                    if (!TryFindEventsFile(conv, 0, "NSH", i.ToString()))
+                    {
+                        suffix = i - 1;
+                        break;
+                    }
+                }
+            }
+            NSHConversation.LoadEventsFromFile(conv, 0, name + "-" + suffix.ToString());
+        }
+
+
+        public static bool TryFindEventsFile(Conversation self, int fileName, string subfolderName, string suffix = null, bool oneRandomLine = false, int randomSeed = 0)
+        {
+            Plugin.Log("~~~TRY FIND " + subfolderName + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + (suffix == null ? "" : "-" + suffix.ToString()));
+            InGameTranslator.LanguageID languageID = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage;
+            string text;
+            for (; ; )
+            {
+                text = AssetManager.ResolveFilePath(self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) +
+                       Path.DirectorySeparatorChar.ToString() + subfolderName +
+                       Path.DirectorySeparatorChar.ToString() + fileName.ToString() + ".txt");
+                if (suffix != null)
+                {
+                    string text2 = text;
+                    text = AssetManager.ResolveFilePath(string.Concat(new string[]
+                    {
+                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                    Path.DirectorySeparatorChar.ToString(),
+                    subfolderName,
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName.ToString(),
+                    "-",
+                    suffix,
+                    ".txt"
+                    }));
+                    if (!File.Exists(text))
+                    {
+                        Plugin.Log("NOT FOUND " + text);
+                        text = text2;
+                    }
+                }
+                if (File.Exists(text))
+                {
+                    Plugin.Log("~~~TRY FIND " + subfolderName + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + (suffix == null ? "" : "-" + suffix.ToString()) + ": " + "true");
+                    return true;
+                }
+                Plugin.Log("NOT FOUND " + text);
+                if (!(languageID != InGameTranslator.LanguageID.English))
+                {
+                    break;
+                }
+                Plugin.Log("RETRY WITH ENGLISH");
+                languageID = InGameTranslator.LanguageID.English;
+            }
+            Plugin.Log("~~~TRY FIND " + subfolderName + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + (suffix == null ? "" : "-" + suffix.ToString()) + ": " + "false");
+            return false;
         }
     }
 }

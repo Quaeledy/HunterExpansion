@@ -237,7 +237,7 @@ namespace HunterExpansion.CustomEffects
             {
                 for (int j = 0; j < room.TileHeight; j++)
                 {
-                    if (room.aimap.getAItile(i, j).terrainProximity == 1)
+                    if (room.aimap.getTerrainProximity(i, j) == 1)
                     {
                         closeToWallTiles.Add(new IntVector2(i, j));
                     }

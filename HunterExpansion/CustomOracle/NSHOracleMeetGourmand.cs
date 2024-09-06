@@ -4,9 +4,9 @@ using MoreSlugcats;
 
 namespace HunterExpansion.CustomOracle
 {
-    public class NSHOracleMeetGourmand : CustomConversationBehaviour
+    public class NSHOracleMeetGourmand : NSHConversationBehaviour
     {
-        public NSHOracleMeetGourmand(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetGourmand, NSHConversationID.Gourmand_Talk0)
+        public NSHOracleMeetGourmand(NSHOracleBehaviour owner) : base(owner)
         {
         }
 
@@ -104,28 +104,21 @@ namespace HunterExpansion.CustomOracle
         }
 
         //与矛大师的所有对话
-        public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
+        public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //现实对话
             if (id == NSHConversationID.Gourmand_Talk0)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 10 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("（sound of escaping laughter）"), 0 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Oh, I'm not laughing at your size - that's something our creator would do. Out of fear of overeating."), 60 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("But you little creatures and us iterators don't need to be afraid."), 40 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You look content, which is a rare thing in our land! It makes my heart sing."), 45 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Anyway, I'm glad to see you. As long as you don't eat my neurons."), 40 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-0");
             }
             else if (id == NSHConversationID.Gourmand_Talk1)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You're back. Anything else you need?"), 30 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Seriously, I can't think of anything you'd need from me, you consummate little creature!"), 50 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Except for the neurons, of course. This won't work. Give it up."), 40 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-1");
             }
             else if (id == NSHConversationID.Gourmand_Talk2)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Okay, if you want to stay here, remember not to eat my neurons!"), 40 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-2");
             }
         }
     }

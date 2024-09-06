@@ -3,9 +3,9 @@ using static CustomOracleTx.CustomOracleBehaviour;
 
 namespace HunterExpansion.CustomOracle
 {
-    public class NSHOracleMeetWhite : CustomConversationBehaviour
+    public class NSHOracleMeetWhite : NSHConversationBehaviour
     {
-        public NSHOracleMeetWhite(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetWhite, NSHConversationID.White_Talk0)
+        public NSHOracleMeetWhite(NSHOracleBehaviour owner) : base(owner)
         {
         }
 
@@ -103,26 +103,21 @@ namespace HunterExpansion.CustomOracle
             }
         }
 
-        //与矛大师的所有对话
-        public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
+        //与求生者的所有对话
+        public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
-            int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //现实对话
             if (id == NSHConversationID.White_Talk0)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Oh? Hello, I haven't encountered a small customer like you in a while."), 60 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You look very primitive, but you have been marked. There are only Five Pebbles nearby that<LINE>can do this. It seems that you have walked a long way, little traveler."), 120 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You can rest here for a while. It used to be known as a temple, but now I don't<LINE>mind being treated as an inn anymore~"), 90 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-0");
             }
             else if (id == NSHConversationID.White_Talk1)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you want anything else?"), 20 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If you want a job, I can accept you as a messenger."), 40 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Just kidding. I'm sorry, but there's not much I can do, I can't even hear your needs."), 70 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-1");
             }
             else if (id == NSHConversationID.White_Talk2)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Okay, if you want to stay here, don't forget my words: no neuron buffet!"), 60 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-2");
             }
         }
     }

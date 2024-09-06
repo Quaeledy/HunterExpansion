@@ -10,6 +10,10 @@ using HunterExpansion.CustomOracle;
 using Menu;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using CustomDreamTx;
+using CustomSaveTx;
+using HunterExpansion.CustomSave;
+using HunterExpansion.CustomDream;
 
 namespace HunterExpansion
 {
@@ -23,20 +27,25 @@ namespace HunterExpansion
             IL.OverseersWorldAI.DirectionFinder.ctor += DirectionFinder_ctorIL;
             //这是在修区域菜单无法找到“NSH”区域的问题
             IL.Menu.FastTravelScreen.ctor += FastTravelScreen_ctorIL;
-            IL.Menu.FastTravelScreen.FinalizeRegionSwitch += FastTravelScreen_FinalizeRegionSwitchIL;
+            IL.Menu.FastTravelScreen.FinalizeRegionSwitch += FastTravelScreen_FinalizeRegionSwitchIL;/*
             //这是在修离开NSH区域后，NSH房间的珍珠丢失的问题（回到NSH区域的下一个循环将重新生成）
             //这是在不开启重要物品追踪的情况下，让NSH的房间也能存东西
-            IL.RegionState.AdaptWorldToRegionState += RegionState_AdaptWorldToRegionStateIL;
+            //IL.RegionState.AdaptWorldToRegionState += RegionState_AdaptWorldToRegionStateIL;
             //这是让读取避难所前两个字母作为区域名，变成在NSH区域读前三个字母
-            IL.SaveState.SaveToString += SaveState_SaveToStringIL;
+            //IL.SaveState.SaveToString += SaveState_SaveToStringIL;
             //这是在修多人联机时，梦境结束会卡在雨眠界面，雨眠cg疯狂抖动的问题
-            IL.RainWorldGame.CommunicateWithUpcomingProcess += RainWorldGame_CommunicateWithUpcomingProcessIL;
+            //IL.RainWorldGame.CommunicateWithUpcomingProcess += RainWorldGame_CommunicateWithUpcomingProcessIL;*/
+            //这是在修NSH外缘业力门传送去郊区会卡住的问题
+            IL.FliesWorldAI.ctor += FliesWorldAI_ctorIL;
+            //这是修复胖猫不能正常触发去NSH过场cg的问题
+            IL.ProcessManager.PostSwitchMainProcess += ProcessManager_PostSwitchMainProcessIL;
         }
 
         public static void Init()
         {
-            //这是在修Emgtx的bug，解决与速通计时器的冲突
-            On.MoreSlugcats.SpeedRunTimer.Update += SpeedRunTimer_Update;
+            //这是在使部分游戏日志可以输出
+            //On.RWCustom.Custom.Log += Custom_Log;
+
             //这是在修NSH珍珠在避难所显示为方块的问题
             On.ItemSymbol.SpriteNameForItem += ItemSymbol_SpriteNameForItem;
             //这是在修NSH区域迭代器主板闪烁总为红光的问题
@@ -46,15 +55,27 @@ namespace HunterExpansion
             //这是在修区域菜单无法找到“NSH”区域的问题
             On.PlayerProgression.MiscProgressionData.ConditionalShelterData.GetShelterRegion += ConditionalShelterData_GetShelterRegion;
             //这是预防读不到NSH区域的避难所
-            On.PlayerProgression.MiscProgressionData.SaveDiscoveredShelter += MiscProgressionData_SaveDiscoveredShelter;
-
+            On.PlayerProgression.MiscProgressionData.SaveDiscoveredShelter += MiscProgressionData_SaveDiscoveredShelter;/*
+            //这是在修Emgtx的bug，解决与速通计时器的冲突
+            //On.MoreSlugcats.SpeedRunTimer.Update += SpeedRunTimer_Update;
             //这是在修warp传送到sb_oe业力门时，先传送到oe区域，再想传送到sb区域，会传送不了
             //On.AbstractPhysicalObject.ChangeRooms += AbstractPhysicalObject_ChangeRooms;
             //On.PathFinder.Reset += PathFinder_Reset;
-
+            //这是修复多人雨眠卡死bug
+            //On.SaveState.BringUpToDate += SaveState_BringUpToDate;
+            //这是修复传送报错bug？修不了，可能是Warp的问题
+            //On.OverWorld.WorldLoaded += OverWorld_WorldLoaded;*/
+            //这是在解决读取文件中特殊事件不能生效的问题
+            On.Conversation.SpecialEvent.Activate += SpecialEvent_Activate;
+            //这是在修传送梦境会卡在雨眠界面，雨眠cg疯狂抖动的问题
+            On.DreamsState.StaticEndOfCycleProgress += DreamsState_StaticEndOfCycleProgress;
+            //这是在修带猫崽过门遇到监视者导致卡死的问题
+            On.OverseerAbstractAI.HowInterestingIsCreature += OverseerAbstractAI_HowInterestingIsCreature;
+            //这是修复圣猫想去NSH，跳崖后卡死的问题
+            On.MoreSlugcats.BlizzardGraphics.InitiateSprites += BlizzardGraphics_InitiateSprites;
         }
         #region IL Hooks
-        public static void DataPearl_UpdateIL(ILContext il)
+        private static void DataPearl_UpdateIL(ILContext il)
         {
             try
             {
@@ -78,7 +99,7 @@ namespace HunterExpansion
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
         }
 
@@ -107,7 +128,7 @@ namespace HunterExpansion
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
         }
 
@@ -133,11 +154,11 @@ namespace HunterExpansion
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
         }
 
-        public static void FastTravelScreen_FinalizeRegionSwitchIL(ILContext il)
+        private static void FastTravelScreen_FinalizeRegionSwitchIL(ILContext il)
         {
             try
             {
@@ -168,7 +189,7 @@ namespace HunterExpansion
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
             try
             {
@@ -200,57 +221,7 @@ namespace HunterExpansion
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
-            }
-        }
-
-        public static void SaveState_SaveToStringIL(ILContext il)
-        {
-            try
-            {
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.After,
-                    (i) => i.MatchCallvirt<String>("Substring"),
-                    (i) => i.Match(OpCodes.Stfld)))
-                {
-                    Plugin.Log("SaveState_SaveToStringIL MatchFind!");
-                    c.Emit(OpCodes.Ldarg_0);
-                    c.Emit(OpCodes.Ldloc_S, (byte)11);
-                    c.EmitDelegate<Action<SaveState, int>>((self, num3) =>
-                    {
-                        if(Regex.Split(RainWorld.ShelterAfterPassage, "_")[0] == "NSH")
-                            self.objectTrackers[num3].lastSeenRegion = RainWorld.ShelterAfterPassage.Substring(0, 3);
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
-        }
-
-        public static void RegionState_AdaptWorldToRegionStateIL(ILContext il)
-        {
-            try
-            {
-                ILCursor c = new ILCursor(il);
-                //对self.room.game.GetStorySession.playerSessionRecords[num]进行null检查
-                if (c.TryGotoNext(MoveType.After,
-                    (i) => i.MatchStloc(11)))//stloc.s 11
-                {
-                    Plugin.Log("RegionState_AdaptWorldToRegionStateIL MatchFind!");
-                    c.Emit(OpCodes.Ldloc_S, (byte)11);//找到flag3的本地变量
-                    c.Emit(OpCodes.Ldloc_S, (byte)10);//找到abstractRoom的本地变量
-                    c.EmitDelegate<Func<bool, AbstractRoom, bool>>((flag3, abstractRoom) =>
-                    {
-                        return flag3 || abstractRoom.name == "NSH_AI";
-                    });
-                    c.Emit(OpCodes.Stloc_S, (byte)11);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
+                UnityEngine.Debug.LogException(e);
             }
         }
 
@@ -294,11 +265,125 @@ namespace HunterExpansion
             }
             catch (Exception e)
             {
+                UnityEngine.Debug.LogException(e);
+            }
+        }
+
+        private static void FliesWorldAI_ctorIL(ILContext il)
+        {
+            try
+            {
+                ILCursor c = new ILCursor(il);
+                //当NSH还没在魔方节点生成时，需要把房间设为HR_AI
+                if (c.TryGotoNext(MoveType.After,
+                    (i) => i.Match(OpCodes.Ldarg_1),
+                    (i) => i.MatchLdfld<World>("region"),
+                    (i) => i.MatchLdfld<Region>("name"),
+                    (i) => i.MatchLdstr("SU"),
+                    (i) => i.Match(OpCodes.Call)))//这里已经找到了world.region.name == "SU"
+                {
+                    Plugin.Log("FliesWorldAI_ctorIL MatchFind!");
+                    c.Emit(OpCodes.Ldarg_0);//找到FliesWorldAI
+                    c.EmitDelegate<Func<bool, FliesWorldAI, bool>>((flag, self) =>
+                    {
+                        return flag && self.fliesToSpawn.Length >= 3;
+                    });
+                }
+            }
+            catch (Exception e)
+            {
                 Debug.LogException(e);
             }
         }
+
+        private static void ProcessManager_PostSwitchMainProcessIL(ILContext il)
+        {
+            try
+            {
+                ILCursor c = new ILCursor(il);
+                //当NSH还没在魔方节点生成时，需要把房间设为HR_AI
+                if (c.TryGotoNext(MoveType.After,
+                    (i) => i.MatchNewobj<MoreSlugcats.ScribbleDreamScreen>(),
+                    (i) => i.MatchStfld<ProcessManager>("currentMainLoop")))
+                {
+                    Plugin.Log("ProcessManager_PostSwitchMainProcessIL MatchFind!");
+                    c.Emit(OpCodes.Ldarg_0);//找到ProcessManager
+                    c.EmitDelegate<Action<ProcessManager>>((self) =>
+                    {
+                        if (TravelDreamRegistry.modifyScribbleDreamScreen)
+                        {
+                            TravelDreamRegistry.modifyScribbleDreamScreen = false;
+                            self.currentMainLoop = new DreamScreen(self); 
+                        }
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
+        /*
+        public static void SaveState_SaveToStringIL(ILContext il)
+        {
+            try
+            {
+                ILCursor c = new ILCursor(il);
+                if (c.TryGotoNext(MoveType.After,
+                    (i) => i.MatchCallvirt<String>("Substring"),
+                    (i) => i.Match(OpCodes.Stfld)))
+                {
+                    Plugin.Log("SaveState_SaveToStringIL MatchFind!");
+                    c.Emit(OpCodes.Ldarg_0);
+                    c.Emit(OpCodes.Ldloc_S, (byte)11);
+                    c.EmitDelegate<Action<SaveState, int>>((self, num3) =>
+                    {
+                        if (Regex.Split(RainWorld.ShelterAfterPassage, "_")[0] == "NSH")
+                            self.objectTrackers[num3].lastSeenRegion = RainWorld.ShelterAfterPassage.Substring(0, 3);
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
+        public static void RegionState_AdaptWorldToRegionStateIL(ILContext il)
+        {
+            try
+            {
+                ILCursor c = new ILCursor(il);
+                //对self.room.game.GetStorySession.playerSessionRecords[num]进行null检查
+                if (c.TryGotoNext(MoveType.After,
+                    (i) => i.MatchStloc(11)))//stloc.s 11
+                {
+                    Plugin.Log("RegionState_AdaptWorldToRegionStateIL MatchFind!");
+                    c.Emit(OpCodes.Ldloc_S, (byte)11);//找到flag3的本地变量
+                    c.Emit(OpCodes.Ldloc_S, (byte)10);//找到abstractRoom的本地变量
+                    c.EmitDelegate<Func<bool, AbstractRoom, bool>>((flag3, abstractRoom) =>
+                    {
+                        return flag3 || abstractRoom.name == "NSH_AI";
+                    });
+                    c.Emit(OpCodes.Stloc_S, (byte)11);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+        */
         #endregion
-        public static string ItemSymbol_SpriteNameForItem(On.ItemSymbol.orig_SpriteNameForItem orig, AbstractPhysicalObject.AbstractObjectType itemType, int intData)
+        private static void Custom_Log(On.RWCustom.Custom.orig_Log orig, params string[] values)
+        {
+            orig(values);
+            for(int i = 0; i < values.Length; i++)
+                Plugin.Log("Custom_Log: " + values[i]);
+        }
+
+        private static string ItemSymbol_SpriteNameForItem(On.ItemSymbol.orig_SpriteNameForItem orig, AbstractPhysicalObject.AbstractObjectType itemType, int intData)
         {
             string result = orig(itemType, intData);
             if (itemType == NSHPearlRegistry.NSHPearl)
@@ -308,19 +393,10 @@ namespace HunterExpansion
             return result;
         }
 
-        public static void SpeedRunTimer_Update(On.MoreSlugcats.SpeedRunTimer.orig_Update orig, SpeedRunTimer self)
-        {
-            if (self.ThePlayer().abstractCreature.world.game.GetStorySession.playerSessionRecords[0] == null)
-            {
-                return;
-            }
-            orig(self);
-        }
-
-        public static void SuperStructureFuses_ctor(On.SuperStructureFuses.orig_ctor orig, SuperStructureFuses self, PlacedObject placedObject, IntRect rect, Room room)
+        private static void SuperStructureFuses_ctor(On.SuperStructureFuses.orig_ctor orig, SuperStructureFuses self, PlacedObject placedObject, IntRect rect, Room room)
         {
             orig(self, placedObject, rect, room);
-            if (room.world.region.name == "NSH" && !room.world.game.IsArenaSession)
+            if (room != null && room.world.region != null && room.world.region.name == "NSH" && !room.world.game.IsArenaSession)
             {
                 self.broken = room.roomSettings.GetEffectAmount(RoomSettings.RoomEffect.Type.CorruptionSpores);
                 if (room.world.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Sofanthiel)
@@ -329,15 +405,15 @@ namespace HunterExpansion
                 }
             }
         }
-        
-        public static void WorldLoader_SpawnerStabilityCheck(On.WorldLoader.orig_SpawnerStabilityCheck orig, WorldLoader self, World.CreatureSpawner spawner)
+
+        private static void WorldLoader_SpawnerStabilityCheck(On.WorldLoader.orig_SpawnerStabilityCheck orig, WorldLoader self, World.CreatureSpawner spawner)
         {
             if (self.worldName == "NSH")
                 return;
             orig(self, spawner);
         }
 
-        public static string ConditionalShelterData_GetShelterRegion(On.PlayerProgression.MiscProgressionData.ConditionalShelterData.orig_GetShelterRegion orig, PlayerProgression.MiscProgressionData.ConditionalShelterData self)
+        private static string ConditionalShelterData_GetShelterRegion(On.PlayerProgression.MiscProgressionData.ConditionalShelterData.orig_GetShelterRegion orig, PlayerProgression.MiscProgressionData.ConditionalShelterData self)
         {
             string result = orig(self);
             if (Regex.Split(self.shelterName, "_")[0] == "NSH")
@@ -365,113 +441,63 @@ namespace HunterExpansion
             }
             orig(self, roomName);
         }
-        /*
-        private static void Region_ctor(On.Region.orig_ctor orig, Region self, string name, int firstRoomIndex, int regionNumber, SlugcatStats.Name storyIndex)
+
+        private static void SpecialEvent_Activate(On.Conversation.SpecialEvent.orig_Activate orig, Conversation.SpecialEvent self)
         {
-            orig(self, name, firstRoomIndex, regionNumber, storyIndex);
-            if (self.name == "NSH")
+            orig(self); 
+            if (self.owner.interfaceOwner is NSHOracleBehaviour)
+                (self.owner.interfaceOwner as NSHOracleBehaviour).SpecialEvent(self.eventName);
+        }
+
+        private static void DreamsState_StaticEndOfCycleProgress(On.DreamsState.orig_StaticEndOfCycleProgress orig, SaveState saveState, string currentRegion, string denPosition, ref int cyclesSinceLastDream, ref int cyclesSinceLastFamilyDream, ref int cyclesSinceLastGuideDream, ref int inGWOrSHCounter, ref DreamsState.DreamID upcomingDream, ref DreamsState.DreamID eventDream, ref bool everSleptInSB, ref bool everSleptInSB_S01, ref bool guideHasShownHimselfToPlayer, ref int guideThread, ref bool guideHasShownMoonThisRound, ref int familyThread)
+        {
+            List<WeakReference<CustomNormalDreamTx>> allSlugDreams = new List<WeakReference<CustomNormalDreamTx>>();
+            foreach (CustomNormalDreamTx dream in CustomDreamRx.normalDreamTreatments)
             {
-                self.regionParams.slugPupSpawnChance = 0f;
+                if (dream.focusSlugcat == Plugin.AllSlugcats)
+                {
+                    dream.focusSlugcat = saveState.saveStateNumber;
+                }
             }
+            if ((denPosition == "GATE_NSH_DGL" || denPosition == "GATE_SB_OE" || denPosition == "GATE_OE_SU") && 
+                !TravelCompletedSave.travelCompleted)
+            {
+                cyclesSinceLastFamilyDream = 0;//屏蔽FamilyDream计数，防止被原本的方法干扰
+            }
+            orig(saveState, currentRegion, denPosition, ref cyclesSinceLastDream, ref cyclesSinceLastFamilyDream, ref cyclesSinceLastGuideDream, ref inGWOrSHCounter, ref upcomingDream, ref eventDream, ref everSleptInSB, ref everSleptInSB_S01, ref guideHasShownHimselfToPlayer, ref guideThread, ref guideHasShownMoonThisRound, ref familyThread);
+        }
+
+        private static float OverseerAbstractAI_HowInterestingIsCreature(On.OverseerAbstractAI.orig_HowInterestingIsCreature orig, OverseerAbstractAI self, AbstractCreature testCrit)
+        {
+            if (testCrit == null || 
+                testCrit.realizedCreature == null || 
+                testCrit.realizedCreature.room == null || 
+                testCrit.realizedCreature.room.IsGateRoom())
+                return 0f;
+            return orig(self, testCrit);
+        }
+
+        private static void BlizzardGraphics_InitiateSprites(On.MoreSlugcats.BlizzardGraphics.orig_InitiateSprites orig, MoreSlugcats.BlizzardGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        {
+            if (self.room == null)
+                self.room = self.rCam.room;
+            orig(self, sLeaser, rCam);
+        }
+        /*
+        private static void SaveState_ctor(On.SaveState.orig_ctor orig, SaveState self, SlugcatStats.Name saveStateNumber, PlayerProgression progression)
+        {
+            orig.Invoke(self, saveStateNumber, progression);
+        }
+
+        private static string DeathPersistentSaveData_SaveToString(On.DeathPersistentSaveData.orig_SaveToString orig, DeathPersistentSaveData self, bool saveAsIfPlayerDied, bool saveAsIfPlayerQuit)
+        {
+            string result = orig.Invoke(self, saveAsIfPlayerDied, saveAsIfPlayerQuit);
+            return result;
+        }
+
+        private static void DeathPersistentSaveData_FromString(On.DeathPersistentSaveData.orig_FromString orig, DeathPersistentSaveData self, string s)
+        {
+            orig.Invoke(self, s);
         }*/
-        /*
-        public static void AbstractPhysicalObject_ChangeRooms(On.AbstractPhysicalObject.orig_ChangeRooms orig, AbstractPhysicalObject self, WorldCoordinate newCoord)
-        {
-            //问题：self.world.GetAbstractRoom(newCoord) == null
-            Plugin.Log("newCoord：" + (newCoord));
-            Plugin.Log("newCoord.room：" + (newCoord.room));
-            Plugin.Log("self.world.GetAbstractRoom(self.pos) == null? " + (self.world.GetAbstractRoom(self.pos) == null));
-            Plugin.Log("this.firstRoomIndex：" + self.world.firstRoomIndex);
-            Plugin.Log("this.firstRoomIndex + this.NumberOfRooms：" + self.world.NumberOfRooms);
-            orig(self, newCoord);
-        }
-        
-        public static void PathFinder_Reset(On.PathFinder.orig_Reset orig, PathFinder self, Room newRealizedRoom)
-        {
-            self.currentlyFollowingDestination = self.creature.pos;
-            self.realizedRoom = newRealizedRoom;
-            self.room = self.realizedRoom.abstractRoom.index;
-            self.checkNextList.Clear();
-            int num = self.realizedRoom.TileWidth;
-            int num2 = 0;
-            int num3 = 0;
-            int num4 = self.realizedRoom.TileHeight;
-            bool flag = false;
-            for (int i = 0; i < self.realizedRoom.TileWidth; i++)
-            {
-                for (int j = 0; j < self.realizedRoom.TileHeight; j++)
-                {
-                    if (self.realizedRoom == null)
-                    {
-                        Debug.Log("@@ REALIZED ROOM NULL !!");
-                    }
-                    else if (self.realizedRoom.aimap == null)
-                    {
-                        Debug.Log("@@ AIMAP NULL FOR ROOM " + self.realizedRoom.abstractRoom.name);
-                    }
-                    if (self.realizedRoom.aimap.TileAccessibleToCreature(i, j, self.creatureType))
-                    {
-                        flag = true;
-                        if (i < num)
-                        {
-                            num = i;
-                        }
-                        if (j < num4)
-                        {
-                            num4 = j;
-                        }
-                        if (i > num3)
-                        {
-                            num3 = i;
-                        }
-                        if (j > num2)
-                        {
-                            num2 = j;
-                        }
-                    }
-                }
-            }
-            if (!flag)
-            {
-                num = 0;
-                num4 = 0;
-                num3 = 1;
-                num2 = 1;
-            }
-            self.coveredArea = new IntRect(num, num4, num3, num2);
-            num3 = self.realizedRoom.TileWidth - num3 - 1;
-            num2 = self.realizedRoom.TileHeight - num2 - 1;
-            self.CurrentRoomCells = new PathFinder.PathingCell[self.realizedRoom.TileWidth - num3 - num, self.realizedRoom.TileHeight - num2 - num4];
-            for (int k = 0; k < self.realizedRoom.TileWidth - num3 - num; k++)
-            {
-                for (int l = 0; l < self.realizedRoom.TileHeight - num2 - num4; l++)
-                {
-                    self.CurrentRoomCells[k, l] = new PathFinder.PathingCell(new WorldCoordinate(self.room, k + num, l + num4, -1));
-                }
-            }
-            if (self.visualize && self.realizedRoom.TileWidth * self.realizedRoom.TileHeight < 16000)
-            {
-                self.debugDrawer = new PathfindingVisualizer(self.world, self.realizedRoom, self, self.CurrentRoomCells.GetLength(0), self.CurrentRoomCells.GetLength(1), new IntVector2(self.coveredArea.left, self.coveredArea.bottom));
-            }
-            if (self.accessibilityMapper != null)
-            {
-                self.accessibilityMapper.CullClients(self);
-            }
-            self.accessibilityMapper = null;
-            if (self.nonShortcutRoomEntrancePos != null)
-            {
-                self.InitiatePath(self.nonShortcutRoomEntrancePos.Value.abstractNode);
-            }
-            else if (!self.creature.pos.TileDefined && self.creature.pos.NodeDefined)
-            {
-                self.InitiatePath(self.creature.pos.abstractNode);
-            }
-            else
-            {
-                self.InitiAccessibilityMapping(self.creature.pos, null);
-            }
-            self.reAssignDestinationOnceAccessibilityMappingIsDone = true;
-        }
-        */
     }
 }

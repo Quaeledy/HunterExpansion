@@ -34,10 +34,10 @@ namespace HunterExpansion.CustomSave
             }
             else
             {
-                result = "";
+                result = "<mpdA>" + header;
                 for (int i = 0; i < introText.Length; i++)
                 {
-                    result += "<mpdA>" + header + "<mpdB>" + i.ToString() + "<introText>" + introText[i].ToString();
+                    result +=  "<mpdB>" + i.ToString() + "<introText>" + introText[i].ToString();
                 }
             }
 
@@ -52,13 +52,16 @@ namespace HunterExpansion.CustomSave
             for (int i = 0; i < array.Length; i++)
             {
                 string[] array2 = Regex.Split(array[i], "<mpdB>");
-                for(int j = 0;  j < array2.Length; j++)
+                if (array2[0] == header)
                 {
-                    string[] array3 = Regex.Split(array2[j], "<introText>");
-                    if (array3.Length > 1 && array3[0] != "" && array3[1] != "")
+                    for (int j = 1; j < array2.Length; j++)
                     {
-                        int header = int.Parse(array3[0]);
-                        introText[header] = bool.Parse(array3[1]);
+                        string[] array3 = Regex.Split(array2[j], "<introText>");
+                        if (array3.Length > 1 && array3[0] != "" && array3[1] != "")
+                        {
+                            int header = int.Parse(array3[0]);
+                            introText[header] = bool.Parse(array3[1]);
+                        }
                     }
                 }
             }

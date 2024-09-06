@@ -3,7 +3,7 @@ using HunterExpansion.CustomSave;
 using MonoMod.Cil;
 using System;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
+//using Debug = UnityEngine.Debug;
 using Mono.Cecil.Cil;
 using MoreSlugcats;
 using System.Collections.Generic;
@@ -29,6 +29,7 @@ namespace HunterExpansion.HRTalk
             On.Oracle.ctor += Oracle_ctor;
             On.RoomCamera.ChangeBothPalettes += RoomCamera_ChangeBothPalettes;
             On.Room.ReadyForAI += Room_ReadyForAI;
+            On.Player.ctor += Player_ctor;
         }
         #region IL输出修改后代码的示例
         /*
@@ -202,6 +203,15 @@ namespace HunterExpansion.HRTalk
             }
         }
         #endregion
+
+        private static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
+        {
+            orig(self, abstractCreature, world);
+
+            NSHHasSpawn = false;
+            SRSHasSpawn = false;
+        }
+
         private static void Oracle_ctor(On.Oracle.orig_ctor orig, Oracle self, AbstractPhysicalObject abstractPhysicalObject, Room room)
         {
             Plugin.Log("room.oracleWantToSpawn: " + (room.oracleWantToSpawn != null ? room.oracleWantToSpawn.ToString() : "NULL"));
@@ -220,6 +230,7 @@ namespace HunterExpansion.HRTalk
                             if ((physicalObject as Oracle).ID == room.oracleWantToSpawn)
                             {
                                 oracleHasSpawn = true;
+                                Plugin.Log(room.oracleWantToSpawn.ToString() + " oracle has spawn!");
                                 break;
                             }
                         }
@@ -234,12 +245,14 @@ namespace HunterExpansion.HRTalk
                         {
                             if ((physicalObject as Oracle).ID == NSHOracleRegistry.NSHOracle)
                             {
-                                NSHHasSpawn = true;
+                                NSHHasSpawn = true; 
+                                Plugin.Log("NSH oracle has spawn!");
                                 break;
                             }
                             if ((physicalObject as Oracle).ID == SRSOracleRegistry.SRSOracle)
                             {
                                 SRSHasSpawn = true;
+                                Plugin.Log("SRS oracle has spawn!");
                                 break;
                             }
                         }

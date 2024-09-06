@@ -13,6 +13,7 @@ using HunterExpansion.CustomSave;
 using Expedition;
 using RWCustom;
 using System.Globalization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HunterExpansion.CustomEnding
 {
@@ -28,11 +29,19 @@ namespace HunterExpansion.CustomEnding
         {
             //区域名相关
             On.Region.GetProperRegionAcronym += Region_GetProperRegionAcronym;
+            On.OverWorld.GetRegion_string += OverWorld_GetRegion_string;
 
             //业力门相关（还有一个地图显示业力门符号的方法在HUD里）
             On.RegionGate.KarmaBlinkRed += RegionGate_KarmaBlinkRed;
             On.GateKarmaGlyph.Update += GateKarmaGlyph_Update;
             Hook hook = new Hook(typeof(RegionGate).GetProperty("MeetRequirement", RegionHooks.propFlags).GetGetMethod(), typeof(RegionHooks).GetMethod("RegionGate_get_MeetRequirement", RegionHooks.methodFlags));
+            /*
+            //自定义的倒塌业力门相关
+            On.RegionGate.ChangeDoorStatus += RegionGate_ChangeDoorStatus;
+            On.RegionGate.DetectZone += RegionGate_DetectZone;
+            On.RegionGateGraphics.ctor += RegionGateGraphics_ctor;
+            On.RegionGateGraphics.DoorGraphic.ctor += DoorGraphic_ctor;
+            On.GateKarmaGlyph.ctor += GateKarmaGlyph_ctor;*/
         }
 
         public static bool RegionGate_KarmaBlinkRed(On.RegionGate.orig_KarmaBlinkRed orig, RegionGate self)
@@ -144,7 +153,7 @@ namespace HunterExpansion.CustomEnding
                 self.room.abstractRoom.name.Contains("AVA") || 
                 (self.room.abstractRoom.name.Contains("DGL") && self.karmaRequirements[(!self.letThroughDir) ? 1 : 0] == HunterExpansionEnums.GateRequirement.NSHLock))
             {
-                return !Plugin.gateLock;
+                return HunterExpansionEnums.GateRequirement.customNSHGateRequirements(self);
             }
             //珍珠解锁业力门
             if ((self.room.game.session as StoryGameSession).saveStateNumber == SlugcatStats.Name.Red &&
@@ -152,19 +161,26 @@ namespace HunterExpansion.CustomEnding
             {
                 return true;
             }
+            //倒塌的地底-外层空间业力门
+            if (self.room.world.region.name == "SB" &&
+                self.room.abstractRoom.name.Contains("NSH") && self.karmaRequirements[(!self.letThroughDir) ? 1 : 0] == MoreSlugcatsEnums.GateRequirement.OELock)
+            {
+                return HunterExpansionEnums.GateRequirement.customNSHGateRequirements(self);
+            }
             return result;
         }
 
         public static string Region_GetProperRegionAcronym(On.Region.orig_GetProperRegionAcronym orig, SlugcatStats.Name character, string baseAcronym)
         {
+            Plugin.Log("Get Proper Region Acronym (Orinal): " + baseAcronym);
             string result = orig(character, baseAcronym);
-            if (character == Plugin.SlugName && PearlFixedSave.pearlFixed && EndingSession.openGate)
+            string text = baseAcronym;
+            if (PearlFixedSave.pearlFixed && 
+                (EndingSession.openGate || (character != Plugin.SlugName && EndingSession.openCount > 0))
+                && text == "OE")
             {
-                string text = baseAcronym;
-                if (text == "OE")
-                {
-                    text = "NSH";
-                }
+                text = "NSH";
+                baseAcronym = "NSH";
                 string[] array = AssetManager.ListDirectory("World", true, false);
                 for (int i = 0; i < array.Length; i++)
                 {
@@ -206,7 +222,60 @@ namespace HunterExpansion.CustomEnding
                 }
                 result = text;
             }
+            if (text == "DGL")
+            {
+                text = RoomSpecificScript.shouldGoRegionName;
+                baseAcronym = RoomSpecificScript.shouldGoRegionName;
+                string[] array = AssetManager.ListDirectory("World", true, false);
+                for (int i = 0; i < array.Length; i++)
+                {
+                    string path = AssetManager.ResolveFilePath(string.Concat(new string[]
+                    {
+                        "World",
+                        Path.DirectorySeparatorChar.ToString(),
+                        Path.GetFileName(array[i]),
+                        Path.DirectorySeparatorChar.ToString(),
+                        "equivalences.txt"
+                    }));
+                    if (File.Exists(path))
+                    {
+                        string[] array2 = File.ReadAllText(path).Trim().Split(new char[]
+                        {
+                            ','
+                        });
+                        for (int j = 0; j < array2.Length; j++)
+                        {
+                            string text2 = null;
+                            string a = array2[j];
+                            if (array2[j].Contains("-"))
+                            {
+                                a = array2[j].Split(new char[]
+                                {
+                                    '-'
+                                })[0];
+                                text2 = array2[j].Split(new char[]
+                                {
+                                    '-'
+                                })[1];
+                            }
+                            if (a == baseAcronym && (text2 == null || character.value.ToLower() == text2.ToLower()))
+                            {
+                                text = Path.GetFileName(array[i]).ToUpper();
+                            }
+                        }
+                    }
+                }
+                result = text;
+            }
+            Plugin.Log("Get Proper Region Acronym (New): " + result);
             return result;
+        }
+
+        public static Region OverWorld_GetRegion_string(On.OverWorld.orig_GetRegion_string orig, OverWorld self, string rName)
+        {
+            if (rName == "DGL")
+                rName = RoomSpecificScript.shouldGoRegionName;
+            return orig(self, rName);
         }
 
         public static int ShouldPlayAnimation(GateKarmaGlyph self)

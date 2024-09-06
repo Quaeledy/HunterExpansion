@@ -3,10 +3,10 @@ using CustomDreamTx;
 using static CustomOracleTx.CustomOracleBehaviour;
 using HunterExpansion.CustomSave;
 using UnityEngine;
+using Unity.Mathematics;
 using System.Collections.Generic;
 using CustomOracleTx;
 using MoreSlugcats;
-using SlugBase.DataTypes;
 using System;
 using Random = UnityEngine.Random;
 using System.Globalization;
@@ -19,7 +19,7 @@ using HunterExpansion.CustomDream;
 
 namespace HunterExpansion.CustomOracle
 {
-    public class NSHOracleMeetHunter : CustomConversationBehaviour
+    public class NSHOracleMeetHunter : NSHConversationBehaviour
     {
         //梦境相关属性
         public static bool swarmerCreated = false;
@@ -42,9 +42,10 @@ namespace HunterExpansion.CustomOracle
         public static FSprite blackRect = new FSprite("pixel");
         public static Vector2 oraclePos = Vector2.zero;
         public bool holdPlayer;
+        private bool hasTookPupsAway;
 
 
-        public NSHOracleMeetHunter(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetHunter, NSHConversationID.Hunter_Talk0)
+        public NSHOracleMeetHunter(NSHOracleBehaviour owner) : base(owner)
         {
             swarmerCreated = false;
             swarmerReleased = true;
@@ -57,7 +58,8 @@ namespace HunterExpansion.CustomOracle
 
             isControled = false;
             hasSayHello = false;
-            playerWaitDeath = false;
+            playerWaitDeath = false; 
+            hasTookPupsAway = false;
             fadeCounter = 0;
 
             Plugin.Log("NSH Oracle Meet Hunter!");
@@ -124,7 +126,7 @@ namespace HunterExpansion.CustomOracle
                         return;
                     }
                     else if (CustomDreamRx.currentActivateNormalDream.activateDreamID == DreamID.HunterDream_5 &&
-                        inActionCounter > 40)
+                        inActionCounter > 20)
                     {
                         owner.NewAction(NSHOracleBehaviorAction.MeetHunter_Praise);
                         return;
@@ -133,8 +135,52 @@ namespace HunterExpansion.CustomOracle
                 //现实行为
                 else
                 {
-                    owner.conversation = null;
+                    //owner.conversation = null;
                     SaveState saveState = this.oracle.room.game.manager.rainWorld.progression.currentSaveState;
+                    if (this.owner.oracle.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft <= 0)
+                    {
+                        if (state.playerEncountersWithMark == 0 && inActionCounter > 40)
+                        {
+                            owner.NewAction(NSHOracleBehaviorAction.MeetHunter_UnfulfilledMessager1);
+                            (owner as NSHOracleBehaviour).PlayerEncountersAdd();
+                            return;
+                        }
+                        else if (state.playerEncountersWithMark == 1 && inActionCounter > 40)
+                        {
+                            owner.NewAction(NSHOracleBehaviorAction.MeetHunter_UnfulfilledMessager2);
+                            (owner as NSHOracleBehaviour).PlayerEncountersAdd();
+                            return;
+                        }
+                    }
+                    else// if (saveState.deathPersistentSaveData.altEnding)
+                    {
+                        if (state.playerEncountersWithMark == 0 && inActionCounter > 60)
+                        {
+                            owner.NewAction(NSHOracleBehaviorAction.MeetHunter_Talk1);
+                            (owner as NSHOracleBehaviour).PlayerEncountersAdd();
+                            return;
+                        }
+                        else if (state.playerEncountersWithMark == 1 && inActionCounter > 60)
+                        {
+                            owner.NewAction(NSHOracleBehaviorAction.MeetHunter_Talk2);
+                            (owner as NSHOracleBehaviour).PlayerEncountersAdd();
+                            return;
+                        }
+                        else if (state.playerEncountersWithMark >= 2 && inActionCounter > 10)
+                        {
+                            if (RedsIllness.RedsCycles(saveState.redExtraCycles) - saveState.cycleNumber <= 0)
+                            {
+                                owner.NewAction(NSHOracleBehaviorAction.MeetHunter_Talk3);
+                            }
+                            else
+                            {
+                                owner.NewAction(NSHOracleBehaviorAction.MeetHunter_Talk3_Wait);
+                            }
+                            (owner as NSHOracleBehaviour).PlayerEncountersAdd();
+                            return;
+                        }
+                    }
+                    /*
                     if (saveState.deathPersistentSaveData.altEnding)
                     {
                         if (state.playerEncountersWithMark == 0 && inActionCounter > 60)
@@ -180,8 +226,9 @@ namespace HunterExpansion.CustomOracle
                     }
                     else
                     {
-                        owner.dialogBox.NewMessage(owner.Translate("..."), 60);
-                    }
+                        if (inActionCounter < 40)
+                            owner.dialogBox.NewMessage(owner.Translate("..."), 60);
+                    }*/
                     return;
                 }
             }
@@ -418,7 +465,34 @@ namespace HunterExpansion.CustomOracle
                             fadeCounter = 0;
                             owner.conversation = null;
                             isControled = false;
-                            player.room.game.GetStorySession.saveState.SessionEnded(player.room.game, true, false);
+
+                            RainWorldGame game = this.oracle.room.game;
+                            for (int l = 0; l < game.world.GetAbstractRoom(player.abstractCreature.pos).creatures.Count; l++)
+                            {
+                                if (ModManager.MSC && game.world.GetAbstractRoom(player.abstractCreature.pos).creatures[l].creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
+                                {
+                                    PlayerNPCState slugpup = game.world.GetAbstractRoom(game.Players[0].pos).creatures[l].state as PlayerNPCState;
+                                    Plugin.Log("Slugpup foodInStomach (old): " + slugpup.foodInStomach);
+                                    Plugin.Log("Slugpup MaxFoodInStomach: " + (slugpup.player.realizedCreature as Player).MaxFoodInStomach);
+                                    slugpup.foodInStomach = (slugpup.player.realizedCreature as Player).MaxFoodInStomach;
+                                    Plugin.Log("Help to feed slugpup! creature index: " + l);
+                                    Plugin.Log("Slugpup foodInStomach (new): " + slugpup.foodInStomach);
+                                }
+                            }
+
+                            AbstractCreature abstractCreature = game.FirstAlivePlayer;
+                            if (abstractCreature == null)
+                            {
+                                abstractCreature = game.FirstAnyPlayer;
+                            }
+                            SaveState saveState = game.GetStorySession.saveState;
+                            SaveState.forcedEndRoomToAllowwSave = abstractCreature.Room.name;
+                            saveState.BringUpToDate(game);
+                            SaveState.forcedEndRoomToAllowwSave = "";
+                            RainWorldGame.ForceSaveNewDenLocation(game, "NSH_AI", true);
+                            game.manager.rainWorld.progression.SaveWorldStateAndProgression(false);
+                            game.manager.rainWorld.progression.SaveProgressionAndDeathPersistentDataOfCurrentState(false, false);
+                            //player.room.game.GetStorySession.saveState.SessionEnded(player.room.game, true, false);
                             oracle.room.game.manager.RequestMainProcessSwitch(ProcessManager.ProcessID.Statistics);
                         }
                         return;
@@ -436,6 +510,19 @@ namespace HunterExpansion.CustomOracle
                         {
                             player.AddFood(player.MaxFoodInStomach);
                         }
+                        //帮忙喂猫崽
+                        for (int l = 0; l < this.oracle.room.abstractRoom.creatures.Count; l++)
+                        {
+                            if (ModManager.MSC && this.oracle.room.abstractRoom.creatures[l].creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
+                            {
+                                PlayerNPCState slugpup = this.oracle.room.game.world.GetAbstractRoom(this.oracle.room.game.Players[0].pos).creatures[l].state as PlayerNPCState;
+                                Plugin.Log("Slugpup foodInStomach (old): " + slugpup.foodInStomach);
+                                Plugin.Log("Slugpup MaxFoodInStomach: " + (slugpup.player.realizedCreature as Player).MaxFoodInStomach);
+                                slugpup.foodInStomach = (slugpup.player.realizedCreature as Player).MaxFoodInStomach;
+                                Plugin.Log("Help to feed slugpup! creature index: " + l);
+                                Plugin.Log("Slugpup foodInStomach (new): " + slugpup.foodInStomach);
+                            }
+                        }
                         //说完继续工作
                         owner.conversation = null;
                         owner.getToWorking = 1f;
@@ -447,49 +534,100 @@ namespace HunterExpansion.CustomOracle
             else if (action == NSHOracleBehaviorAction.MeetHunter_Talk3)
             {
                 owner.lookPoint = player.firstChunk.pos + Custom.DirVec(oracle.firstChunk.pos, player.DangerPos) * Custom.LerpMap(Mathf.Min(Custom.Dist(oracle.firstChunk.pos, player.DangerPos), 200f), 200f, 0f, 10f, 100f);
-                if (!playerWaitDeath && owner.conversation == null)
+                if (!playerWaitDeath)
                 {
                     oraclePos = oracle.firstChunk.pos;
-                    if (!EndingSession.goEnding)
+                    //有猫崽则让玩家带走猫崽
+                    if (owner.IsThereHasSlugPup())
                     {
-                        //Plugin.Log("oracle.firstChunk.pos: " + oracle.firstChunk.pos);
-                        //NSH开始下落
-                        if (oracle.firstChunk.pos.y > 95f)
+                        if (!this.hasTookPupsAway)
                         {
-                            movementBehavior = NSHOracleMovementBehavior.Land;
-                            (owner as NSHOracleBehaviour).landPos = (oracle.firstChunk.pos.x > 480f) ? new Vector2(700f, 95f) : new Vector2(260f, 95f);
+                            List<Player> pups = owner.FindSlugPup();
+                            owner.dialogBox.NewMessage(owner.Translate("Good morning, messenger."), 60);
+                            if (pups.Count == 1)
+                                owner.dialogBox.NewMessage(owner.Translate("Oh, you're with your friend. But we need some time alone, I believe. Can you come back for me after you take it to somewhere safe?"), 60);
+                            else
+                                owner.dialogBox.NewMessage(owner.Translate("Oh, you're with your friends. But we need some time alone, I believe. Can you come back for me after you take them to somewhere safe?"), 60);
+                            this.hasTookPupsAway = true;
                         }
-                        //下落完毕
-                        if (oracle.firstChunk.pos.y <= 95f)
-                        {
-                            movementBehavior = CustomMovementBehavior.ShowMedia; 
-                            //oracle.firstChunk.vel *= Custom.LerpMap(oracle.firstChunk.vel.magnitude, 0f, 2f, 0.9f, 0.5f);
-                            //NSH说第一句话
-                            if (!hasSayHello)
-                            {
-                                hasSayHello = true;
-                                owner.dialogBox.NewMessage(owner.Translate("Good morning. Come on, my little messenger. Come here to me."), 60);
-                            }
-                            //NSH说完话后，玩家强制靠近NSH
-                            if (owner.dialogBox.messages.Count == 0)
-                            {
-                                //玩家开始靠近NSH
-                                EndingSession.goEnding = true;
-                            }
-                        }
+                        if (owner.dialogBox.messages.Count == 0)
+                            owner.getToWorking = 1f;
                     }
-                    else
+                    //没有猫崽从这里开始
+                    else if (player.room != null && player.room == oracle.room)
                     {
-                        movementBehavior = CustomMovementBehavior.ShowMedia;
-                        //NSH伸出手
-                        int i = (oracle.firstChunk.pos.x > player.firstChunk.pos.x) ? 0 : 1;
-                        (oracle.graphicsModule as OracleGraphics).hands[i].vel *= Custom.LerpMap((oracle.graphicsModule as OracleGraphics).hands[i].vel.magnitude, 1f, 6f, 0.999f, 0.9f);
-                        (oracle.graphicsModule as OracleGraphics).hands[i].vel += 4f * Custom.DirVec((oracle.graphicsModule as OracleGraphics).hands[i].pos, player.firstChunk.pos + new Vector2(0f, 10f));
-                        //玩家已经靠近了NSH
-                        if (Custom.Dist(player.DangerPos, oracle.firstChunk.pos) <= 20f)
+                        if (this.hasTookPupsAway)
                         {
-                            owner.InitateConversation(NSHConversationID.Hunter_Talk2, this);
-                            playerWaitDeath = true;
+                            bool seePlayer = oracle.room.GetTilePosition(player.mainBodyChunk.pos).y < 32 &&
+                                             (Custom.DistLess(player.mainBodyChunk.pos, oracle.firstChunk.pos, 150f) ||
+                                              !Custom.DistLess(player.mainBodyChunk.pos, oracle.room.MiddleOfTile(oracle.room.ShortcutLeadingToNode(0).StartTile), 150f));
+                            if (!seePlayer)
+                                return;
+                        }
+                        if (!EndingSession.goEnding)
+                        {
+                            owner.getToWorking = 0f;
+                            owner.LockShortcuts();
+                            //NSH开始下落
+                            if (oracle.firstChunk.pos.y > 95f)
+                            {
+                                movementBehavior = NSHOracleMovementBehavior.Land;
+                                (owner as NSHOracleBehaviour).landPos = (oracle.firstChunk.pos.x > 480f) ? new Vector2(700f, 95f) : new Vector2(260f, 95f);
+                            }
+                            //下落完毕
+                            if (oracle.firstChunk.pos.y <= 95f)
+                            {
+                                movementBehavior = CustomMovementBehavior.ShowMedia;
+                                //oracle.firstChunk.vel *= Custom.LerpMap(oracle.firstChunk.vel.magnitude, 0f, 2f, 0.9f, 0.5f);
+                                //NSH说第一句话
+                                if (!hasSayHello)
+                                {
+                                    hasSayHello = true;
+                                    if (this.hasTookPupsAway)
+                                    {
+                                        owner.dialogBox.NewMessage(owner.Translate("Welcome back, my messenger. Come, Come here."), 60);
+                                    }
+                                    else
+                                    {
+                                        owner.dialogBox.NewMessage(owner.Translate("Good morning. Come here, my little messenger. Come to me."), 60);
+                                    }
+                                }
+                                //NSH说完话后，玩家强制靠近NSH
+                                if (owner.dialogBox.messages.Count == 0)
+                                    EndingSession.goEnding = true;
+                            }
+                        }
+                        else
+                        {
+                            movementBehavior = CustomMovementBehavior.ShowMedia;
+                            //NSH伸出手
+                            int i = (oracle.firstChunk.pos.x > player.firstChunk.pos.x) ? 0 : 1;
+                            (oracle.graphicsModule as OracleGraphics).hands[i].vel *= Custom.LerpMap((oracle.graphicsModule as OracleGraphics).hands[i].vel.magnitude, 1f, 6f, 0.999f, 0.9f);
+                            (oracle.graphicsModule as OracleGraphics).hands[i].vel += 4f * Custom.DirVec((oracle.graphicsModule as OracleGraphics).hands[i].pos, player.firstChunk.pos + new Vector2(0f, 10f));
+                            //任何玩家已经靠近了NSH
+                            for (int j = 0; j < oracle.room.game.Players.Count; j++)
+                            {
+                                Player p = oracle.room.game.Players[j].realizedCreature as Player;
+                                if (Custom.Dist(p.DangerPos, oracle.firstChunk.pos) <= 20f)
+                                {
+                                    owner.InitateConversation(NSHConversationID.Hunter_Talk2, this);
+                                    playerWaitDeath = true;
+                                    //将最近的玩家图层置于迭代器上方
+                                    if (oracle.graphicsModule != null)
+                                    {
+                                        if (p is IDrawable)
+                                            oracle.graphicsModule.AddObjectToInternalContainer(p as IDrawable, 0);
+                                        else if (p.graphicsModule != null)
+                                            oracle.graphicsModule.AddObjectToInternalContainer(p.graphicsModule, 0);
+                                    }
+                                }
+                            }
+                            /*
+                            if (Custom.Dist(player.DangerPos, oracle.firstChunk.pos) <= 20f)
+                            {
+                                owner.InitateConversation(NSHConversationID.Hunter_Talk2, this);
+                                playerWaitDeath = true;
+                            }*/
                         }
                     }
                 }
@@ -497,9 +635,17 @@ namespace HunterExpansion.CustomOracle
                 if (owner.conversation != null)
                 {
                     movementBehavior = CustomMovementBehavior.ShowMedia;
-                    //NSH伸出手
-                    int i = (oracle.firstChunk.pos.x > player.firstChunk.pos.x) ? 0 : 1;
-                    (oracle.graphicsModule as OracleGraphics).hands[i].pos = player.firstChunk.pos + new Vector2(0f, 10f);
+                    //NSH对最近的猫伸出手
+                    for (int j = 0; j < oracle.room.game.Players.Count; j++)
+                    {
+                        Player p = oracle.room.game.Players[j].realizedCreature as Player;
+                        if (Custom.Dist(p.DangerPos, oracle.firstChunk.pos) <= 20f)
+                        {
+                            int i = (oracle.firstChunk.pos.x > p.firstChunk.pos.x) ? 0 : 1;
+                            (oracle.graphicsModule as OracleGraphics).hands[i].pos = p.firstChunk.pos + new Vector2(0f, 10f);
+                        }
+                        owner.lookPoint = p.firstChunk.pos + Custom.DirVec(oracle.firstChunk.pos, p.DangerPos) * Custom.LerpMap(Mathf.Min(Custom.Dist(oracle.firstChunk.pos, p.DangerPos), 200f), 200f, 0f, 10f, 100f);
+                    }
                     //NSH说完话了
                     if (owner.conversation.slatedForDeletion)
                     {
@@ -518,7 +664,7 @@ namespace HunterExpansion.CustomOracle
                             {
                                 for (int k = 0; k < 20; k++)
                                 {
-                                    player.room.game.cameras[0].virtualMicrophone.AllQuiet();
+                                    //player.room.game.cameras[0].virtualMicrophone.AllQuiet();
                                     player.room.PlaySound(SoundID.SS_AI_Give_The_Mark_Boom, player.firstChunk.pos, 0.5f, 1f);
                                     oracle.room.AddObject(new Spark(player.mainBodyChunk.pos, Custom.RNV() * Random.value * 40f, new Color(1f, 1f, 1f), null, 30, 120));
                                 }
@@ -572,6 +718,19 @@ namespace HunterExpansion.CustomOracle
                         if (player.FoodInStomach <= player.MaxFoodInStomach)
                         {
                             player.AddFood(player.MaxFoodInStomach);
+                        }
+                        //帮忙喂猫崽
+                        for (int l = 0; l < this.oracle.room.abstractRoom.creatures.Count; l++)
+                        {
+                            if (ModManager.MSC && this.oracle.room.abstractRoom.creatures[l].creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
+                            {
+                                PlayerNPCState slugpup = this.oracle.room.game.world.GetAbstractRoom(this.oracle.room.game.Players[0].pos).creatures[l].state as PlayerNPCState;
+                                Plugin.Log("Slugpup foodInStomach (old): " + slugpup.foodInStomach);
+                                Plugin.Log("Slugpup MaxFoodInStomach: " + (slugpup.player.realizedCreature as Player).MaxFoodInStomach);
+                                slugpup.foodInStomach = (slugpup.player.realizedCreature as Player).MaxFoodInStomach;
+                                Plugin.Log("Help to feed slugpup! creature index: " + l);
+                                Plugin.Log("Slugpup foodInStomach (new): " + slugpup.foodInStomach);
+                            }
                         }
                         //说完继续工作
                         owner.conversation = null;
@@ -1004,80 +1163,76 @@ namespace HunterExpansion.CustomOracle
         }
 
         //与红猫的所有对话
-        public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
+        public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //梦境对话
             //第一场梦境，诞生
             if (id == NSHConversationID.Hunter_DreamTalk0)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Hear me?"), 10 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("We are in a hurry. Let's keep it simple and professional."), 60 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("As you see,I should be counted as a creator of you."), 50 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I would borrow your hand to accomplish something."), 50 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("As compensation, I will guide you on the path of ascension."), 60 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("But I know, this will always be a heartless invitation. Creating life should have not been such a hasty thing."), 90 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I'm sorry.Unfortunately, we don't have any other options."), 60 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, "Dream-0");
             }
             //第二场梦境，误入
             else if (id == NSHConversationID.Hunter_DreamTalk1)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What are you doing here?"), 20 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Neither you nor I are ready for the upcoming tasks yet."), 50 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please go back and don't disturb my work."), 40 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 0));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If you just want to take a break, I don't object either."), 60 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, "Dream-1");
             }
             //第三场梦境的对话属于旁白，不在这里，在NSHConversation里
             //第四场梦境，启程
             else if (id == NSHConversationID.Hunter_DreamTalk3)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I entrusted it to you."), 20 * extralingerfactor));
-                giveSwarmerToHunter = true;
-                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 20));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Guess you have already known its importance."), 40 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("If it's necessary, the pearl can be left, but the neuron must be delivered to it's destination."), 80 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("This will be your first time entering the natural environment, and the journey will not be easy, but I wish you a pleasant journey."), 100 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Take care, my little messenger."), 30 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, "Dream-3");
             }
             //美梦，夸夸
             else if (id == NSHConversationID.Hunter_DreamTalk5)
             {
-                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 30));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You have completed a very great job, messenger."), 40 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I am proud of you, and at the same time, I feel ashamed of myself."), 40 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You don't have much time left. Go deep underground and you will be saved."), 60 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Don't turn back."), 25 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, "Dream-5");
             }
             //现实对话
             else if (id == NSHConversationID.Hunter_UnfulfilledMessager0)
             {
-                LoadEventsFromFile(47, "NSH-1", conv);
+                NSHConversation.LoadEventsFromFile(conv, 47, "UnfulfilledMessager-1");
             }
             else if (id == NSHConversationID.Hunter_UnfulfilledMessager1)
             {
-                LoadEventsFromFile(47, "NSH-2", conv);
+                NSHConversation.LoadEventsFromFile(conv, 47, "UnfulfilledMessager-2");
             }
             else if (id == NSHConversationID.Hunter_Talk0)
             {
-                LoadEventsFromFile(0, "NSH-Ending", conv);
+                if (owner.IsThereHasSlugPup())
+                {
+                    List<Player> pups = owner.FindSlugPup();
+                    if (pups.Count == 1)
+                        NSHConversation.LoadEventsFromFile(conv, 0, "Ending-0-WithPup");
+                    else
+                        NSHConversation.LoadEventsFromFile(conv, 0, "Ending-0-WithPups");
+                }
+                else
+                    NSHConversation.LoadEventsFromFile(conv, 0, "Ending-0");
             }
             else if (id == NSHConversationID.Hunter_Talk1)
             {
-                LoadEventsFromFile(1, "NSH-Ending", conv);
+                if (owner.IsThereHasSlugPup())
+                {
+                    List<Player> pups = owner.FindSlugPup();
+                    if (pups.Count == 1)
+                        NSHConversation.LoadEventsFromFile(conv, 0, "Ending-1-WithPup");
+                    else
+                        NSHConversation.LoadEventsFromFile(conv, 0, "Ending-1-WithPups");
+                }
+                else
+                    NSHConversation.LoadEventsFromFile(conv, 0, "Ending-1");
             }
             else if (id == NSHConversationID.Hunter_Talk2)
             {
-                //conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 2));
-                LoadEventsFromFile(2, "NSH-Ending", conv);
+                NSHConversation.LoadEventsFromFile(conv, 0, "Ending-2");
             }
             else if (id == NSHConversationID.Hunter_Talk2_Wait)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Is there anything you need, my little messenger?"), 40 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Willing to serve~"), 10 * extralingerfactor));
+                if (owner.IsThereHasSlugPup())
+                    NSHConversation.LoadEventsFromFile(conv, 0, "Ending-Wait-WithPup");
+                else
+                    NSHConversation.LoadEventsFromFile(conv, 0, "Ending-Wait");
             }
             //特殊对话
             else if (id == NSHConversationID.WarnSlugcatStayAwayFromSwarmer)
@@ -1085,13 +1240,13 @@ namespace HunterExpansion.CustomOracle
                 switch (NSHOracleMeetHunter.swarmerApproached)
                 {
                     case 0:
-                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please stay away; I don't want anything to go wrong in this process."), 60 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Please keep out. I don't want anything to go wrong at this stage."), 60 * extralingerfactor));
                         break;
                     case 1:
-                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It seems you're curious about it? I'll hand it over to you at the right time, but not now."), 80 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It seems like you're curious about it? I'll hand it over to you at the right time, but not now."), 80 * extralingerfactor));
                         break;
                     case 2:
-                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What are you doing, messenger? Please don't attempt to touch it."), 60 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What are you doing, messenger? Please don't touch it."), 60 * extralingerfactor));
                         conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It will interrupt my process and potentially result in errors and irreversible damage."), 70 * extralingerfactor));
                         conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("It's an unpleasant experience for any iterator, so please stop your attempts."), 65 * extralingerfactor));
                         break;
@@ -1105,7 +1260,7 @@ namespace HunterExpansion.CustomOracle
                                 conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("May I hope you don't interfere with my work?"), 20 * extralingerfactor));
                                 break;
                             default:
-                                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("......"), 20 * extralingerfactor));
+                                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 20 * extralingerfactor));
                                 break;
                         }
                         break;
@@ -1116,113 +1271,23 @@ namespace HunterExpansion.CustomOracle
                 switch (NSHOracleMeetHunter.swarmerStolen)
                 {
                     case 0:
-                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("......"), 20 * extralingerfactor));
-                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I don't know how you did it, but I hope this kind of thing won't happen again."), 60 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("..."), 20 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I don't know how you did it, but I hope it won't happen again."), 60 * extralingerfactor));
                         break;
                     case 1:
-                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you seem unwilling to follow orders?"), 45 * extralingerfactor));
-                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("What a pity! I have to remind you that my patience is limited."), 55 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Seems like you are unwilling to follow orders?"), 45 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Such a shame! I have to remind you that my patience is not infinite."), 55 * extralingerfactor));
                         break;
                     default:
-                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("An disobedient messenger~"), 25 * extralingerfactor));
+                        conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Such a disobedient messenger~"), 25 * extralingerfactor));
                         conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Congratulations! You are free now."), 30 * extralingerfactor));
                         break;
                 }
             }
         }
 
-        public void LoadEventsFromFile(int fileName, string suffix, CustomOracleConversation conv)
-        {
-            Debug.Log("~~~LOAD CONVO " + fileName.ToString());
-            InGameTranslator.LanguageID languageID = conv.interfaceOwner.rainWorld.inGameTranslator.currentLanguage;
-            string text;
-            for (; ; )
-            {
-                text = AssetManager.ResolveFilePath(conv.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + ".txt");
-                if (suffix != null)
-                {
-                    string text2 = text;
-                    text = AssetManager.ResolveFilePath(string.Concat(new string[]
-                    {
-                    conv.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
-                    Path.DirectorySeparatorChar.ToString(),
-                    fileName.ToString(),
-                    "-",
-                    suffix,
-                    ".txt"
-                    }));
-                    if (!File.Exists(text))
-                    {
-                        text = text2;
-                    }
-                }
-                if (File.Exists(text))
-                {
-                    goto IL_117;
-                }
-                Debug.Log("NOT FOUND " + text);
-                if (!(languageID != InGameTranslator.LanguageID.English))
-                {
-                    break;
-                }
-                Debug.Log("RETRY WITH ENGLISH");
-                languageID = InGameTranslator.LanguageID.English;
-            }
-            return;
-        IL_117:
-            string text3 = File.ReadAllText(text, Encoding.UTF8);
-            if (text3[0] != '0')
-            {
-                text3 = Custom.xorEncrypt(text3, 54 + fileName + (int)languageID * 7);
-            }
-            string[] array = Regex.Split(text3, "\r\n");
-            try
-            {
-                if (Regex.Split(array[0], "-")[1] == fileName.ToString())
-                {
-                    for (int j = 1; j < array.Length; j++)
-                    {// j是行数
-                        string[] array3 = LocalizationTranslator.ConsolidateLineInstructions(array[j]);
-                        if (array3.Length == 3)
-                        {
-                            int num;
-                            int num2;
-                            if (ModManager.MSC && !int.TryParse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture, out num) && int.TryParse(array3[2], NumberStyles.Any, CultureInfo.InvariantCulture, out num2))
-                            {
-                                conv.events.Add(new Conversation.TextEvent(conv, int.Parse(array3[0], NumberStyles.Any, CultureInfo.InvariantCulture), array3[1], int.Parse(array3[2], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                            else
-                            {
-                                conv.events.Add(new Conversation.TextEvent(conv, int.Parse(array3[0], NumberStyles.Any, CultureInfo.InvariantCulture), array3[2], int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                        }
-                        else if (array3.Length == 2)
-                        {
-                            if (array3[0] == "SPECEVENT")
-                            {
-                                conv.events.Add(new Conversation.SpecialEvent(conv, 0, array3[1]));
-                            }
-                            else if (array3[0] == "PEBBLESWAIT")
-                            {
-                                conv.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(conv, null, int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                        }
-                        else if (array3.Length == 1 && array3[0].Length > 0)
-                        {
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, array3[0], 0));
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                Debug.Log("TEXT ERROR");
-                conv.events.Add(new Conversation.TextEvent(conv, 0, "TEXT ERROR", 100));
-            }
-        }
-
         //用于计算猎手的时间状态
-        private int GetPlayerEncountersState()
+        public override int GetPlayerEncountersState()
         {
             if (this.owner.oracle.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft > 0)
                 return 1;

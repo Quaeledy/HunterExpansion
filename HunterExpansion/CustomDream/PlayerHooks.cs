@@ -11,8 +11,7 @@ using UnityEngine;
 using MoreSlugcats;
 using static CustomOracleTx.CustomOracleBehaviour;
 using RWCustom;
-using IL;
-using On;
+using HunterExpansion.CustomEffects;
 
 namespace HunterExpansion.CustomDream
 {
@@ -42,7 +41,7 @@ namespace HunterExpansion.CustomDream
         public static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-            if (self.room.game.session.characterStats.name != Plugin.SlugName)
+            if (world.game.IsStorySession && world.game.session.characterStats.name != Plugin.SlugName)
                 return;
 
             //第一场梦境：需要幼崽体型
@@ -60,7 +59,13 @@ namespace HunterExpansion.CustomDream
             if (saveStateNumber == Plugin.SlugName && self.dreamsState == null)
             {
                 self.dreamsState = new DreamsState();//让红猫有梦
-            }
+            }/*
+            if (self.denPosition == "GATE_SB_NSH" &&
+                self.denPosition == "GATE_NSH_DGL" &&
+                self.dreamsState == null)
+            {
+                self.dreamsState = new DreamsState();//让去NSH的猫有梦
+            }*/
         }
 
         public static void Player_DreamUpdate(On.Player.orig_UpdateMSC orig, Player self)
@@ -201,6 +206,21 @@ namespace HunterExpansion.CustomDream
         public static void SpawnOverseerInRoom(Room room, string roomName, CreatureTemplate.Type type, int ownerIterator)
         {
             AbstractCreature result;
+            if (room.game == null)
+            {
+                Plugin.Log("Exception : Can't get game to spawn creature.");
+                return;
+            }
+            if (room.game.world == null)
+            {
+                Plugin.Log("Exception : Can't get world to spawn creature.");
+                return;
+            }
+            if (room.game.world.GetAbstractRoom(roomName) == null)
+            {
+                Plugin.Log("Exception : Can't get AbstractRoom to spawn creature.");
+                return;
+            }
             int roomID = room.game.world.GetAbstractRoom(roomName).index;
             if (room.game.world.GetAbstractRoom(roomID).realizedRoom == null)
             {

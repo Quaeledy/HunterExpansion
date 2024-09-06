@@ -70,7 +70,7 @@ namespace HunterExpansion
     {
         public IntroText1(Room room) : base(room, new Message[]
             {
-                Message.NewMessage("The pearls you carry may determine your ending.", 180, 350),
+                Message.NewMessage("The pearl you carry may determine your expedition's ending.", 180, 350),
                 Message.NewMessage("Please treat it with caution.", 10, 250)
             })
 

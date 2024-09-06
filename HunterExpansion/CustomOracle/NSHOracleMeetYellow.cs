@@ -3,9 +3,9 @@ using static CustomOracleTx.CustomOracleBehaviour;
 
 namespace HunterExpansion.CustomOracle
 {
-    public class NSHOracleMeetYellow : CustomConversationBehaviour
+    public class NSHOracleMeetYellow : NSHConversationBehaviour
     {
-        public NSHOracleMeetYellow(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetYellow, NSHConversationID.Yellow_Talk0)
+        public NSHOracleMeetYellow(NSHOracleBehaviour owner) : base(owner)
         {
         }
 
@@ -103,23 +103,21 @@ namespace HunterExpansion.CustomOracle
         }
 
         //与黄猫的所有对话
-        public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
+        public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //现实对话
             if (id == NSHConversationID.Yellow_Talk0)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Oh, hi! Your kind is really smart, isn't it? It's a rare occurrence for organisms to grope for the<LINE>location of the calculation room, but in hundreds of rain cycles, I actually saw two slugcats."), 180 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Listen up: The rule of NSH Inn is: YES to overnight, NO to neuron buffet. If you encounter<LINE>someone of your kind, please let them know."), 120 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-0");
             }
             else if (id == NSHConversationID.Yellow_Talk1)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Meeting again, what makes you reluctant to part ways? Let me guess..."), 60 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Your kind has gone to the jurisdiction of Five Pebbles - if that's what you want to know."), 70 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-1");
             }
             else if (id == NSHConversationID.Yellow_Talk2)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Okay, if you want to stay here, don't forget my words: no neuron buffet!"), 60 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-2");
             }
         }
     }

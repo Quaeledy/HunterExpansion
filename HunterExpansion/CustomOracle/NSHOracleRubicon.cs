@@ -16,7 +16,7 @@ using CustomOracleTx;
 
 namespace HunterExpansion.CustomOracle
 {
-    public class NSHOracleRubicon : CustomConversationBehaviour
+    public class NSHOracleRubicon : NSHConversationBehaviour
     {
         public bool noticedPlayer;
         public bool startedConversation;
@@ -25,7 +25,7 @@ namespace HunterExpansion.CustomOracle
         public HRKarmaShrine shrineControl;
         public int finalGhostFade;
 
-        public NSHOracleRubicon(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.Rubicon, NSHConversationID.NSH_HR)
+        public NSHOracleRubicon(NSHOracleBehaviour owner) : base(owner)
         {
             Plugin.Log("NSH Oracle load Rubicon Behaviour!");
             noticedPlayer = false;
@@ -288,129 +288,39 @@ namespace HunterExpansion.CustomOracle
             this.owner.dialogBox.Interrupt(text, delay);
         }
 
-        public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
+        public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
             int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //魔方节点对话
             //四迭都在
             if (id == NSHConversationID.NSH_Moon_Pebbles_SRS_HR)
             {
-                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
-                LoadEventsFromFile(135, "NSH_Moon_Pebbles_SRS_HR", conv);
+                conv.events.Add(new NSHConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
+                NSHConversation.LoadEventsFromFile(conv, 135, "NSH_Moon_Pebbles_SRS_HR");
             }
             //NSH，Moon，FP都在
             else if (id == MoreSlugcatsEnums.ConversationID.Moon_Pebbles_HR)
             {
-                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
-                LoadEventsFromFile(135, "NSH_Moon_Pebbles_HR", conv);
+                conv.events.Add(new NSHConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
+                NSHConversation.LoadEventsFromFile(conv, 135, "NSH_Moon_Pebbles_HR");
             }
             //NSH，Moon
             else if (id == MoreSlugcatsEnums.ConversationID.Moon_HR)
             {
-                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
-                LoadEventsFromFile(133, "NSH_Moon_HR", conv);
+                conv.events.Add(new NSHConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
+                NSHConversation.LoadEventsFromFile(conv, 133, "NSH_Moon_HR");
             }
             //NSH，FP
             else if (id == MoreSlugcatsEnums.ConversationID.Pebbles_HR)
             {
-                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
-                LoadEventsFromFile(134, "NSH_Pebbles_HR", conv);
+                conv.events.Add(new NSHConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
+                NSHConversation.LoadEventsFromFile(conv, 134, "NSH_Pebbles_HR");
             }
             //只有NSH在
             else if (id == NSHConversationID.NSH_HR)
             {
-                conv.events.Add(new CustomOracleConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
-                LoadEventsFromFile(135, "NSH_HR", conv);
-            }
-        }
-
-        public void LoadEventsFromFile(int fileName, string suffix, CustomOracleConversation conv)
-        {
-            Debug.Log("~~~LOAD CONVO " + fileName.ToString());
-            InGameTranslator.LanguageID languageID = conv.interfaceOwner.rainWorld.inGameTranslator.currentLanguage;
-            string text;
-            for (; ; )
-            {
-                text = AssetManager.ResolveFilePath(conv.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + ".txt");
-                if (suffix != null)
-                {
-                    string text2 = text;
-                    text = AssetManager.ResolveFilePath(string.Concat(new string[]
-                    {
-                    conv.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
-                    Path.DirectorySeparatorChar.ToString(),
-                    fileName.ToString(),
-                    "-",
-                    suffix,
-                    ".txt"
-                    }));
-                    if (!File.Exists(text))
-                    {
-                        text = text2;
-                    }
-                }
-                if (File.Exists(text))
-                {
-                    goto IL_117;
-                }
-                Debug.Log("NOT FOUND " + text);
-                if (!(languageID != InGameTranslator.LanguageID.English))
-                {
-                    break;
-                }
-                Debug.Log("RETRY WITH ENGLISH");
-                languageID = InGameTranslator.LanguageID.English;
-            }
-            return;
-        IL_117:
-            string text3 = File.ReadAllText(text, Encoding.UTF8);
-            if (text3[0] != '0')
-            {
-                text3 = Custom.xorEncrypt(text3, 54 + fileName + (int)languageID * 7);
-            }
-            string[] array = Regex.Split(text3, "\r\n");
-            try
-            {
-                if (Regex.Split(array[0], "-")[1] == fileName.ToString())
-                {
-                    for (int j = 1; j < array.Length; j++)
-                    {// j是行数
-                        string[] array3 = LocalizationTranslator.ConsolidateLineInstructions(array[j]);
-                        if (array3.Length == 3)
-                        {
-                            int num;
-                            int num2;
-                            if (ModManager.MSC && !int.TryParse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture, out num) && int.TryParse(array3[2], NumberStyles.Any, CultureInfo.InvariantCulture, out num2))
-                            {
-                                conv.events.Add(new Conversation.TextEvent(conv, int.Parse(array3[0], NumberStyles.Any, CultureInfo.InvariantCulture), array3[1], int.Parse(array3[2], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                            else
-                            {
-                                conv.events.Add(new Conversation.TextEvent(conv, int.Parse(array3[0], NumberStyles.Any, CultureInfo.InvariantCulture), array3[2], int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                        }
-                        else if (array3.Length == 2)
-                        {
-                            if (array3[0] == "SPECEVENT")
-                            {
-                                conv.events.Add(new Conversation.SpecialEvent(conv, 0, array3[1]));
-                            }
-                            else if (array3[0] == "PEBBLESWAIT")
-                            {
-                                conv.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(conv, null, int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
-                            }
-                        }
-                        else if (array3.Length == 1 && array3[0].Length > 0)
-                        {
-                            conv.events.Add(new Conversation.TextEvent(conv, 0, array3[0], 0));
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                Debug.Log("TEXT ERROR");
-                conv.events.Add(new Conversation.TextEvent(conv, 0, "TEXT ERROR", 100));
+                conv.events.Add(new NSHConversation.PauseAndWaitForStillEvent(conv, conv.convBehav, 5));
+                NSHConversation.LoadEventsFromFile(conv, 135, "NSH_HR");
             }
         }
     }

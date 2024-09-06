@@ -6,7 +6,7 @@ using OraclePanicDisplay = HunterExpansion.CustomEffects.OraclePanicDisplay;
 
 namespace HunterExpansion.CustomOracle
 {
-    public class NSHOracleMeetSaint : CustomConversationBehaviour
+    public class NSHOracleMeetSaint : NSHConversationBehaviour
     {
         public OraclePanicDisplay panicObject; 
         public int panicTimer;
@@ -32,7 +32,7 @@ namespace HunterExpansion.CustomOracle
             }
         }
 
-        public NSHOracleMeetSaint(NSHOracleBehaviour owner) : base(owner, NSHOracleBehaviorSubBehavID.MeetSaint, NSHConversationID.Saint_Talk0)
+        public NSHOracleMeetSaint(NSHOracleBehaviour owner) : base(owner)
         {
             this.PickNextPanicTime();
             this.lowGravity = -1f;
@@ -195,27 +195,21 @@ namespace HunterExpansion.CustomOracle
         }
 
         //与圣徒的所有对话
-        public void AddConversationEvents(CustomOracleConversation conv, Conversation.ID id)
+        public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
-            int extralingerfactor = oracle.room.game.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //猫猫没有语言印记也读
             //现实对话
             if (id == NSHConversationID.Saint_Talk0)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Ha, it's really strange! After the weather turns cold, have slugcats evolved hair?"), 70 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Come on, although my room may not be warm, it can barely keep warm. I have always<LINE>loved the companionship of your kind, especially recently."), 110 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("To this day, this land is still trapped here with us..."), 60 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("I hope you can leave when you want. You know, the void sea has always been open for you."), 80 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-0");
             }
             else if (id == NSHConversationID.Saint_Talk1)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you want to stay a little longer? I am very welcome."), 50 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("You remind me of the past. Although it may sound incredible, your species has<LINE>always been a good partner for iterators..."), 100 * extralingerfactor));
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("- When you're not feasting on neurons."), 30 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-1");
             }
             else if (id == NSHConversationID.Saint_Talk2)
             {
-                conv.events.Add(new Conversation.TextEvent(conv, 0, Translate("Do you want to stay a little longer? I am very welcome."), 50 * extralingerfactor));
+                NSHConversation.LoadEventsFromFile(conv, 0, oracle.room.world.game.session.characterStats.name.value + "-2");
             }
         }
 

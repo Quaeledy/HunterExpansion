@@ -10,6 +10,7 @@ using HUD;
 using Menu;
 using HunterExpansion.CustomSave;
 using MoreSlugcats;
+using JollyCoop.JollyHUD;
 using RWCustom;
 using HunterExpansion.CustomEnding;
 using MonoMod.RuntimeDetour;
@@ -76,50 +77,71 @@ namespace HunterExpansion
             {
                 saveState = (hud.owner as SleepAndDeathScreen).saveState;
             }
-            for (int k = 0; k < mapData.gateData.Length; k++)
+            if (mapData.regionName == "NSH")
             {
-                bool flag3 = false;
-                int num;
-                if (mapData.gateData[k].karma == null)
+                for (int k = 0; k < mapData.gateData.Length; k++)
                 {
-                    flag3 = true;
-                }
-                else if (int.TryParse(mapData.gateData[k].karma.value, NumberStyles.Any, CultureInfo.InvariantCulture, out num))
-                {
-                    flag3 = (num - 1 <= mapData.currentKarma);
-                }
-                RegionGate.GateRequirement karma = mapData.gateData[k].karma;
-                if (saveState == null || (hud.owner.GetOwnerType() != HUD.HUD.OwnerType.Player && hud.owner.GetOwnerType() != HUD.HUD.OwnerType.SleepScreen && hud.owner.GetOwnerType() != HUD.HUD.OwnerType.DeathScreen))
-                {
-                    flag3 = true;
-                }
-                else if (ModManager.MSC)
-                {
-                    if (RainWorld.ShowLogs)
+                    bool flag3 = false;
+                    int num;
+                    if (mapData.gateData[k].karma == null)
                     {
-                        string str = "gate condition on map, karma ";
-                        RegionGate.GateRequirement karma2 = mapData.gateData[k].karma;
-                        Debug.Log(str + ((karma2 != null) ? karma2.ToString() : null));
+                        flag3 = true;
                     }
-                    if (mapData.gateData[k].karma == HunterExpansionEnums.GateRequirement.NSHLock &&
-                        self.mapData.NameOfRoom(mapData.gateData[k].roomIndex) == "GATE_NSH_DGL")
+                    else if (int.TryParse(mapData.gateData[k].karma.value, NumberStyles.Any, CultureInfo.InvariantCulture, out num))
                     {
-                        flag3 = false;
-                        if (!Plugin.gateLock)
-                        {
-                            flag3 = true;
-                        }
-                        if (!flag3)
-                        {
-                            karma = MoreSlugcatsEnums.GateRequirement.OELock;
-                        }
+                        flag3 = (num - 1 <= mapData.currentKarma);
+                    }
+                    RegionGate.GateRequirement karma = mapData.gateData[k].karma;
+                    if (saveState == null || (hud.owner.GetOwnerType() != HUD.HUD.OwnerType.Player && hud.owner.GetOwnerType() != HUD.HUD.OwnerType.SleepScreen && hud.owner.GetOwnerType() != HUD.HUD.OwnerType.DeathScreen))
+                    {
+                        flag3 = true;
+                    }
+                    else if (ModManager.MSC)
+                    {
                         if (RainWorld.ShowLogs)
                         {
-                            Plugin.Log("NSH gate condition on map " + flag3.ToString());
+                            string str = "gate condition on map, karma ";
+                            RegionGate.GateRequirement karma2 = mapData.gateData[k].karma;
+                            Debug.Log(str + ((karma2 != null) ? karma2.ToString() : null));
+                        }
+                        if (mapData.gateData[k].karma == HunterExpansionEnums.GateRequirement.NSHLock &&
+                            self.mapData.NameOfRoom(mapData.gateData[k].roomIndex) == "GATE_NSH_DGL")
+                        {
+                            //去掉旧的
+                            for (int m = self.mapObjects.Count - 1; m >= 0; m--)
+                            {
+                                if (self.mapObjects[m] is Map.GateMarker &&
+                                    (self.mapObjects[m] as Map.GateMarker).room == mapData.gateData[k].roomIndex)
+                                {
+                                    self.mapObjects.RemoveAt(m);
+                                }
+                            }
+                            //加上新的
+                            flag3 = false;
+                            if (HunterExpansionEnums.GateRequirement.customNSHGateRequirements(saveState))
+                            {
+                                flag3 = true;
+                            }
+                            if (!flag3)
+                            {
+                                karma = MoreSlugcatsEnums.GateRequirement.OELock;
+                            }
+                            else if (self.RegionName == "NSH")
+                            {
+                                karma = RegionGate.GateRequirement.OneKarma;
+                            }
+                            else
+                            {
+                                karma = RegionGate.GateRequirement.OneKarma;
+                            }
+                            if (RainWorld.ShowLogs)
+                            {
+                                Plugin.Log("NSH gate condition on map " + flag3.ToString());
+                            }
+                            self.mapObjects.Add(new Map.GateMarker(self, mapData.gateData[k].roomIndex, karma, flag3));
                         }
                     }
                 }
-                self.mapObjects.Add(new Map.GateMarker(self, mapData.gateData[k].roomIndex, karma, flag3));
             }
         }
 
