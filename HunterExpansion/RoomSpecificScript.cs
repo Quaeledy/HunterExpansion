@@ -1351,7 +1351,9 @@ namespace HunterExpansion
             {
                 this.room = room;
 
-                if (this.room.snow == true)
+                if (this.room.snow == true ||
+                    this.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Spear ||
+                    this.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer)
                 {
                     PearlFixedSave.pearlFixed = false;
                 }

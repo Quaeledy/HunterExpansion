@@ -23,9 +23,8 @@ using System.Data;
 using System;
 using CustomRegions.Mod;
 using CustomRegions.Collectables;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
 using System.Reflection;
+using static Menu.Remix.InternalOI;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -60,6 +59,7 @@ namespace HunterExpansion.CustomOracle
         public Dictionary<DataPearl.AbstractDataPearl, GlyphLabel> readPearlGlyphs;
         public List<EntityID> talkedAboutThisSession;
         public PhysicalObject holdingObject;
+        private Dictionary<UpdatableAndDeletable, ProjectionCircle> myProjectionCircle;
         public bool refuseRestartConversation;
         public new bool restartConversationAfterCurrentDialoge;//base.Update会在NSH重新开始解读时令this.restartConversationAfterCurrentDialoge = false，从而变成NSH无限循环播放重新解读的句子，所以要new一个
 
@@ -79,7 +79,7 @@ namespace HunterExpansion.CustomOracle
         public bool hasTalkToPup = false;*/
 
         //好感度相关
-        public static bool generateKillingIntent = false;
+        public bool generateKillingIntent = false;
 
         //展示图像相关
         public ProjectedImage showImage;
@@ -98,6 +98,7 @@ namespace HunterExpansion.CustomOracle
             //this.movementBehavior = ((Random.value < 0.5f) ? NSHOracleMovementBehavior.Meditate : CustomMovementBehavior.Idle);//0.5f
             this.action = (Random.value < 0.5f) ? NSHOracleBehaviorAction.General_Meditate : CustomAction.General_Idle;
             this.talkedAboutThisSession = new List<EntityID>();
+            this.myProjectionCircle = new Dictionary<UpdatableAndDeletable, ProjectionCircle>();
             this.oracle.health = (RipNSHSave.ripNSH && oracle.room.world.region != null && oracle.room.world.region.name != "HR") ? 0f : 1f;
             this.InitStoryPearlCollection();
 
@@ -446,16 +447,27 @@ namespace HunterExpansion.CustomOracle
                 {
                     for (int j = 0; j < physicalObjects[i].Count; j++)
                     {
+                        bool flag3 = false;
                         PhysicalObject physicalObject = physicalObjects[i][j];
                         if (physicalObject is Weapon)
                         {
                             Weapon weapon = physicalObject as Weapon;
-                            if (weapon.mode == Weapon.Mode.Thrown && Custom.Dist(weapon.firstChunk.pos, this.oracle.firstChunk.pos) < 100f)
+                            if ((weapon.mode == Weapon.Mode.Thrown && Custom.Dist(weapon.firstChunk.pos, this.oracle.firstChunk.pos) < 100f) ||
+                                (weapon is SingularityBomb && (weapon as SingularityBomb).activateSingularity))
                             {
                                 this.talkedAboutThisSession.Add(physicalObject.abstractPhysicalObject.ID);
+                                flag3 = true;
                                 weapon.ChangeMode(Weapon.Mode.Free);
                                 weapon.SetRandomSpin();
                                 weapon.firstChunk.vel *= -0.2f;
+                                if (weapon is SingularityBomb && (weapon as SingularityBomb).activateSingularity)
+                                {
+                                    (weapon as SingularityBomb).activateSingularity = false;
+                                    (weapon as SingularityBomb).ignited = false;
+                                    this.readItemOrbits.Add((weapon as SingularityBomb).abstractPhysicalObject as AbstractWorldEntity);
+                                    this.myProjectionCircle.Add(weapon, new ProjectionCircle(base.player.mainBodyChunk.pos, 0f, 3f));
+                                    this.oracle.room.AddObject(this.myProjectionCircle[weapon]);
+                                }
                                 for (int num8 = 0; num8 < 5; num8++)
                                 {
                                     this.oracle.room.AddObject(new Spark(weapon.firstChunk.pos, Custom.RNV(), Color.white, null, 16, 24));
@@ -467,6 +479,10 @@ namespace HunterExpansion.CustomOracle
                                 {
                                     this.conversation.Interrupt(this.Translate("..."), 0);
                                     this.conversation = null;
+                                }
+                                if (this.dialogBox.messages != null && this.dialogBox.messages.Count > 0)
+                                {
+                                    this.dialogBox.Interrupt(base.Translate("..."), 40);
                                 }
                                 if (State.GetOpinion == NSHOracleState.PlayerOpinion.Likes)
                                 {
@@ -508,7 +524,6 @@ namespace HunterExpansion.CustomOracle
                                 }
                             }
                         }
-                        bool flag3 = false;
                         //flag4表示了几种NSH不做解读的情况
                         bool flag4 = (this.currSubBehavior is NSHOracleMeetSofanthiel) ||
                                      ((this.currSubBehavior is NSHOracleMeetSaint) && (this.currSubBehavior as NSHOracleMeetSaint).panicObject != null) ||
@@ -526,7 +541,7 @@ namespace HunterExpansion.CustomOracle
                         //flag4 = true;
                         //flag3 = true;
                         //}
-                        if (this.inspectItem == null && (this.conversation == null || flag3) && !flag4
+                        if (this.inspectItem == null && (this.conversation == null || flag3) && !flag4 && !flag3
                             && !(physicalObject is NSHPearl) && !(physicalObject is Oracle) && !(physicalObject is Creature))
                         {
                             //读珍珠
@@ -570,7 +585,8 @@ namespace HunterExpansion.CustomOracle
                                      physicalObject.grabbedBy.Count == 0 &&
                                      !((physicalObject is Spear) && player.spearOnBack != null && player.spearOnBack.spear != null && physicalObject == player.spearOnBack.spear) && //不读玩家背上的矛
                                      !this.readItemOrbits.Contains(physicalObject.abstractPhysicalObject) &&
-                                     !this.talkedAboutThisSession.Contains(physicalObject.abstractPhysicalObject.ID))
+                                     !this.talkedAboutThisSession.Contains(physicalObject.abstractPhysicalObject.ID) &&
+                                     !this.myProjectionCircle.ContainsKey(physicalObject))
                             {
                                 this.inspectItem = physicalObject;
                                 if (physicalObject is FireEgg && (physicalObject as FireEgg).activeCounter > 0)
@@ -1654,6 +1670,10 @@ namespace HunterExpansion.CustomOracle
                 {
                     this.readItemOrbits.Add(abstractWorldEntity);
                 }
+                else if ((abstractWorldEntity as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.SingularityBomb)
+                {
+                    this.readItemOrbits.Add(abstractWorldEntity);
+                }
                 AbstractPhysicalObject obj = abstractWorldEntity as AbstractPhysicalObject;
                 Plugin.Log("obj is {0}, obj.tracker == null? {1}", obj.type.ToString(), (obj.tracker == null));
             }
@@ -1741,6 +1761,7 @@ namespace HunterExpansion.CustomOracle
             {
                 if ((abstractWorldEntity as AbstractPhysicalObject).realizedObject != null)
                 {
+                    PhysicalObject obj = (abstractWorldEntity as AbstractPhysicalObject).realizedObject;
                     if ((abstractWorldEntity as AbstractPhysicalObject).realizedObject.grabbedBy.Count > 0)
                     {
                         list2.Add(abstractWorldEntity);
@@ -1755,6 +1776,52 @@ namespace HunterExpansion.CustomOracle
                         }
                         num++;
                     }
+                    //会保存奇点炸弹
+                    else if ((abstractWorldEntity as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.SingularityBomb)
+                    {
+                        (obj as SingularityBomb).activateSingularity = false;
+                        (obj as SingularityBomb).ignited = false;
+                        if (getToWorking > 0f)
+                        {
+                            obj.firstChunk.pos = Custom.MoveTowards(obj.firstChunk.pos, this.storedPearlOrbitLocation(num), 2.5f);
+                            obj.firstChunk.vel *= 0.99f;
+                            if (this.myProjectionCircle != null && this.myProjectionCircle.ContainsKey(obj))
+                            {
+                                Vector2 pos = obj.firstChunk.pos;
+                                ProjectionCircle circle = this.myProjectionCircle[obj];
+                                circle.radius = Mathf.Clamp(Mathf.Lerp(circle.radius, 18f, 0.02f), 0f, 18f);
+                                circle.pos = pos;
+                            }
+                            else
+                            {
+                                this.myProjectionCircle.Add(obj, new ProjectionCircle(base.player.mainBodyChunk.pos, 18f, 3f));
+                                this.oracle.room.AddObject(this.myProjectionCircle[obj]);
+                            }
+                        }
+                        num++;
+                    }
+                    if (this.myProjectionCircle.ContainsKey(obj))
+                    {
+                        if (this.player != null)
+                        {
+                            //如果迭代器在无重力状态靠物品太近了，就远离
+                            if (Custom.Dist(obj.firstChunk.pos, oracle.firstChunk.pos) < 5f * this.myProjectionCircle[obj].radius)
+                            {
+                                Plugin.Log("Too close to the ProjectionCircle, Oracle starts to move away.");
+                                Vector2 dist = (oracle.firstChunk.pos - obj.firstChunk.pos).normalized;//dist必须是单位向量，否则反射就错了
+                                if (Vector2.Angle(oracle.firstChunk.vel, dist) > 90)
+                                    oracle.firstChunk.vel = Vector2.Reflect(oracle.firstChunk.vel, dist);
+                            }
+                            //如果蛞蝓猫在无重力状态靠物品太近了，就让蛞蝓猫远离
+                            if (Custom.Dist(obj.firstChunk.pos, player.firstChunk.pos) < this.myProjectionCircle[obj].radius)
+                            {
+                                Plugin.Log("Too close to the ProjectionCircle, Oracle starts to move Slugcat away.");
+                                Vector2 dist = (player.firstChunk.pos - obj.firstChunk.pos).normalized;
+                                if (Vector2.Angle(player.firstChunk.vel, dist) > 90)
+                                    player.firstChunk.vel = Vector2.Reflect(player.firstChunk.vel, dist);
+                            }
+                        }
+                    }
                 }
             }
             foreach (AbstractWorldEntity abstractWorldEntity2 in list2)
@@ -1766,8 +1833,20 @@ namespace HunterExpansion.CustomOracle
                     Plugin.Log(str + ((abstractWorldEntity3 != null) ? abstractWorldEntity3.ToString() : null));
                 }
                 this.readItemOrbits.Remove(abstractWorldEntity2);
-                if(this.talkedAboutThisSession.Contains((abstractWorldEntity2 as AbstractPhysicalObject).ID))
-                    this.dialogBox.NewMessage(this.Translate("Oh, of course, you can take it away anytime!"), 10);
+                if (abstractWorldEntity2 is AbstractPhysicalObject absObj && absObj.realizedObject != null &&
+                    this.myProjectionCircle != null && this.myProjectionCircle.ContainsKey(absObj.realizedObject))
+                {
+                    this.myProjectionCircle[absObj.realizedObject].radius = 0f;
+                    this.myProjectionCircle[absObj.realizedObject].Destroy();
+                    this.myProjectionCircle.Remove(absObj.realizedObject);
+                }
+                if (this.talkedAboutThisSession.Contains((abstractWorldEntity2 as AbstractPhysicalObject).ID))
+                {
+                    if ((abstractWorldEntity2 as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.FireEgg)
+                        this.dialogBox.NewMessage(this.Translate("Oh, of course, you can take it away anytime!"), 10);
+                    if ((abstractWorldEntity2 as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.SingularityBomb)
+                        this.dialogBox.NewMessage(this.Translate("You can take it, but don't attack me anymore."), 10);
+                }
             }
         }
 

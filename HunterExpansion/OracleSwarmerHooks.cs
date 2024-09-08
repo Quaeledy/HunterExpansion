@@ -94,7 +94,7 @@ namespace HunterExpansion
                                     oracleBehavior.dialogBox.NewMessage(oracleBehavior.Translate("..."), 20);
                                     //oracleBehavior.dialogBox.NewMessage(oracleBehavior.Translate("Goodbye, you cruel creature."), 20);
                                     oracleBehavior.State.likesPlayer = -1;
-                                    NSHOracleBehaviour.generateKillingIntent = true;
+                                    oracleBehavior.generateKillingIntent = true;
                                 }
                                 else if (self is SSOracleSwarmer ||
                                     (self is SSOracleSwarmer &&
@@ -138,7 +138,7 @@ namespace HunterExpansion
                                     oracleBehavior.dialogBox.NewMessage(oracleBehavior.Translate("..."), 20);
                                     oracleBehavior.dialogBox.NewMessage(oracleBehavior.Translate("Goodbye, you cruel creature."), 20);
                                     oracleBehavior.State.likesPlayer = -1;
-                                    NSHOracleBehaviour.generateKillingIntent = true;
+                                    oracleBehavior.generateKillingIntent = true;
                                 }
                             }
                                 
