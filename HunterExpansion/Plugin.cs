@@ -22,7 +22,7 @@ using HunterExpansion.CustomEffects;
 
 namespace HunterExpansion
 {
-    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.0.8")]
+    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.0")]
     public class Plugin : BaseUnityPlugin
     {
         static public readonly string MOD_ID = "Quaeledy.hunterexpansion";
@@ -106,7 +106,7 @@ namespace HunterExpansion
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
             orig.Invoke(self);
-
+            
             if (IsInit) return;
             IsInit = true;
 

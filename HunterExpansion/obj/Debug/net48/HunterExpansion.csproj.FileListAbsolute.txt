@@ -12,3 +12,4 @@ D:\收藏\雨世界\Mod制作\代码\HunterExpansion\HunterExpansion\obj\Debug\n
 D:\收藏\雨世界\Mod制作\代码\HunterExpansion\HunterExpansion\obj\Debug\net48\HunterExpansion.csproj.CoreCompileInputs.cache
 D:\收藏\雨世界\Mod制作\代码\HunterExpansion\HunterExpansion\obj\Debug\net48\HunterExpansion.dll
 D:\收藏\雨世界\Mod制作\代码\HunterExpansion\HunterExpansion\obj\Debug\net48\HunterExpansion.pdb
+D:\收藏\雨世界\Mod制作\代码\HunterExpansion\HunterExpansion\obj\Debug\net48\HunterExpansion.sourcelink.json

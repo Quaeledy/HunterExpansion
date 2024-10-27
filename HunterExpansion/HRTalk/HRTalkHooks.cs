@@ -207,7 +207,7 @@ namespace HunterExpansion.HRTalk
         private static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-
+            
             NSHHasSpawn = false;
             SRSHasSpawn = false;
         }
