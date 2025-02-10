@@ -51,7 +51,8 @@ namespace HunterExpansion
             orig(self, eu);
             if (OracleSwarmerData.TryGetValue(self, out var oracleSwarmer))
             {
-                if (self.room.game.world.region.name != oracleSwarmer.spawnRegion &&
+                if (self.room.game.world != null &&
+                    self.room.game.world.region.name != oracleSwarmer.spawnRegion &&
                     !OracleSwarmerRegionSave.oracleSwarmerRegion.ContainsKey(self.abstractPhysicalObject.ID))
                 {
                     OracleSwarmerRegionSave.oracleSwarmerRegion.Add(oracleSwarmer.id, oracleSwarmer.spawnRegion);

@@ -237,7 +237,7 @@ namespace HunterExpansion.CustomDream
             {
                 return MenuSceneID.LeaveNSH;
             }
-            return MenuScene.SceneID.Empty;
+            return SceneFromDream(dreamID);
         }
         
         

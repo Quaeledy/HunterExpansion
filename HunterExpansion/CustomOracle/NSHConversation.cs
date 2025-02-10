@@ -1018,6 +1018,7 @@ namespace HunterExpansion.CustomOracle
             }
             return;
             IL_117:
+            Plugin.Log("FOUND FILE!!! Load from flie: " + text);
             string text3 = File.ReadAllText(text, Encoding.UTF8);
             if (text3[0] != '0')
             {
@@ -1199,7 +1200,8 @@ namespace HunterExpansion.CustomOracle
                 languageID = InGameTranslator.LanguageID.English;
             }
             return;
-        IL_117:
+            IL_117:
+            Plugin.Log("FOUND FILE!!! Load from flie: " + text);
             string text3 = File.ReadAllText(text, Encoding.UTF8);
             if (text3[0] != '0')
             {

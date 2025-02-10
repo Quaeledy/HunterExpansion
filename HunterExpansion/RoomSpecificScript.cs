@@ -522,7 +522,7 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && this.player.DangerPos.y < 0f && (this.player.DangerPos.x < 430f || (blackRect != null && blackRect.alpha > 0f)))
+                    if (player != null && this.player.DangerPos.y < 0f && (this.player.DangerPos.x < 800f || (blackRect != null && blackRect.alpha > 0f)))
                     {
                         return true;
                     }

@@ -3,32 +3,72 @@
   "WorkspaceRootPath": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customoracle\\nshconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customoracle\\nshconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\worldhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\worldhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\roomspecificscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\roomspecificscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customoracle\\nshoraclemeethunter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customoracle\\nshoraclemeethunter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customeffects\\oracleswarmerresync.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customeffects\\oracleswarmerresync.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customeffects\\electricfullscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customeffects\\electricfullscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customoracle\\nshconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customoracle\\nshconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customoracle\\nshoraclebehaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customoracle\\nshoraclebehaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customoracle\\nshoracle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customoracle\\nshoracle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customending\\endingscenes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customending\\endingscenes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customdream\\customdreamregistry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customdream\\customdreamregistry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customsave\\fonddreamcompletedsave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customsave\\fonddreamcompletedsave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customsave\\introtextsave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customsave\\introtextsave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\oracleswarmerhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\oracleswarmerhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customending\\endingscenes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customending\\endingscenes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customending\\endingsession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customending\\endingsession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customoracle\\nshoraclemeetotherslugcat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customoracle\\nshoraclemeetotherslugcat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customsave\\pearlfixedsave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customsave\\pearlfixedsave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\hrtalk\\hrtalkhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -37,10 +77,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customending\\regionhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customending\\regionhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customoracle\\nshoraclebehaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customoracle\\nshoraclebehaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customdream\\playerhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -53,10 +89,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\customeffects\\redsillnesseffect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\customeffects\\redsillnesseffect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|d:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\mod\u5236\u4F5C\\\u4EE3\u7801\\hunterexpansion\\hunterexpansion\\oracleswarmerhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{22619339-EE86-444A-A8A7-A6CD385E76A1}|HunterExpansion\\HunterExpansion.csproj|solutionrelative:hunterexpansion\\oracleswarmerhooks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -70,77 +102,85 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "Plugin.cs",
               "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\Plugin.cs",
               "RelativeDocumentMoniker": "HunterExpansion\\Plugin.cs",
               "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\Plugin.cs",
               "RelativeToolTip": "HunterExpansion\\Plugin.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABgAAABHAAAAAAAAAA==",
+              "ViewState": "AgIAAJ8AAAAAAAAAAAAAAMEAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-04T05:27:30.152Z",
               "IsPinned": true
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "EndingScenes.cs",
-              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEnding\\EndingScenes.cs",
-              "RelativeDocumentMoniker": "HunterExpansion\\CustomEnding\\EndingScenes.cs",
-              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEnding\\EndingScenes.cs",
-              "RelativeToolTip": "HunterExpansion\\CustomEnding\\EndingScenes.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-26T13:32:06.943Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "NSHOracle.cs",
-              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracle.cs",
-              "RelativeDocumentMoniker": "HunterExpansion\\CustomOracle\\NSHOracle.cs",
-              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracle.cs",
-              "RelativeToolTip": "HunterExpansion\\CustomOracle\\NSHOracle.cs",
-              "ViewState": "AgIAAM4AAAAAAAAAAAAkwBECAABZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T13:07:44.568Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "WorldHooks.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\WorldHooks.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\WorldHooks.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\WorldHooks.cs",
+              "RelativeToolTip": "HunterExpansion\\WorldHooks.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAUwBoAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-04T08:28:11.19Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "NSHConversation.cs",
               "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHConversation.cs",
               "RelativeDocumentMoniker": "HunterExpansion\\CustomOracle\\NSHConversation.cs",
               "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHConversation.cs",
               "RelativeToolTip": "HunterExpansion\\CustomOracle\\NSHConversation.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAACcAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAFcEAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T13:04:16.84Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-26T06:20:33.494Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "OracleSwarmerHooks.cs",
-              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\OracleSwarmerHooks.cs",
-              "RelativeDocumentMoniker": "HunterExpansion\\OracleSwarmerHooks.cs",
-              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\OracleSwarmerHooks.cs",
-              "RelativeToolTip": "HunterExpansion\\OracleSwarmerHooks.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAABowGAAAAAkAAAAAAAAAA==",
+              "DocumentIndex": 9,
+              "Title": "CustomDreamRegistry.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomDream\\CustomDreamRegistry.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomDream\\CustomDreamRegistry.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomDream\\CustomDreamRegistry.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomDream\\CustomDreamRegistry.cs",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAkwHIAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-31T03:24:06.889Z"
+              "WhenOpened": "2024-07-21T10:06:54.279Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "PlayerHooks.cs",
-              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomDream\\PlayerHooks.cs",
-              "RelativeDocumentMoniker": "HunterExpansion\\CustomDream\\PlayerHooks.cs",
-              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomDream\\PlayerHooks.cs",
-              "RelativeToolTip": "HunterExpansion\\CustomDream\\PlayerHooks.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAkwLYAAAAZAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "NSHOracleMeetHunter.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracleMeetHunter.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomOracle\\NSHOracleMeetHunter.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracleMeetHunter.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomOracle\\NSHOracleMeetHunter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFUBAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-30T02:55:11.469Z"
+              "WhenOpened": "2024-12-21T11:31:49.747Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "OracleSwarmerResync.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEffects\\OracleSwarmerResync.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomEffects\\OracleSwarmerResync.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEffects\\OracleSwarmerResync.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomEffects\\OracleSwarmerResync.cs",
+              "ViewState": "AgIAALIAAAAAAAAAAAAowL8AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-30T07:51:35.485Z"
             },
             {
               "$type": "Document",
@@ -150,38 +190,145 @@
               "RelativeDocumentMoniker": "HunterExpansion\\RoomSpecificScript.cs",
               "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\RoomSpecificScript.cs",
               "RelativeToolTip": "HunterExpansion\\RoomSpecificScript.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEcAAAA4AAAAAAAAAA==",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAkwGMAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-21T12:41:17.056Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-21T12:41:17.056Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ElectricFullScreen.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEffects\\ElectricFullScreen.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomEffects\\ElectricFullScreen.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEffects\\ElectricFullScreen.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomEffects\\ElectricFullScreen.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwkAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-30T07:51:09.302Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "OracleSwarmerHooks.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\OracleSwarmerHooks.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\OracleSwarmerHooks.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\OracleSwarmerHooks.cs",
+              "RelativeToolTip": "HunterExpansion\\OracleSwarmerHooks.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADUAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-14T05:08:53.816Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
+              "Title": "NSHOracleBehaviour.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracleBehaviour.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomOracle\\NSHOracleBehaviour.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracleBehaviour.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomOracle\\NSHOracleBehaviour.cs",
+              "ViewState": "AgIAAIcEAAAAAAAAAAAAAPQEAACBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-05T13:09:03.912Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IntroTextSave.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomSave\\IntroTextSave.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomSave\\IntroTextSave.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomSave\\IntroTextSave.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomSave\\IntroTextSave.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAiwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-21T11:21:09.26Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "NSHOracle.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracle.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomOracle\\NSHOracle.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracle.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomOracle\\NSHOracle.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-05T13:07:44.568Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "FondDreamCompletedSave.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomSave\\FondDreamCompletedSave.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomSave\\FondDreamCompletedSave.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomSave\\FondDreamCompletedSave.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomSave\\FondDreamCompletedSave.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-21T11:21:20.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "EndingSession.cs",
               "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEnding\\EndingSession.cs",
               "RelativeDocumentMoniker": "HunterExpansion\\CustomEnding\\EndingSession.cs",
               "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEnding\\EndingSession.cs",
               "RelativeToolTip": "HunterExpansion\\CustomEnding\\EndingSession.cs",
-              "ViewState": "AgIAADsAAAAAAAAAAAAgwEYAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAN0AAAAAAAAAAAAgwMcAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-26T13:31:28.134Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CustomDreamRegistry.cs",
-              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomDream\\CustomDreamRegistry.cs",
-              "RelativeDocumentMoniker": "HunterExpansion\\CustomDream\\CustomDreamRegistry.cs",
-              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomDream\\CustomDreamRegistry.cs",
-              "RelativeToolTip": "HunterExpansion\\CustomDream\\CustomDreamRegistry.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAANUAAAAxAAAAAAAAAA==",
+              "DocumentIndex": 13,
+              "Title": "EndingScenes.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEnding\\EndingScenes.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomEnding\\EndingScenes.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEnding\\EndingScenes.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomEnding\\EndingScenes.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYDAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-21T10:06:54.279Z"
+              "WhenOpened": "2024-10-26T13:32:06.943Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 19,
+              "Title": "PlayerHooks.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomDream\\PlayerHooks.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomDream\\PlayerHooks.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomDream\\PlayerHooks.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomDream\\PlayerHooks.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAABYwD4AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-30T02:55:11.469Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "PearlFixedSave.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomSave\\PearlFixedSave.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomSave\\PearlFixedSave.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomSave\\PearlFixedSave.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomSave\\PearlFixedSave.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwwAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-06T13:13:28.435Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "NSHOracleMeetOtherSlugcat.cs",
+              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracleMeetOtherSlugcat.cs",
+              "RelativeDocumentMoniker": "HunterExpansion\\CustomOracle\\NSHOracleMeetOtherSlugcat.cs",
+              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracleMeetOtherSlugcat.cs",
+              "RelativeToolTip": "HunterExpansion\\CustomOracle\\NSHOracleMeetOtherSlugcat.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAsAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T14:56:11.388Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
               "Title": "RegionHooks.cs",
               "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEnding\\RegionHooks.cs",
               "RelativeDocumentMoniker": "HunterExpansion\\CustomEnding\\RegionHooks.cs",
@@ -193,7 +340,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 17,
               "Title": "HRTalkHooks.cs",
               "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\HRTalk\\HRTalkHooks.cs",
               "RelativeDocumentMoniker": "HunterExpansion\\HRTalk\\HRTalkHooks.cs",
@@ -205,19 +352,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "NSHOracleBehaviour.cs",
-              "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracleBehaviour.cs",
-              "RelativeDocumentMoniker": "HunterExpansion\\CustomOracle\\NSHOracleBehaviour.cs",
-              "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomOracle\\NSHOracleBehaviour.cs",
-              "RelativeToolTip": "HunterExpansion\\CustomOracle\\NSHOracleBehaviour.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T13:09:03.912Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 21,
               "Title": "RedsIllnessEffect.cs",
               "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\CustomEffects\\RedsIllnessEffect.cs",
               "RelativeDocumentMoniker": "HunterExpansion\\CustomEffects\\RedsIllnessEffect.cs",
@@ -229,13 +364,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 20,
               "Title": "BugFix.cs",
               "DocumentMoniker": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\BugFix.cs",
               "RelativeDocumentMoniker": "HunterExpansion\\BugFix.cs",
               "ToolTip": "D:\\\u6536\u85CF\\\u96E8\u4E16\u754C\\Mod\u5236\u4F5C\\\u4EE3\u7801\\HunterExpansion\\HunterExpansion\\BugFix.cs",
               "RelativeToolTip": "HunterExpansion\\BugFix.cs",
-              "ViewState": "AgIAAOsAAAAAAAAAAABkwPQAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAOgAAAAAAAAAAABqwPQAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-21T10:31:01.387Z"
             }
