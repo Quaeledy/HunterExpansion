@@ -8,19 +8,24 @@
     ".NETFramework,Version=v4.8": []
   },
   "packageFolders": {
-    "C:\\Users\\LX\\.nuget\\packages\\": {}
+    "C:\\Users\\lenovo\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\收藏\\雨世界\\Mod制作\\代码\\HunterExpansion\\HunterExpansion\\HunterExpansion.csproj",
+      "projectUniqueName": "D:\\Collection\\Rain World\\Mod\\Code\\HunterExpansion\\HunterExpansion\\HunterExpansion.csproj",
       "projectName": "HunterExpansion",
-      "projectPath": "D:\\收藏\\雨世界\\Mod制作\\代码\\HunterExpansion\\HunterExpansion\\HunterExpansion.csproj",
-      "packagesPath": "C:\\Users\\LX\\.nuget\\packages\\",
-      "outputPath": "D:\\收藏\\雨世界\\Mod制作\\代码\\HunterExpansion\\HunterExpansion\\obj\\",
+      "projectPath": "D:\\Collection\\Rain World\\Mod\\Code\\HunterExpansion\\HunterExpansion\\HunterExpansion.csproj",
+      "packagesPath": "C:\\Users\\lenovo\\.nuget\\packages\\",
+      "outputPath": "D:\\Collection\\Rain World\\Mod\\Code\\HunterExpansion\\HunterExpansion\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\LX\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -45,12 +50,13 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net48": {
         "targetAlias": "net48",
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
