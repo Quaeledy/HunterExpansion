@@ -1,0 +1,14 @@
+0-0
+I entrust this to you.
+
+SPECEVENT : giveSwarmerToHunter
+
+PEBBLESWAIT : 160
+
+I suppose you already know its importance.
+
+If necessary, the pearl is expendible, but the neuron must be delivered to its destination.
+
+This will be your first time entering the wilderness,<LINE>and the journey will not be easy, but I wish you a pleasant one.
+
+Take care, my little messenger.

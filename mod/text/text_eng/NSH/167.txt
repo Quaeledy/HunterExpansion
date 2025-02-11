@@ -1,0 +1,2 @@
+0-167
+This is a seed bearing structure. Do you want to try farming? But I can't teach you, <ItemPlayerName>,<LINE>because this seed is already dead.<LINE>Oh, poor seed! It must be more disappointed than you are.

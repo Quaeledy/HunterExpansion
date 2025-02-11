@@ -1,0 +1,8 @@
+0-127
+...
+
+<CapItemPlayerName>, esto no es ... algo con lo que jugar.
+
+Es una célula de rarefacción masiva de baja densidad. Aunque las células de rarefacción masiva son un recurso valioso para nosotros, esta ha perdido su valor.<LINE>Su capa protectora está dañada y no hay forma de extraer de forma segura la energía que contiene.
+
+Por supuesto, existen métodos inseguros. Pero no recomiendo usarla como arma a menos que sea<LINE>absolutamente necesario. La mejor solución es mantenerse alejado de ella.

@@ -1,0 +1,6 @@
+0-106
+Esta perla codificaba un himno simple. Es una novedad poder hacer contacto directo con el rastro de acceso de uno de los míos...
+
+Parece que su dueño la apreciaba mucho. Muestra rastros de acceso repetitivo, y de acceso reciente.
+
+Debes haberla tomado de otro iterador. Te sugiero que se la devuelvas a su legítimo dueño, <PlayerName>.

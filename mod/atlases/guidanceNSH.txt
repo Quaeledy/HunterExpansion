@@ -1,0 +1,20 @@
+{"frames": {
+
+"GuidanceNSH.png":
+{
+	"frame": {"x":0,"y":0,"w":21,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":21,"h":19},
+	"sourceSize": {"w":21,"h":19}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "guidanceNSH.png",
+	"format": "RGBA8888",
+	"size": {"w":21,"h":19},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d37f0aa6445ed5d6a9c82a8ef3bdb17c:4c2f728909d82dcaaf5548c7df52e7a6:c9aa35b353185949107af36df8521a85$"
+}
+}

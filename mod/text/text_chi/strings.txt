@@ -1,0 +1,531 @@
+Hunter Expansion|猎手拓展
+Quaeledy.hunterexpansion-name|猎手拓展
+Quaeledy.hunterexpansion-description|为猎手添加了六个演出梦境和一个新的结局（包含两个分支）。制作了NSH的基本行为，以及他的巨构的部分房间。在“收藏”里增加了NSH的解读。<LINE>谨将本作品献给我的朋友们。本mod不代表任何官方设定和剧情。我制作它是因为我的朋友们希望能在游戏中看见NSH。希望你喜欢这个mod。
+
+//提示
+The pearl you carry may determine your expedition's ending.|你携带的珍珠可能决定你的结局。
+Please treat it with caution.|请谨慎对待它。
+No Significant Harassment's Transcription|无稽烦忧的记录
+
+//区域名
+No Significant Harassment|无稽烦忧
+The Temporary Arena|临时竞技场
+No Significant Harassment (Memory Conflux)|无稽烦忧（内存集成）
+No Significant Harassment (The Boxroom)|无稽烦忧（收藏匣）
+No Significant Harassment (Multistage Amplifier)|无稽烦忧（多级放大器）
+No Significant Harassment (General Systems Bus)|无稽烦忧（通用系统总线）
+
+//称呼
+little one|小家伙
+little messenger|小信使
+little furball|小圆球
+little moth|小飞蛾
+
+little wanderer|小流浪者
+little apprentice|小学徒
+little scholar|小学者
+little garbage worm|小垃圾虫
+little naturalist|小博物学家
+
+little Wanderer|小流浪者
+little Apprentice|小学徒
+little Scholar|小学者
+little Garbage Worm|小垃圾虫
+little Naturalist|小博物学家
+
+//新版对话翻译
+//第二场梦境，误入
+//玩家靠近神经元触发的对话，对话为随机抽取（太少了，多来点）
+//（一次）
+Please keep out. I don't want anything to go wrong at this stage.|请不要靠近，我不希望这个过程出什么差错。
+//（两次）
+It seems like you're curious about it? I'll hand it over to you at the right time, but not now.|看来你对它很好奇？我会在合适的时候将它交给你，但不是现在。
+//（三次）
+What are you doing, messenger? Please don't touch it.|信使，你在做什么？请不要试图触碰它。
+It will interrupt my process and potentially result in errors and irreversible damage.|这会中断我的进程，同时可能导致错误和不可逆的损害。
+It's an unpleasant experience for any iterator, so please stop your attempts.|这对任何迭代器都是不愉快的体验，请停止你的尝试。
+//（多次之后随机抽取）
+Please do not approach it.|请不要靠近它。
+May I hope you don't interfere with my work?|我可以希望你不要干扰我的工作吗？
+
+//玩家开挂拿神经元触发的对话，按触犯次数和严重程度依次触发
+//（一级）
+I don't know how you did it, but I hope it won't happen again.|我不知道你是怎么做到的，但我希望这种事情不会发生第二次。
+//（二级）
+Seems like you are unwilling to follow orders?|看起来你不太愿意听从命令？
+Such a shame! I have to remind you that my patience is not infinite.|多么可惜！我不得不提醒你，我的耐心是有限的。
+//（三级）
+Such a disobedient messenger~|不听话的信使~
+Congratulations! You are free now.|恭喜！你自由了。
+
+//结局流程对话
+//Moon修珍珠
+Oh... don't you want me to do this?|哦……你不想让我这么做吗？
+Um... I will continue.|嗯……我会继续。
+//NSH招呼猎手
+Good morning. Come here, my little messenger. Come to me.|早上好。来吧，我的小信使。来我这里。
+Good morning, messenger.|早上好，信使。
+Oh, you're with your friend. But we need some time alone, I believe. Can you come back for me after you take it to somewhere safe?|噢，你还带着你的小朋友，但我想我们需要单独的空间，<LINE>你可以把它带到安全的地方再回来找我吗？
+Oh, you're with your friends. But we need some time alone, I believe. Can you come back for me after you take them to somewhere safe?|噢，你还带着你的小朋友们，但我想我们需要单独的空间，<LINE>你可以把它们带到安全的地方再回来找我吗？
+Welcome back, my messenger. Come, Come here.|欢迎回来，我的小信使。来吧，来我这里。
+
+//NSH被攻击
+What are you doing? Please don't attack me.|你在做什么？请不要攻击我。
+Stop this barbaric behavior, animal.|野兽，停下你野蛮的行为。
+Remember to behave in the next cycle.|下个循环记得礼貌一点。
+I have already warned you.|我已经警告过你了。
+
+//当着NSH的面食用神经元
+Creature, are you intentionally provoking me?|野兽，你在有意激怒我吗？
+Okay, if you brought it to me just for this moment, feel free.|好吧，如果你把它带到我面前就是为了这一刻，请便。
+
+//NSH读白色珍珠及彩色珍珠引语
+//第一次
+Do you want to give it to me? Or just want me to read it?|你想把它送给我？或者只是希望我阅读它？
+Let me take a look at this pearl...|让我看看这颗珍珠……
+//第二次
+Are you curious about the content in this pearl? Okay, I'm curious~|你很好奇这颗珍珠中的内容吗？好吧，我很好奇~
+//第三次
+Another pearl? It seems that you really like them!|又一颗珍珠？看来你确实很喜欢它们！
+//第四次
+Seeing you appear with pearls, I think I already know your purpose for coming here.|看到你带着珍珠出现，我想我已经知道你来这里的目的了。
+The scavengers will be jealous of your horde!|拾荒者们会嫉妒你的收集能力的！
+//多次见203
+
+//NSH解读物品的引语
+What is that?|那是什么？
+Seems like you found something new again! Let me take a look.|看来你捡到新东西了！我看一看。
+Seems like you found something new again. Let me take a look.|看来你捡到新东西了。我看一看。
+Ah-Hah! You are making this into a habit! Let me take a close look.|哈哈，你已经养成习惯了！我看一看。
+If you continue to be polite, I will explain to you.|如果你接下来保持礼貌，我就解释给你听。
+I have the right to refuse to entertain impolite guests, don't you think?|我有权拒绝招待不礼貌的客人，你说对吗？
+Let's see, what do you have here this time?|让我们看看，又是什么好东西？
+What is it again?|又是什么东西？
+
+//NSH解读的火虫卵被拿走时
+Oh, of course, you can take it away anytime!|噢，当然，你可以随时拿走它！
+//NSH保管的奇点炸弹被拿走时
+You can take it, but don't attack me anymore.|你可以拿走，但不要再攻击我了。
+
+//当着NSH的面吃神经元
+//吃NSH的
+Beast, are you intentionally provoking me?|野兽，你在有意激怒我吗？
+//吃Moon的
+Goodbye, you cruel creature.|再见，残忍的生物。
+//吃FP的
+Okay, if you brought it to me just for this moment, feel free.|好吧，如果你把它带到我面前就是为了这一刻，请便。
+
+
+//第一场梦境，诞生
+Can you hear me?|听得到吗？
+We are running out of time. Let's keep it simple.|时间紧迫。让我们公事公办。
+As you see,I should be counted as a creator of you.|如你所见，我该算作你的创造者。
+I need to lend your hand for something.|接下来我需要借你之手办成一件事。
+As compensation, I will guide you on the path of ascension.|作为补偿，我会指引你走上飞升之路。
+But I know, this will always be a unreasonable request. Creating life should have not been such a hasty thing.|但我知道，这总会是个不情之请。创造生命本不该如此仓促。
+I'm sorry. Unfortunately, we don't have any other options.|我很遗憾，只可惜我们没有其它选择。
+
+
+//第二场梦境，误入
+Why are you here?|你怎么来了？
+Neither you nor I are ready for what's coming next, yet.|现在你和我都还没有为之后的任务做好准备。
+Please leave and don't disturb my work.|请回去，不要打扰我的工作。
+If you just want to take a break, I don't object either.|如果你只是想休息一会儿，我并不反对。
+
+//玩家靠近神经元触发的对话，对话为随机抽取（太少了，多来点）
+//（一次）
+Please keep out. I don't want anything to go wrong at this stage.|请不要靠近，我不希望这个过程出什么差错。
+//（两次）
+It seems like you're curious about it? I'll hand it over to you at the right time, but not now.|看来你对它很好奇？我会在合适的时候将它交给你，但不是现在。
+//（三次）
+What are you doing, messenger? Please don't attempt to touch it.|信使，你在做什么？请不要试图触碰它。
+It will interrupt my process and potentially result in errors and irreversible damage.|这会中断我的进程，同时可能导致错误和不可逆的损害。
+It's an unpleasant experience for any iterator, so please stop your attempts.|这对任何迭代器都是不愉快的体验，请停止你的尝试。
+//（多次之后随机抽取）
+Please do not approach it.|请不要靠近它。
+May I hope you don't interfere with my work?|我可以希望你不要干扰我的工作吗？
+
+//玩家开挂拿神经元触发的对话，按触犯次数和严重程度依次触发
+//（一级）
+I don't know how you did it, but I hope it won't happen again.|我不知道你是怎么做到的，但我希望这种事情不会发生第二次。
+//（二级）
+Seems like you are unwilling to follow orders?|看起来你不太愿意听从命令？
+Such a shame! I have to remind you that my patience is not infinite.|多么可惜！我不得不提醒你，我的耐心是有限的。
+//（三级）
+Such a disobedient messenger~|不听话的信使~
+Congratulations! You are free now.|恭喜！你自由了。
+
+
+//第三场梦境，对战
+NSH: This time I'll set you up with a lizard.|无稽烦忧：这次你要应对的是一只蜥蜴。
+NSH: Keep your spirits up, soon after the situation you're facing would be far more dangerous than this.|无稽烦忧：打起精神，你不久之后将面对的情况远比这个危险。
+NSH: We need to ensure that everything is flawless.|无稽烦忧：我们需要确保这件事万无一失。
+//对战结语
+//（无伤）
+NSH: Good. Hope you can maintain the same level of proficiency and caution along the way.|无稽烦忧：很好。希望你在途中也能持有同样的熟练和谨慎。
+//（一到二次）
+NSH: Well done, but still, you need my help.|无稽烦忧：做的不错，但你仍然需要我的帮助。
+NSH: This can't be satisfying, isn't it?|无稽烦忧：这很难令我们满意，不是吗？
+NSH: There are not many opportunities left for us.|无稽烦忧：留给我们的机会都不多了。
+//（三到五次）
+NSH: NSH: Calm down, your body have far more protential than you think.|无稽烦忧：冷静一点，你的机体能够达到的水平远不止于此。
+NSH: Learn to manipulate it perfectly. It will not be difficult for your race.|无稽烦忧：学会完美地操纵它，对你的种族并不是难事。
+NSH: Concentrate, we just need more time.|无稽烦忧：集中精神，我们只是需要更多时间。
+//（更多）
+NSH: ...|无稽烦忧：……
+NSH: Are you acting out?|无稽烦忧：你在闹脾气吗？
+NSH: I have no intention of making things ugly for us. A quarter rain cycle - I hope you can recover later.|无稽烦忧：我无意让我们之间变得剑拔弩张。四分之一个雨循环——希望之后你能恢复状态。
+NSH: My messenger, I have no other choice on this matter. I can only hope that you understands.|无稽烦忧：我的信使，在这件事上我别无选择。我只能寄希望于得到你的理解。
+
+
+//第四场梦境，启程
+I entrusted it to you.|交给你了。
+Guess you have already known its importance.|我想你已经知道了它的重要性。
+If necessary, the pearl is expendible, but the neuron must be delivered to it's destination.|必要时，珍珠可以取舍，但神经元请务必送达。
+This will be your first time entering the wilderness, and the journey will not be easy, but I wish you a pleasant one.|这会是你第一次进入自然环境，路途不会轻松，但祝你旅途愉快。
+Take care, my little messenger.|小信使，保重。
+
+
+//美梦的对话
+You have completed a very great job, messenger.|你完成了一项非常伟大的工作，信使。
+I am proud of you, and at the same time, I feel ashamed of myself.|我为你感到骄傲，同时为我自己感到惭愧。
+You don't have much time. Go deep underground and you will be saved.|你的时间不多了。深入地下，你就会得到拯救。
+Don't look back.|别回头。
+
+
+//结局流程对话
+Oh... don't you want me to do this?|哦……你不想让我这么做吗？
+Um... I will continue.|嗯……我会继续。
+Good morning. Come here, my little messenger. Come to me.|早上好。来吧，我的小信使。来我这里。
+
+
+//由moon解读nsh演算室的珍珠，对话为随机抽取
+// 1
+Its data compiling style is very familiar... I think it comes from a member of the local group.|它的数据书写风格很熟悉……我想它来自本地群组的一位成员。
+
+Its data compiling style is very familiar... I think it comes from No Significant Harassement.|它的数据书写风格很熟悉……我想它来自无稽烦忧。
+
+There isn't much left inside. I think this is a part of the unstructured grid of a physical field, but I lack information to further interpret it.|这里面并没有剩下太多东西。我想这是一个物理场的非结构化网格的一部分，但我缺少能进一步解读它的信息。
+
+// 2
+This is a calculation process used to carefully encrypt and store special data, possibly some kind of key.|这是一份计算过程，用于仔细地加密和保存特殊的数据，可能是某种密钥。
+Without context, I don't know its purpose.|没有前后文的情况下，我不知道它的目的。
+
+// 3
+Strange... This data clearly comes from an iterator. But there are several small errors inside, even though they have been carefully corrected, traces can still be seen.|奇怪……这份数据显然来自一位迭代器。但它里面有好几个小错误，尽管被小心地修改了，仍然可以看出痕迹。
+We rarely make mistakes in calculations, so its creator was certainly not paying attention.|我们很少在计算上犯错，它的书写者肯定心不在焉。
+
+// 4
+This is a log of a working memory, but I can only interpret a few words.|这是一段工作记忆，但我仅能读懂只言片语。
+It is obvious that the compiler used some method to compress his information, in order to store it in a short period of time and perform more operations.|很明显，编译者采用了某种方法压缩他的信息，以便短时间内存储并运算得更多。
+This iterator used to handle an urgent matter, which overwhelmed them, but their calculations were still well-organized.|这位迭代器曾经处理着一件急事。这令他应接不暇，但他的运算仍然有条不紊。
+
+Ah, this makes me feel familiar...|啊，这让我感到似曾相识……
+
+A faintly familiar feeling. If I were to speculate on my own, little creature, I would guess that it comes from the region of No Significant Harassment.|这让我感到似曾相识。如果妄自猜测的话，小生灵，我会猜它来自无稽烦忧的辖区。
+
+// 5
+This is a biome log, and its owner has observed and recorded the evolution of nearly a hundred species of organisms within their region.|这是一份生物笔记，它的主人观察并记载了自己辖区内近百种生物的演化。
+
+I saw a species unique to No Significant Harassment's region.|我看到了无稽烦忧辖区特有的物种。
+I hope you didn't steal it, little creature. The time span of the edits is dramatic, and he persisted in updating its data until a long time ago.|希望你不是偷拿出来的，小生灵。文本的改写时间跨度很大，他直到很久以前都坚持更新它的数据。
+But for a long time recently, he seems to have forgotten it.|只是最近很长一段时间内，他像是忘了它。
+
+I hope you didn't steal it, little creature. The time span of the edits is dramatic, and its owner persisted in updating its data until a long time ago.|希望你不是偷拿出来的，小生灵。文本的改写时间跨度很大，它的主人直到很久以前都坚持更新它的数据。
+But for a long time recently, the writer seems to have forgotten it.|只是最近很长一段时间内，书写者像是忘了它。
+
+// 6
+This is a special qualia... it's a dying experience.|这是一段特殊的感受质……它是一段濒死体验。
+We all know that the near death experience of the ancients was not accompanied by fear, so obviously, this data is extracted from a simple creature.|我们都知道古人的濒死并不会伴随恐惧，所以显然，这段感受提取自一只简单生物。
+I can distinguish the primordial desire for survival - perhaps it's from the brain of a squidcada.|我能辨别出混沌的求生欲——或许来自一只蝉乌贼的脑。
+I find it difficult to imagine whether it will have any practical use.|我很难想象它是否会有任何实际用途。
+
+
+//NSH被攻击
+What are you doing? Please don't attack me.|你在做什么？请不要攻击我。
+Animal, stop your barbaric behavior.|野兽，停下你野蛮的行为。
+Keep that in your mind: be polite in the next cycle.|下个循环记得礼貌一点。
+I have already warned you.|我已经警告过你了。
+
+
+//NSH读FP演算室珍珠
+//水猫线
+This pearl has traces of corruption, although very faint... Well, I can guess who wrote it.|这颗珍珠有被腐化的痕迹，尽管很微弱……好吧，我可以猜到这是谁写的。
+I don't want to read this pearl. Seeing his information is no more enjoyable than seeing the rot.|我不想阅读这颗珍珠。看到他的信息并不比看到腐化更让人愉快。
+If possible, please take it with you when you leave.|如果可以，请你离开的时候带走它。
+
+//圣猫线
+This pearl has suffered severe corruption before. There's nothing inside now.|这颗珍珠曾经遭遇过严重的腐化。现在里面什么也没有。
+This pearl is even more blank than blank - it has been completely corrupted<LINE>and cannot perform any functions.|这颗珍珠比空白更空白——它被腐化完全损坏了，无法进行任何读写操作。
+
+
+//NSH读FP演算室珍珠的引语
+<CapPlayerName>, do you want me to read this?|<CapPlayerName>，你想让我读这个吗？
+This pearl is still very warm, it seems that it has been used recently.|这颗珍珠还很温暖，看来它最近还被使用过。
+
+A beautiful pearl... and it is also used recently! Do you want me to read this?|一颗漂亮的珍珠……而且它不久前还被使用过！你想让我读这个吗？
+
+This pearl was used not long ago! I'm curious where you found it.|这颗珍珠不久前还被使用过！我很好奇你是在哪里找到它的。
+
+Oh... a warm pearl. Do you want to know what is written here?|哦……一颗温暖的珍珠。你想知道这里写了什么吗？
+I'm also very curious! Let me read it to you.|我也很好奇！让我读给你听。
+
+A fresh pearl! This is a rare find, let's take a look at what it says.|一颗新鲜的珍珠！这可是一个罕见的发现，让我们来看看它写了什么。
+
+
+//NSH读白色珍珠及彩色珍珠引语
+//第一次
+Do you want to give it to me? Or just want me to read it?|你想把它送给我？或者只是希望我阅读它？
+Let me take a look at this pearl...|让我看看这颗珍珠……
+//第二次
+Are you curious about the content in this pearl? Okay, I'm curious~|你很好奇这颗珍珠中的内容吗？好吧，我很好奇~
+//第三次
+Another pearl? It seems that you really like them!|又一颗珍珠？看来你确实很喜欢它们！
+//第四次
+Seeing you appear with pearls, I think I already know your purpose for coming here.|看到你带着珍珠出现，我想我已经知道你来这里的目的了。
+The scavengers will be jealous of your collection ability!|拾荒者们会嫉妒你的收集能力的！
+//多次
+<CapPlayerName>, you would like me to read this?|<CapPlayerName>，你想让我读这个吗？
+Would you like me to read this pearl?|你想让我读这个？
+Are you curious about the content of this pearl, <PlayerName>?|你很好奇这颗珍珠的内容吗，<PlayerName>？
+A pearl! Let me see what's written inside.|一颗珍珠！让我看看里面写了什么。
+Do you want me to read this pearl for you?|你希望我为你阅读这颗珍珠吗？
+
+
+//NSH被打断解读
+//喜欢猫
+Lost patience, <PlayerName>?|失去耐心了吗，<PlayerName>？
+Want to leave? In our creators, leaving early is a point deduction~|想走了？在我们创造者那里，早退是要扣分的~
+Go play, children.|去玩吧，小朋友。
+Are you leaving? Did anything scare you|有什么东西吓到你了吗？
+Are you leaving now? See you later.|要走了吗？回头见。
+//不喜欢猫
+Lost patience?|失去耐心了？
+Do you want to leave? Go quickly.|想走了？那就快走。
+...|……
+Are you leaving?|你要走了？
+Are you leaving now?|要走了吗？
+
+//NSH重新解读
+//喜欢猫
+What are you reluctant to part ways with? Okay, let's continue.|你在恋恋不舍什么？好吧，我们继续。
+Is this a game exclusively for small animals?|这是在做什么小动物专属游戏吗？
+You're really not cute! But okay, it's hard for me to get serious with you.|真不可爱！但好吧，我很难同你较真。
+Come on, little beast. Where have we read?|来吧，小野兽。我们读到哪了？
+Have you changed your mind? But I won't continue~|改变心意了？但我不会继续了~
+//不喜欢猫
+What are you reluctant to part with? I'm not interested in reading it to you.|你在恋恋不舍什么？我没兴趣念给你听。
+I don't have time to play games with you, beast.|我没时间陪你玩游戏，野兽。
+...|……
+Little beast, I won't read it to impolite creatures.|小野兽，我不会把它念给不礼貌的生物听。
+Have you changed your mind? But I won't continue.|改变心意了？但我不会继续了。
+
+
+//NSH解读物品的引语
+What is that?|那是什么？
+It seems that you has found something new again! Let me take a look.|看来你捡到新东西了！我看一看。
+It seems that you has found something new again. Let me take a look.|看来你捡到新东西了。我看一看。
+Haha, you have developed a habit! Let me take a look.|哈哈，你已经养成习惯了！我看一看。
+If you continue to be polite, I will explain to you.|如果你接下来保持礼貌，我就解释给你听。
+I have the right to refuse to entertain impolite guests, are you right?|我有权拒绝招待不礼貌的客人，你说对吗？
+Let's see, what kind of good thing is it?|让我们看看，又是什么好东西？
+What kind of thing is it?|又是什么东西？
+//多次（喜欢猫）
+Welcome! Searching, please wait a moment~|欢迎光临！查询中，请稍后~
+You're really tireless. Come on, let's take a look.|你还真是孜孜不倦，来吧，让我们看看。
+Is there another one? Let me take a look.|又一个吗？我看一看。
+Let's take a look. Today's little lecture of NSH is about...|让我们看看，今天的无稽烦忧小课堂要科普的是……
+Ah, you're here. Is there anything I want to see?|啊，你来了，有想让我看看的东西吗？
+Welcome back! Show me, <ItemPlayerName>.|欢迎回来！给我看看吧，<ItemPlayerName>。
+//多次（不喜欢猫）
+You are such a difficult little thing, aren't you? Come on, let me take a look.|你真是个难缠的小东西，不是吗？来吧，我看一看。
+Let me take a look.|我看一看。
+What is this?|这是什么？
+Another one? Let me take a look.|又一个吗？我看一看。
+Okay,  I will look at it.|好吧，我会看看。
+Do you want to show it to me?|你想把它展示给我看？
+//多次
+<CapItemPlayerName>, let me see what you found again?|让我看看你又找到了什么，<ItemPlayerName>？
+Oh, what is that, <ItemPlayerName>?|哦，那是什么，<ItemPlayerName>？
+
+
+//NSH解读物品部分文本
+//矛
+This is a weapon. We are already quite familiar with it, aren't we?|这是武器。我们对它已经很熟悉了，不是吗？
+This is a heavy rebar. If you can't use it, please feel free to leave it here.|这是一根沉重的钢筋。如果你用不到它，可以随意留在这里。
+This is a sharpened rebar. As an apprentice in nature,<LINE>I guess you are not unaware of its purpose.|这是一根削尖的钢筋。身为自然界的学徒，我猜你不会不清楚它的用途。
+//SL_chimney珍珠补充内容
+I have to say, you are really cute!|我得说，你们真的很可爱！
+
+//炸矛
+This is an explosive weapon, just throw it like a rebar. Remember<LINE>to keep a certain distance from the explosion point.|这是一种爆炸性武器，像使用钢筋一样投掷它就好。记得<LINE>同爆炸点保持一定距离。
+However, I guess you have already figured out its usage!|不过，我猜你早就摸索出它的用法了！
+A type of explosive weapon. Be careful, I have seen many creatures<LINE>use it to harm themselves.|一种爆炸性武器。小心，我见过很多生物用它伤到自己。
+
+//石头
+A rock, despite its non-lethality, can still play a unique role in your face of enemies. I think you are already familiar with it~|一块石头，尽管没有杀伤力，仍然能在你面对敌人时发挥独特的作用。我想你已经很熟悉了~
+This is a rock. I seriously suspect that you are trying to use me to compile an encyclopedia,<LINE>or showcase your strange collection addiction.|这是块石头。我严重怀疑你试图利用我编纂一本百科全书，<LINE>或者展示你奇怪的收集癖。
+
+//泡水果
+This is a plant that swells when exposed to water, and it is edible.<LINE>It is said to have a great taste.|这是一种遇水膨胀的植物，可以食用。据说味道很棒。
+Yes, I can't eat it. Don't show off in front of me~|是的，我不能吃。别在我面前炫耀啦~
+
+//火虫卵被拿走时
+Oh, of course, you can take it away anytime!|噢，当然，你可以随时拿走它！
+
+
+//NSH遇见矛大师
+
+//矛大师遇见FP前
+//第一次
+You are...|你是……
+Suns' messenger.|红日的信使。
+Are you lost? We're in an urgent situation, and we all need you to rush to Five Pebbles as soon as possible.|你迷路了吗？现在情况紧急，我们都需要你尽快赶到五块卵石那边。
+Please set off quickly.|请快些出发吧。
+//第二次
+Is there anything I can do? I'm not the iterator you're looking for, little idiot.|有什么需要我做的吗？我不是你要找的迭代器，小糊涂鬼。
+She's running out of time, please set off quickly.|她的时间不多了，请快上路吧。
+//多次
+Suns, what's wrong with your messenger?|红日，你的信使出了什么问题？
+Little one, please go on your mission ASAP.|小家伙，请快出发，拜托。
+
+//矛大师遇见FP后
+//第一次
+Messenger? Come here and take a break. It's not an easy trip, is it.|信使？快来这里休息一下。这次旅程可不容易吧。
+I know he  is hard to persuade, but I didn't expect it to end in this way.|我知道他很难被说服，但我没想到会以这种方式结束。
+Ha!  He has already done such to Moon, what do you expect?|哈，他都已经这样对待月姐了，还有什么出乎意料的呢？
+I will think of other methods.|我会想想别的方法。
+
+//矛大师完成结局后
+//第一次
+I received her... message.|我收到了她的......消息。
+Did you do it, little messenger? Thank you.|是你做的吧，小信使？谢谢你。
+Your mission has been completed and your return journey is smooth.|你的使命已经完成，祝你回程顺利。
+//第二次
+Is there anything you need?|你有什么需要的吗？
+If not, do you mind leave me alone for a while? I need to think.|如果没有，你介意让我独处一段时间吗？我需要思考。
+Goodbye, good messenger.|再见，优秀的信使。
+//多次
+Do you still want to rest here? Be my guest.|你还想留在这里休息吗？我并不反对。
+But don't forget that Suns is still waiting for you, messenger.|但别忘了红日还在等你，信使。
+
+
+//NSH遇见工匠
+
+//第一次对话
+Hello! It seems that I've got a citizen in house. Let me see…What a surprise, you are one of his. Five Pebbles.|你好！看来我迎来了一位公民。让我看看......你居然是五块卵石的公民。
+Then we are enemies, please leave!|那我们就是敌人，请回去吧！
+Haha, just joking~|哈哈，开玩笑的~
+I am very unpleasent with him, but I do not wish to vent on small animals like you.|我对他很不满意，但我并不想迁怒于小动物。
+You seems like you're having a hard time, but I can't help you. Nevertheless,<LINE>before you depart, you can rest here to your heart's content.|你看起来过得很艰难，但我帮不了你。尽管如此，在你启程之前，你可以在我这里尽情休息。
+
+//第二次对话
+Anything catching your attention?|这里有什么东西在吸引你吗？
+Oh, of course, you can stay here. I have no intention of interfering with your decision, as long as you don't sabotage my structure.|哦，当然，你可以留在这里。我无意干涉你的决定，只要你别去破坏我的结构。
+
+
+//NSH遇见猎手
+//多次对话但时机未到
+Is there anything you need, my little messenger?|你有什么需要的吗，我的小信使？
+It's my pleasure~|乐意效劳~
+
+
+//NSH遇见饕餮
+//第一次
+（sound of escaping laughter）|噗。
+Oh, I’m not laughing at you body type - That’s what our creators would do. Out of fear of gluttony.|哦，我不是在笑你的身材——那是我们创造者会做的事情。出于对暴食的恐惧。
+But you little creatures and us iterators don't need to be afraid.|而你们这些小生物和我们迭代器用不着畏惧。
+You look content. It's such a novelty on this land! What a sight.|你看上去心满意足，这在我们的土地上可是罕见的事！这令我心生感慨。
+Anyway, I'm glad to see you. As long as you don't eat my neurons.|无论如何，我很高兴见到你。只要你不吃我的神经元。
+//第二次
+You're back. Anything else you need?|你回来了，还有什么需要的吗？
+Seriously, I can't think of anything you'll need from me, you round little creature!|说真的，我想不出你会从我这里需要什么，你这圆满的小生物！
+Except for the neurons, of course. This won't work. Give it up.|当然，除了神经元。这个不行，放弃吧。
+//多次
+Okay, if you want to stay here, remember to not eat my neurons!|好吧，如果你想留在这里，记得别吃我的神经元！
+
+//NSH遇见求生者
+//第一次
+Oh? Hello, I haven't encountered a little guest like you in a while.|哦？你好，我有一阵没遇到你这样的小客人了。
+You look very primitive, but you have been marked. There are only Five Pebbles nearby<LINE>who can do this. It seems that you have walked a long way, little traveler.|你看起来很原始，但你被打上了印记。附近能做这件事的迭代器只有<LINE>五块卵石了。看来你走了很远，小旅行者。
+You can rest here for a while. It used to be known as a temple, but now I don't<LINE>mind being treated as a hotel~|你可以在这儿歇一会儿。这里曾经被誉为神殿，但现在我不介意被当作客栈~
+//第二次
+Do you want anything else?|你还想要什么吗？
+If you want a job, I can have you as a messenger.|如果你想要一份工作，我可以收你做信使。
+Just kidding. I'm sorry, but there's not much I can do, I can't even hear your needs.|开玩笑的。我很遗憾，但我能做的不多，我甚至没办法听到你的需求。
+//多次
+Okay, if you want to stay here, don't forget my words: no neuron buffet!|好吧，如果你想留在这里，别忘了我的话：神经元自助餐不行！
+
+
+//NSH遇见僧侣
+//第一次
+Oh, hi! Your kind is really smart, isn't it? It's a rare occurrence for organisms to grope for the<LINE>location of the calculation room, but in hundreds of rain cycles, I actually saw two slugcats.|哦，嗨！你们种群真的很聪明，不是吗？被生物摸索到演算室的位置可是件稀罕事，<LINE>但几百个雨循环里，我竟然见到了两只蛞蝓猫。
+Listen up: The rule of NSH Inn is: YES to overnight, NO to neuron buffet. If you encounter<LINE>someone of your kind, please let them know.|听好了：无稽烦忧客栈的规矩是——留宿可以，神经元自助餐不行。<LINE>如果遇到你的同类，请麻烦转告。
+//第二次
+Meeting again, what makes you reluctant to part ways? Let me guess...|又见面了，是什么让你恋恋不舍？我猜猜看……
+Your kind has gone to the jurisdiction of Five Pebbles - if that's what you want to know.|你的同类已经去了五块卵石的辖区——如果这是你想知道的。
+//多次
+Okay, if you want to stay here, don't forget my words: no neuron buffet!|好吧，如果你想留在这里，别忘了我的话：神经元自助餐不行！
+
+
+//NSH遇见溪流
+//溪流完成结局前
+//第一次
+Wow, what a surprise! The last time I saw your species was a long time ago, let alone how special you look.|哇哦，好一个惊喜！上一次见到你的物种已经是很久之前的事了，更何况你看起来如此特殊。
+I hope you don't mind me scanning your structure. As a passionate fan of slugcats,<LINE>I find it difficult to restrain my curiosity.|希望你不介意我扫描一下你的结构。作为蛞蝓猫的狂热爱好者，我很难克制住好奇。
+Let me see... you have a unique pair of gills, but your ancestors didn't. It seems that<LINE>your ethnic group has unique adaptability.|让我看看……你有一对独一无二的鳃，但你的祖先可没有。看起来你的族群有着独一无二的适应能力。
+Welcome to rest here with me. If you plan to visit the jurisdiction of<LINE>Looks To The Moon, please help me say hello to her.|欢迎你在我这里休息。如果你打算去仰望皓月的辖区，帮我向她打个招呼。
+//第二次
+You can stay, but if I lose a dozen neurons again due to my hospitality...|你可以留下，但如果我再因为好客而失去一打神经元……
+I swear I can be much more tricky than a bunch of angry scavengers.|我发誓我可以比发怒的拾荒者棘手得多。
+//多次
+Do you have any further questions?|还有什么问题吗？
+
+//溪流完成结局后
+//第一次
+Hello, I am entangled in a strange matter. A while ago, the area of Five Pebbles stopped raining,<LINE>and after a few cycles, the rain clouds began to condense over Looks To The Moon.|你好，我正纠结于一桩怪事。前段时间，五块卵石的区域停止了下雨，几个循环后，雨云开始凝结在仰望皓月上空。
+It is obvious that someone installed his battery for Moon. Considering that her structure has<LINE>been submerged by water, this is almost an impossible task.|显而易见，有谁将他的电池安装给了月姐。考虑到她的结构已经被水淹没，这几乎是一项不可能的任务。
+Now that I see you, everything has a clue. Did I guess correctly, the magical little one?<LINE>If you did this, please accept my gratitude.|现在我看到了你，一切都有了头绪。我猜对了吗，神奇的小家伙？如果是你做了这件事，请接受我的道谢。
+I hope this means that Five Pebbles have already digested his anger. Anyway, what you<LINE>have accomplished has extraordinary significance.|我希望这意味着五块卵石已经消化了他的愤怒。无论如何，你做到的事情意义非凡。
+Okay, you're the only slugcat worth enjoying the neuron buffet, just take it as my thank you.|好吧，现在你是唯一值得享用神经元自助餐的蛞蝓猫了，就当是我的谢礼。
+Uh, be merciful under your tongue.|呃，嘴下留情。
+//第二次
+I calculated your movement speed based on the time interval of battery installation.<LINE>You're really agile, aren't you?|通过电池安装的时间间隔，我计算了你的移动速度。你真的很敏捷，不是吗？
+You can simply race against a frightened eggbug, and my fellows may even bet on you.|你简直可以和一只受惊的蛋虫赛跑，我的同胞们甚至会为你下注。
+//多次
+Of course you can stay, but I am planning to start studying your body structure.|你当然可以留下，但我正打算着手研究你独一无二的机体结构。
+Do you mind seeing your own scanned slices?|你不介意看到自己的扫描切片吧？
+
+//NSH遇见圣徒
+//第一次
+Ha, it's really strange! After the weather turns cold, have slugcats evolved hair?|哈，真稀奇！天气转冷以后，蛞蝓猫都进化出了毛发吗？
+Come on, although my room may not be warm, it can barely keep warm. I have always<LINE>loved the companionship of your kind, especially recently.|来吧，虽然我的房间算不上温暖，但勉强可以御寒。我一直喜爱你们物种的陪伴，近来尤其如此。
+To this day, this land is still trapped here with us...|时至今日，这片土地仍然和我们一起被困在这里……
+I hope you can leave when you want. You know, the void sea has always been open for you.|我希望你可以脱身。你知道的，虚空海一直都为你们敞开。
+//第二次
+Do you want to stay a little longer? I am very welcome.|你想多留一会儿？我很欢迎。
+You remind me of the past. Although it may sound incredible, your species has<LINE>always been a good partner for iterators...|你让我想起了过去的时光。虽然听上去不可思议，但你的物种一直是迭代器的好搭档……
+- When you're not feasting on neurons.|——当你们没有在大快朵颐神经元的时候。
+//多次
+Do you want to stay a little longer? I am very welcome.|你想多留一会儿？我很欢迎。
+
+
+//NSH遇见怪猫
+//第一次
+You have come at last, my valiant visitor. As I witnessed your arduous journey<LINE>through the watchers, a firm idea took shape:|你终于来了，我英勇的来访者。当我透过监视者见证你艰辛的旅途，一个坚定想法逐渐成形：
+I love you.|我爱你。
+I've waited a long time for this, and I'm sure you have too! Come to me.|为了这一刻我等待已久，相信你也一样！来吧，来我身边。
+Closer, I understand your desire for fusion, and today your hopes will not be dashed once again...|别怕，再近一点。我明白你对融合的渴望，今天你的希望不会再一次落空……
+... We can be together forever in the future.|……我们以后就能永远在一起了。
+//多次
+Come here... don't be afraid...|过来……别害怕……
+
+
+//NSH遇见其他蛞蝓猫
+//第一次
+Strange little guy, hello.|奇怪的小家伙，你好。
+You are such an interesting little creature... different from the guests who used to come to my place.|你真是一个有趣的小生物……和以前来我这里的客人都不一样。
+Anyway, I welcome you to stay here and rest, as long as you don't intend to consume my neurons.|无论如何，我欢迎你留在我这里休息，只要你不打算食用我的神经元。
+//多次
+Do you want to stay a little longer?|还想多留一段时间吗？
+Of course you can! As long as you don't eat my neurons.|当然可以！只要你别吃我的神经元。

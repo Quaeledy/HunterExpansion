@@ -1,0 +1,2 @@
+[ADD]NSHSpecial : NSH_Special
+[ADD]NSHMisc : NSH_Misc_1, NSH_Misc_2

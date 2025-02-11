@@ -1,0 +1,10 @@
+0-210
+SPECEVENT : refuseRestartConversation<NEXT>¿Por qué eres tan reacio? No tengo ningún interés en leértelo.
+
+SPECEVENT : refuseRestartConversation<NEXT>No tengo tiempo para juegos, criatura.
+
+SPECEVENT : refuseRestartConversation<NEXT>...
+
+SPECEVENT : refuseRestartConversation<NEXT>Pequeño ser, no leeré cosas para criaturas irrespetuosas.
+
+SPECEVENT : refuseRestartConversation<NEXT>¿Cambiaste de opinión? Pues no continuaré.

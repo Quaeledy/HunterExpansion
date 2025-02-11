@@ -1,0 +1,10 @@
+0-110
+¡Guau! ¡Mira lo que me has traído aquí! No diré que lo veo a diario, al igual que tú no ves tu corazón tan a menudo.
+
+Debemos tratarlo con precaución. Como dije, la celda de rarefacción masiva es crucial para que los iteradores funcionen.
+
+Su lugar de almacenamiento suele tener protección adicional. A menos que la estructura relativa haya sido dañada, <LINE>o el propio iterador haya dado el permiso, es casi imposible que puedas acceder a él.
+
+Dicho esto, me resulta difícil imaginar de dónde diablos lo sacaste. ¿Alguien te lo confió, <LINE>o te aprovechaste de alguien? Viajar con él no es fácil, así que supongo que no lo hiciste por capricho.
+
+¿A dónde lo llevas? No importa qué, espero que lo trates con respeto y precaución.

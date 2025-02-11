@@ -1,0 +1,4 @@
+0-40
+Esta perla ya había sufrido una grave corrupción en el pasado. Ahora no hay nada dentro.
+
+Esta perla está destrozada: está completamente dañada<LINE> y no puede realizar ninguna función.

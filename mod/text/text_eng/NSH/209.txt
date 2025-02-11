@@ -1,0 +1,10 @@
+0-209
+Why are you hesitating? Okay, let's continue.
+
+Is this some kind of game you animals play?
+
+You're not being very cute right now! But all right, it's hard for me to be serious with you anyway. 
+
+Come on, little animal. Where were we?
+
+SPECEVENT : refuseRestartConversation<NEXT>Changed your mind? Alright, but I'm not continuing~

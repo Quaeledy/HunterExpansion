@@ -1,0 +1,10 @@
+0-203
+<CapPlayerName>, ¿quieres que lea esto?
+
+¿Quieres que lea esta perla?
+
+¿Sientes curiosidad por el contenido de esta perla, <PlayerName>?
+
+¡Una perla! Déjame ver qué hay escrito dentro.
+
+¿Quieres que te lea esta perla?

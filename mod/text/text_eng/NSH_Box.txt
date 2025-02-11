@@ -1,0 +1,9 @@
+﻿This is a operation log that records all the observation information of a boxroom up to now.
+
+In the era of iterators, the old ecosystem has already collapsed.<LINE>Some of our creators decided to record the information of the creatures from the collapsed ecosystem.<LINE>So then you get the little boxrooms in some iterators' structures. 
+
+At first, the boxroom was just a library used to preserve the genetic information of the original fauna and flora.<LINE>Later, they began to cultivate new purposed organisms there for exhibitions and educational purposes.
+
+In such facilities, information is usually not directly transmitted to the iterator,<LINE>but is relayed by pearls. Once the pearl is lost, the transcription stops.<LINE>I assume it's for keeeping the iterator from gaining too much control.
+
+Data loss is usually not pleasant. <LINE>please put it back in its original place if possible, little one.

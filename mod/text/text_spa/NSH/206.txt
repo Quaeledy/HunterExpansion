@@ -1,0 +1,16 @@
+0-206
+Eres una criaturilla muy exigente, ¿no? Venga, déjame echarle un vistazo.
+
+Déjame echar un vistazo.
+
+¿Qué es esto?
+
+¿Otro? Déjame echarle un vistazo.
+
+Bueno, le echaré un vistazo
+
+¿Quieres mostrármelo?
+
+<CapItemPlayerName>, déjame ver qué encontraste esta vez.
+
+Oh, ¿que es eso, <ItemPlayerName>?

@@ -1,0 +1,10 @@
+0-210
+SPECEVENT : refuseRestartConversation<NEXT>Why are you so reluctant? I have no interest in reading it to you.
+
+SPECEVENT : refuseRestartConversation<NEXT>I don’t have time for games, animal.
+
+SPECEVENT : refuseRestartConversation<NEXT>...
+
+SPECEVENT : refuseRestartConversation<NEXT>Little animal, I won't read things for disrespectful creatures.
+
+SPECEVENT : refuseRestartConversation<NEXT>Changed your mind? But I won't continue.

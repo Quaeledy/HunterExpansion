@@ -1,0 +1,109 @@
+Hunter Expansion|Expansión del Cazador
+Quaeledy.hunterexpansion-name|Expansión del Cazador
+Quaeledy.hunterexpansion-description|Seis sueños y un nuevo final (con dos variantes) han sido añadidos para el Cazador. Comportamientos basicos para NSH han sido implementados, junto con su superestructura. Los dialogos de NSH han sido añadidos a la sección [Colección]. <LINE>Dedico este trabajo a mis amigos. Este mod no es canon. Lo he hecho para mis amigos que querían ver a NSH en el juego. Espero disfrutes este mod.
+
+//提示
+The pearl you carry may determine your expedition's ending.|La perla que posees podría determinar el final de tu expedición.
+Please treat it with caution.|Por favor trátala con cuidado.
+No Significant Harassment's Transcription|Transcripción de Acoso sin Importancia
+
+//区域名
+No Significant Harassment|Acoso Sin Importancia
+The Temporary Arena|La Arena Temporal
+No Significant Harassment (Memory Conflux)|Acoso Sin Importancia (Confluencia de Recuerdos)
+No Significant Harassment (The Boxroom)|Acoso Sin Importancia (Laboratorio)
+No Significant Harassment (Multistage Amplifier)|Acoso Sin Importancia (Amplificador Multifase)
+No Significant Harassment (General Systems Bus)|Acoso Sin Importancia (Bus de Sistemas Generales)
+
+//称呼
+little one|pequeñín
+little messenger|pequeño mensajero
+little furball|bolita de pelo
+little moth|pequeña polilla
+
+little Wanderer|Pequeña viajero
+little Apprentice|Pequeño aprendiz
+little Scholar|Pequeño investigador
+little Garbage Worm|Pequeño gusanillo
+little Naturalist|Pequeño arqueólogo
+
+
+//第二场梦境，误入
+//玩家靠近神经元触发的对话，对话为随机抽取（太少了，多来点）
+//（一次）
+Please keep out. I don't want anything to go wrong at this stage.|Por favor aléjate. No quiero que nada salga mal en esta fase.
+//（两次）
+It seems like you're curious about it? I'll hand it over to you at the right time, but not now.|Veo que tienes curiosidad, ¿Cierto? Te lo obsequiaré a su debido momento, se paciente.
+//（三次）
+What are you doing, messenger? Please don't touch it.|¿Qué ocurre mensajero? Por favor no lo toques.
+It will interrupt my process and potentially result in errors and irreversible damage.|El proceso podría fallar y causar daños irreparables.
+It's an unpleasant experience for any iterator, so please stop your attempts.|Es una experiencia desagradable para cualquier iterador, así que por favor detén tus intentos.
+//（多次之后随机抽取）
+Please do not approach it.|Por favor no te acerques.
+May I hope you don't interfere with my work?|¿Quizás podrías no interferir en mi trabajo?
+
+//玩家开挂拿神经元触发的对话，按触犯次数和严重程度依次触发
+//（一级）
+I don't know how you did it, but I hope it won't happen again.|No sé cómo lo hiciste, pero espero que no vuelva a suceder.
+//（二级）
+Seems like you are unwilling to follow orders?|¿Parece que no estás dispuesto a seguir órdenes?
+Such a shame! I have to remind you that my patience is not infinite.|¡Qué pena! Tengo que recordarte que mi paciencia no es infinita.
+//（三级）
+Such a disobedient messenger~|Un mensajero muy desobediente ~
+Congratulations! You are free now.|¡Felicidades! Ahora eres libre.
+
+
+//结局流程对话
+//Moon修珍珠
+Oh... don't you want me to do this?|Oh... ¿no quieres que haga esto?
+Um... I will continue.|Um... prosigo.
+//NSH招呼猎手
+Good morning. Come here, my little messenger. Come to me.|Buenos días. Ven aquí, mi pequeño mensajero. Ven a mí.
+Good morning, messenger.|早上好，信使。
+Oh, you're with your friend. But we need some time alone, I believe. Can you come back for me after you take it to somewhere safe?|噢，你还带着你的小朋友，但我想我们需要单独的空间，<LINE>你可以把它带到安全的地方再回来找我吗？
+Oh, you're with your friends. But we need some time alone, I believe. Can you come back for me after you take them to somewhere safe?|噢，你还带着你的小朋友们，但我想我们需要单独的空间，<LINE>你可以把它们带到安全的地方再回来找我吗？
+Welcome back, my messenger. Come, Come here.|欢迎回来，我的小信使。来吧，来我这里。
+
+
+//NSH被攻击
+What are you doing? Please don't attack me.|¿Qué estás haciendo? Por favor no me ataques.
+Stop this barbaric behavior, animal.|Detén esta actitud desalmada, animal.
+Remember to behave in the next cycle.|Recuerda portarte bien en el siguiente ciclo.
+I have already warned you.|Te he avisado.
+
+
+//当着NSH的面食用神经元
+Creature, are you intentionally provoking me?|野兽，你在有意激怒我吗？
+Okay, if you brought it to me just for this moment, feel free.|好吧，如果你把它带到我面前就是为了这一刻，请便。
+
+
+//NSH读白色珍珠及彩色珍珠引语
+//第一次
+Do you want to give it to me? Or just want me to read it?|¿Quieres dármelo? ¿O simplemente quieres que lo lea?
+Let me take a look at this pearl...|Déjame echarle un vistazo...
+//第二次
+Are you curious about the content in this pearl? Okay, I'm curious~|¿Tienes curiosidad por el contenido de esta perla? Bueno, has despertado mi curiosidad también.
+//第三次
+Another pearl? It seems that you really like them!|¿Otra perla? ¡Parece que te gustan mucho!
+//第四次
+Seeing you appear with pearls, I think I already know your purpose for coming here.|Veo perlas en tus manos, creo que ya conozco tus intenciones.
+The scavengers will be jealous of your horde!|¡Los carroñeros estarán celosos de tu horda!
+//多次见203
+
+
+//NSH解读物品的引语
+What is that?|¿Qué es eso?
+Seems like you found something new again! Let me take a look.|¡Parece que has encontrado algo nuevo! Déjame echarle un vistazo.
+Seems like you found something new again. Let me take a look.|Parece que has encontrado algo nuevo. Déjame echarle un vistazo.
+Ah-Hah! You are making this into a habit! Let me take a close look.|¡Ajá! ¿Con que esto de nuevo eh? Déjame observarlo de cerca.
+If you continue to be polite, I will explain to you.|Si sigues siendo educado, te lo explicaré.
+I have the right to refuse to entertain impolite guests, don't you think?|Tengo derecho a negarme a recibir invitados maleducados, ¿no crees?
+Let's see, what do you have here this time?|Veamos, ¿qué tienes aquí esta vez?
+What is it again?|¿Otra vez esto de nuevo?
+
+
+//NSH解读的火虫卵被拿走时
+Oh, of course, you can take it away anytime!|¡Oh, por supuesto, puedes llevártelo cuando quieras!
+
+//NSH解读SL_chimney珍珠补充内容
+I have to say, you are really cute!|¡Tengo que decir que eres realmente lindo!

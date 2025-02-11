@@ -1,0 +1,2 @@
+0-167
+Esta es una estructura que contiene semillas. ¿Quieres intentar cultivar? No puedo enseñarte, <ItemPlayerName>,<LINE>porque esta semilla ya está muerta.<LINE>¡Oh, pobre semilla! Debe estar más decepcionada que tú.

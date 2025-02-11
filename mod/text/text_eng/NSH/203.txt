@@ -1,0 +1,10 @@
+0-203
+<CapPlayerName>, you would like me to read this?
+
+Would you like me to read this pearl?
+
+Are you curious about the contents of this pearl, <PlayerName>?
+
+A pearl! Let me see what's written inside.
+
+Do you want me to read this pearl for you?

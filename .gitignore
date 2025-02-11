@@ -2,10 +2,7 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
-/HunterExpansion/bin/Debug/net48
-/HunterExpansion/.vs/HunterExpansion/FileContentIndex
-/HunterExpansion/obj/Debug/net48/.NETFramework,Version=v4.8.AssemblyAttributes.cs
-/mod
+/HunterExpansion/.vs
 /settings（备份）
 /预告
 /音效
@@ -22,3 +19,6 @@
 /text（v1.9.07b）
 NSH.jpg
 /.vs
+/HunterExpansion/bin/Debug/net48
+/mod/scenes
+/mod/world

@@ -1,0 +1,8 @@
+0-127
+...
+
+<CapItemPlayerName>, this is not a safe collectible.
+
+This is a low density mass rarefaction cell. Although quality diluted batteries are a precious<LINE>resource for us, they have lost their value. Its shielding layer is damaged, and it is now impossible<LINE>to safely extract the energy contained within it.
+
+Of course, unsafe methods exist. But I don't recommend using it as a weapon unless<LINE>absolutely necessary. The best solution is to stay away from it.

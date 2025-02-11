@@ -1,0 +1,4 @@
+0-0
+Un tipo de arma explosiva. Ten cuidado, he visto a muchas criaturas lastimarse accidentalmente al usarla. Recuerda, <LINE>mantente a cierta distancia de su punto de explosión.
+
+¡Sin embargo, supongo que ya te habrás dado cuenta!

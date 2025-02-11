@@ -1,0 +1,12 @@
+0-0
+PEBBLESWAIT : 80
+
+Wow, what a surprise! The last time I saw your species was a long time ago,<LINE>but I've never seen a specimen as unique as you!
+
+And, one of my kind has given you a mark. Have you met any other iterators during your trip here?<LINE>Or... are you also a messenger? 
+
+PEBBLESWAIT : 80
+
+I am unable to confirm my assumptions. Anyways, you must have gone a long way here. 
+
+After all, you're really agile, aren't you? 

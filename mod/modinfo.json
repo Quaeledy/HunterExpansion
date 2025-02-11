@@ -1,0 +1,11 @@
+﻿{
+	"id": "Quaeledy.hunterexpansion",
+	"name": "Hunter Expansion",
+	"version": "1.1.0",
+	"authors": "Quaeledy",
+	"description": "Six dream scenes and a new ending (with two variations) have been added for the Hunter. Basic behaviors for NSH have been implemented, along with parts of his superstructure. NSH's dialogues have been added to the [Collection] section. <LINE>I dedicate this work to my friends. This mod is not canon. I made it for my friends who wanted to see NSH in the game. I hope you enjoy this mod.",
+	"target_game_version": "v1.9.15",
+	"requirements": [ "emgtx", "moreslugcats", "crs" ],
+	"requirements_names": [ "EmgTx", "More Slugcat Expansion", "Custom Regions Support" ],
+	"tags": [ "Campaigns", "Regions" ]
+}

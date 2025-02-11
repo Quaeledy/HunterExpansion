@@ -1,0 +1,16 @@
+0-205
+¡Bienvenido! Iniciando escaneo... Por favor espere un momento~
+
+Eres realmente incansable. Venga, echemos un vistazo.
+
+¿Otro? Déjame echarle un vistazo.
+
+¡Echemos un vistazo! En el episodio de hoy de Maravillas naturales con Acoso sin Importancia sobre...
+
+Ah, estás aquí, ¿hay algo que quieras que mire?
+
+¡Bienvenido de nuevo! Déjame echar un vistazo, <itemPlayerName>.
+
+<CapItemPlayerName>, déjame ver qué encontraste esta vez.
+
+Oh, ¿que es eso, <ItemPlayerName>?

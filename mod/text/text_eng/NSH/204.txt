@@ -1,0 +1,10 @@
+0-204
+<CapPlayerName>, do you want me to read this?<NEXT>This pearl is still very warm, it seems that it had been read recently.
+
+A beautiful pearl... and it was also used recently! Do you want me to read this?
+
+This pearl was used not long ago! I'm curious where you found it.
+
+Oh... a warm pearl. Do you want to know what is written here?<NEXT>I'm also very curious! Let me read it to you.
+
+A fresh pearl! This is a rare find, let's take a look at what it says.

@@ -1,0 +1,15 @@
+[ADD]NSH_AI_Attacked_1 : NSH-Attacked-1/vol=0.5
+[ADD]NSH_AI_Attacked_2 : NSH-Attacked-2/vol=0.5
+[ADD]NSH_AI_Attacked_3 : NSH-Attacked-2/vol=0.5
+[ADD]NSH_AI_Attacked_4 : NSH-Attacked-2/vol=0.5
+[ADD]NSH_AI_Break_1 : NSH-Break-1/vol=0.5
+[ADD]NSH_AI_Break_2 : NSH-Break-2/vol=0.5
+[ADD]NSH_AI_Break_3 : NSH-Break-3/vol=0.5
+[ADD]NSH_AI_Break_4 : NSH-Break-4/vol=0.5
+[ADD]NSH_AI_LongDialogue_1 : NSH-LongDialogue-1/vol=0.5
+[ADD]NSH_AI_LongDialogue_2 : NSH-LongDialogue-2/vol=0.5
+[ADD]NSH_AI_LongDialogue_3 : NSH-LongDialogue-3/vol=0.5
+[ADD]NSH_AI_Recover_1 : NSH-Recover-1/vol=0.5
+[ADD]NSH_AI_Recover_2 : NSH-Recover-2/vol=0.5
+[ADD]NSH_AI_ShortDialogue_1 : NSH-ShortDialogue-1/vol=0.5
+[ADD]NSH_AI_ShortDialogue_2 : NSH-ShortDialogue-2/vol=0.5

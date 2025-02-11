@@ -1,0 +1,12 @@
+0-0
+PEBBLESWAIT : 80
+
+¡Vaya, qué sorpresa! La última vez que vi a alguien de tu especie fue hace mucho tiempo, <LINE>¡pero nunca había visto un espécimen tan único como tú!
+
+Y, uno de mi especie te ha dejado una marca. ¿Has conocido a otros iteradores durante tu viaje aquí? <LINE>O... ¿también eres un mensajero?
+
+PEBBLESWAIT : 80
+
+No puedo confirmar mis suposiciones. De todos modos, debes haber recorrido un largo camino hasta aquí.
+
+Después de todo, eres muy ágil, ¿no? 

@@ -1,0 +1,10 @@
+0-209
+¿De vuelta? Bien, continuemos.
+
+¿Es esto algún tipo de juego al que juegan los animales?
+
+¡No te estás portando muy bien ahora mismo! Pero bueno, de todas formas me resulta difícil hablar en serio contigo.
+
+Vamos, animalito. ¿Dónde lo dejamos?
+
+SPECEVENT : refuseRestartConversation<NEXT>¿Cambiaste de opinión? Está bien, pero no continuaré.

@@ -1,0 +1,8 @@
+0-127
+...
+
+<CapItemPlayerName>, this is not some... Rare collectable for you to play with.
+
+This is a low density mass rarefaction cell. Although mass rarefaction cells are a precious resource to us, this one has lost its value.<LINE>Its shielding layer is damaged, and there is no way to safely extract the energy contained within it.
+
+Of course, unsafe methods exist. But I don't recommend using it as a weapon unless<LINE>absolutely necessary. The best solution is to stay away from it.

@@ -1,0 +1,10 @@
+0-204
+<CapPlayerName>, ¿quieres que lea esto?<NEXT>Esta perla aún está muy caliente, parece que fue leída recientemente.
+
+Una perla preciosa... ¡y además fue usada recientemente! ¿Quieres que lea esto?
+
+¡Esta perla se utilizó hace poco! Tengo curiosidad por saber dónde la encontraste.
+
+Oh... una perla cálida. ¿Quieres saber qué está escrito aquí? <NEXT>¡Yo también tengo mucha curiosidad! Déjame leértelo.
+
+¡Una perla nueva! Es un hallazgo poco común. Veamos qué dice.

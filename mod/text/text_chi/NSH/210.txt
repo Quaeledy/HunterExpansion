@@ -1,0 +1,10 @@
+0-210
+SPECEVENT : refuseRestartConversation<NEXT>你在恋恋不舍什么？我没兴趣念给你听。
+
+SPECEVENT : refuseRestartConversation<NEXT>我没时间陪你玩游戏，野兽。
+
+SPECEVENT : refuseRestartConversation<NEXT>……
+
+SPECEVENT : refuseRestartConversation<NEXT>小野兽，我不会把它念给不礼貌的生物听。
+
+SPECEVENT : refuseRestartConversation<NEXT>改变心意了？但我不会继续了。

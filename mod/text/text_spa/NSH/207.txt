@@ -1,0 +1,10 @@
+0-207
+¿Perdiste la paciencia, <PlayerName>?
+
+¿Quieres irte? Si fueras uno de nuestros creadores, ¡esto afectaría tu promedio de calificaciones!
+
+Muy bien, ve a jugar, pequeñín.
+
+¿Te vas? ¿Algo te asustó?
+
+¿Te vas ya? Nos vemos luego.

@@ -1,0 +1,109 @@
+Hunter Expansion|猎手拓展
+Quaeledy.hunterexpansion-name|猎手拓展
+Quaeledy.hunterexpansion-description|为猎手添加了六个演出梦境和一个新的结局（包含两个分支）。制作了NSH的基本行为，以及他的巨构的部分房间。在“收藏”里增加了NSH的解读。<LINE>谨将本作品献给我的朋友们。本mod不代表任何官方设定和剧情。我制作它是因为我的朋友们希望能在游戏中看见NSH。希望你喜欢这个mod。
+
+//提示
+The pearl you carry may determine your expedition's ending.|你携带的珍珠可能决定你的结局。
+Please treat it with caution.|请谨慎对待它。
+No Significant Harassment's Transcription|无稽烦忧的记录
+
+//区域名
+No Significant Harassment|无稽烦忧
+The Temporary Arena|临时竞技场
+No Significant Harassment (Memory Conflux)|无稽烦忧（内存集成）
+No Significant Harassment (The Boxroom)|无稽烦忧（收藏匣）
+No Significant Harassment (Multistage Amplifier)|无稽烦忧（多级放大器）
+No Significant Harassment (General Systems Bus)|无稽烦忧（通用系统总线）
+
+//称呼
+little one|小家伙
+little messenger|小信使
+little furball|小圆球
+little moth|小飞蛾
+
+little Wanderer|小流浪者
+little Apprentice|小学徒
+little Scholar|小学者
+little Garbage Worm|小垃圾虫
+little Naturalist|小博物学家
+
+
+//第二场梦境，误入
+//玩家靠近神经元触发的对话，对话为随机抽取（太少了，多来点）
+//（一次）
+Please keep out. I don't want anything to go wrong at this stage.|请不要靠近，我不希望这个过程出什么差错。
+//（两次）
+It seems like you're curious about it? I'll hand it over to you at the right time, but not now.|看来你对它很好奇？我会在合适的时候将它交给你，但不是现在。
+//（三次）
+What are you doing, messenger? Please don't touch it.|信使，你在做什么？请不要试图触碰它。
+It will interrupt my process and potentially result in errors and irreversible damage.|这会中断我的进程，同时可能导致错误和不可逆的损害。
+It's an unpleasant experience for any iterator, so please stop your attempts.|这对任何迭代器都是不愉快的体验，请停止你的尝试。
+//（多次之后随机抽取）
+Please do not approach it.|请不要靠近它。
+May I hope you don't interfere with my work?|我可以希望你不要干扰我的工作吗？
+
+//玩家开挂拿神经元触发的对话，按触犯次数和严重程度依次触发
+//（一级）
+I don't know how you did it, but I hope it won't happen again.|我不知道你是怎么做到的，但我希望这种事情不会发生第二次。
+//（二级）
+Seems like you are unwilling to follow orders?|看起来你不太愿意听从命令？
+Such a shame! I have to remind you that my patience is not infinite.|多么可惜！我不得不提醒你，我的耐心是有限的。
+//（三级）
+Such a disobedient messenger~|不听话的信使~
+Congratulations! You are free now.|恭喜！你自由了。
+
+
+//结局流程对话
+//Moon修珍珠
+Oh... don't you want me to do this?|哦……你不想让我这么做吗？
+Um... I will continue.|嗯……我会继续。
+//NSH招呼猎手
+Good morning. Come here, my little messenger. Come to me.|早上好。来吧，我的小信使。来我这里。
+Good morning, messenger.|早上好，信使。
+Oh, you're with your friend. But we need some time alone, I believe. Can you come back for me after you take it to somewhere safe?|噢，你还带着你的小朋友，但我想我们需要单独的空间，<LINE>你可以把它带到安全的地方再回来找我吗？
+Oh, you're with your friends. But we need some time alone, I believe. Can you come back for me after you take them to somewhere safe?|噢，你还带着你的小朋友们，但我想我们需要单独的空间，<LINE>你可以把它们带到安全的地方再回来找我吗？
+Welcome back, my messenger. Come, Come here.|欢迎回来，我的小信使。来吧，来我这里。
+
+
+//NSH被攻击
+What are you doing? Please don't attack me.|你在做什么？请不要攻击我。
+Stop this barbaric behavior, animal.|野兽，停下你野蛮的行为。
+Remember to behave in the next cycle.|下个循环记得礼貌一点。
+I have already warned you.|我已经警告过你了。
+
+
+//当着NSH的面食用神经元
+Creature, are you intentionally provoking me?|野兽，你在有意激怒我吗？
+Okay, if you brought it to me just for this moment, feel free.|好吧，如果你把它带到我面前就是为了这一刻，请便。
+
+
+//NSH读白色珍珠及彩色珍珠引语
+//第一次
+Do you want to give it to me? Or just want me to read it?|你想把它送给我？或者只是希望我阅读它？
+Let me take a look at this pearl...|让我看看这颗珍珠……
+//第二次
+Are you curious about the content in this pearl? Okay, I'm curious~|你很好奇这颗珍珠中的内容吗？好吧，我很好奇~
+//第三次
+Another pearl? It seems that you really like them!|又一颗珍珠？看来你确实很喜欢它们！
+//第四次
+Seeing you appear with pearls, I think I already know your purpose for coming here.|看到你带着珍珠出现，我想我已经知道你来这里的目的了。
+The scavengers will be jealous of your horde!|拾荒者们会嫉妒你的收集能力的！
+//多次见203
+
+
+//NSH解读物品的引语
+What is that?|那是什么？
+Seems like you found something new again! Let me take a look.|看来你捡到新东西了！我看一看。
+Seems like you found something new again. Let me take a look.|看来你捡到新东西了。我看一看。
+Ah-Hah! You are making this into a habit! Let me take a close look.|哈哈，你已经养成习惯了！我看一看。
+If you continue to be polite, I will explain to you.|如果你接下来保持礼貌，我就解释给你听。
+I have the right to refuse to entertain impolite guests, don't you think?|我有权拒绝招待不礼貌的客人，你说对吗？
+Let's see, what do you have here this time?|让我们看看，又是什么好东西？
+What is it again?|又是什么东西？
+
+
+//NSH解读的火虫卵被拿走时
+Oh, of course, you can take it away anytime!|噢，当然，你可以随时拿走它！
+
+//NSH解读SL_chimney珍珠补充内容
+I have to say, you are really cute!|我得说，你们真的很可爱！

@@ -1,0 +1,10 @@
+0-0
+PEBBLESWAIT : 240
+
+¡Lo lograste, pequeño! ¡Lo sabía!
+
+Gracias, eres el mejor mensajero.
+
+No tienes mucho tiempo... Lo siento. Ve al oeste y luego dirígete a las profundidades, <LINE>y allí te espera tu salvación.
+
+No mires atrás.
