@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CustomOracleTx;
+﻿using CustomOracleTx;
+using RWCustom;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using RWCustom;
-using static CustomOracleTx.CustomOracleBehaviour;
-using CustomDreamTx;
-using HunterExpansion.CustomDream;
-using System.Diagnostics;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -162,7 +153,7 @@ namespace HunterExpansion.CustomOracle
                     for (int l = 4; l < 7; l++)
                     {
                         Color handColor = Gown_Color(gown, (float)l / 7f);
-                        (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4]     = handColor;
+                        (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 1] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 2] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 3] = handColor;
@@ -195,7 +186,7 @@ namespace HunterExpansion.CustomOracle
         public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             sLeaser.sprites = new FSprite[totalSprites];
-            
+
             sLeaser.containers = new FContainer[]
             {
                 new FContainer()
@@ -340,7 +331,7 @@ namespace HunterExpansion.CustomOracle
         {
             if (f <= 0.1f)
                 return SRSOracleColor.Violet;
-            else if(f == 1f)
+            else if (f == 1f)
                 return SRSOracleColor.Brown;
             else
                 return Color.Lerp(SRSOracleColor.Violet, SRSOracleColor.Brown, f + 0.1f);

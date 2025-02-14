@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using CustomOracleTx;
+using HunterExpansion.CustomSave;
 using MoreSlugcats;
+using UnityEngine;
 using static CustomOracleTx.CustomOracleBehaviour;
 using Random = UnityEngine.Random;
-using HunterExpansion.CustomSave;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
-using RWCustom;
-using CustomOracleTx;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -164,7 +155,7 @@ namespace HunterExpansion.CustomOracle
                             {
                                 if (oracle.oracleBehavior != null)
                                 {
-                                    if(oracle.ID == Oracle.OracleID.SS || oracle.ID == MoreSlugcatsEnums.OracleID.DM)
+                                    if (oracle.ID == Oracle.OracleID.SS || oracle.ID == MoreSlugcatsEnums.OracleID.DM)
                                     {
                                         SSOracleBehavior oracleBehavior = oracle.oracleBehavior as SSOracleBehavior;
                                         oracleBehavior.getToWorking = this.owner.getToWorking;

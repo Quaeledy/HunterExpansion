@@ -1,6 +1,6 @@
-﻿using HunterExpansion.CustomOracle;
+﻿using HunterExpansion.CustomDream;
 using HunterExpansion.CustomEnding;
-using HunterExpansion.CustomDream;
+using HunterExpansion.CustomOracle;
 
 namespace HunterExpansion
 {
@@ -31,7 +31,7 @@ namespace HunterExpansion
 
                 //附赠的SRS
                 SRSOracleBehaviorAction.RegisterValues();
-                SRSOracleBehaviorSubBehavID.RegisterValues() ;
+                SRSOracleBehaviorSubBehavID.RegisterValues();
 
                 registed = true;
             }

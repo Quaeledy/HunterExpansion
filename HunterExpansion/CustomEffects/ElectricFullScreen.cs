@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using MoreSlugcats;
+﻿using MoreSlugcats;
 using RWCustom;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using RWCustom;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using Mono.Cecil.Cil;
 using MoreSlugcats;
-using Smoke;
+using System;
+using UnityEngine;
 
 namespace HunterExpansion
 {
@@ -40,7 +34,7 @@ namespace HunterExpansion
                     (i) => i.MatchLdfld<RegionGateGraphics>("smoke"),
                     (i) => i.MatchLdloc(9)))//这里已经找到了pos2
                 {
-                    Plugin.Log("RegionGateGraphics_UpdateIL MatchFind!"); 
+                    Plugin.Log("RegionGateGraphics_UpdateIL MatchFind!");
                     c.Emit(OpCodes.Ldarg_1);//找到RegionGate gate
                     c.EmitDelegate<Func<Vector2, RegionGate, Vector2>>((pos2, gate) =>
                     {
@@ -92,7 +86,7 @@ namespace HunterExpansion
                 {
                     result = -1;
                 }
-                else if(crit.pos.x < middleX - 8 && flag)
+                else if (crit.pos.x < middleX - 8 && flag)
                 {
                     result = 0;
                 }

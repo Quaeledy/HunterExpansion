@@ -1,12 +1,9 @@
 ﻿using CustomDreamTx;
-using UnityEngine;
-using System;
-using RWCustom;
-using Menu;
-using JollyCoop;
-using HunterExpansion.CustomSave;
-using HunterExpansion.CustomOracle;
 using HunterExpansion.CustomEnding;
+using HunterExpansion.CustomOracle;
+using HunterExpansion.CustomSave;
+using Menu;
+using RWCustom;
 
 namespace HunterExpansion.CustomDream
 {
@@ -239,8 +236,8 @@ namespace HunterExpansion.CustomDream
             }
             return SceneFromDream(dreamID);
         }
-        
-        
+
+
         public override void EndDream(RainWorldGame game)
         {
             base.EndDream(game);

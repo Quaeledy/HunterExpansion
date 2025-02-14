@@ -3,10 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Assertions;
 using static HunterExpansion.CustomEffects.Mesh3D;
 
 namespace HunterExpansion.CustomEffects
@@ -26,7 +23,7 @@ namespace HunterExpansion.CustomEffects
             get => _localRotaiton;
             set
             {
-                if(_localRotaiton != value)
+                if (_localRotaiton != value)
                 {
                     _localRotaiton = value;
                     _verticeDirty = true;
@@ -41,7 +38,7 @@ namespace HunterExpansion.CustomEffects
             get => _globalRotation;
             set
             {
-                if( _globalRotation != value)
+                if (_globalRotation != value)
                 {
                     _globalRotation = value;
                     _verticeDirty = true;
@@ -168,7 +165,7 @@ namespace HunterExpansion.CustomEffects
         protected int firstConainerIndex;
         protected int lastConainerIndex;
 
-        public bool autoCaculateZ = true;        
+        public bool autoCaculateZ = true;
 
         public Mesh3DRenderer(Mesh3D mesh, int startIndex)
         {
@@ -212,7 +209,7 @@ namespace HunterExpansion.CustomEffects
 
         public virtual void Update()
         {
-            
+
         }
 
         public virtual void RecaculateVertices()
@@ -260,12 +257,12 @@ namespace HunterExpansion.CustomEffects
             firstConainerIndex = int.MaxValue;
             lastConainerIndex = int.MinValue;
 
-            for(int i = 0;i < totalSprites; i++)
+            for (int i = 0; i < totalSprites; i++)
             {
                 int index = newContainer.GetChildIndex(sLeaser.sprites[i]);
                 if (index < firstConainerIndex)
                     firstConainerIndex = index;
-                if(index > lastConainerIndex)
+                if (index > lastConainerIndex)
                     lastConainerIndex = index;
             }
         }
@@ -333,7 +330,7 @@ namespace HunterExpansion.CustomEffects
             drawVerticesBuffer = new Vector2[totalSprites][];
             colorBuffer = new Color[totalSprites][];
 
-            for(int i = 0; i < drawVerticesBuffer.Length; i++)
+            for (int i = 0; i < drawVerticesBuffer.Length; i++)
             {
                 drawVerticesBuffer[i] = new Vector2[4];
                 colorBuffer[i] = new Color[2];
@@ -380,7 +377,7 @@ namespace HunterExpansion.CustomEffects
                 Vector2 posB = GetVerticeIn2D(line.b)/* + drawCenter - camPos*/;
 
                 Vector2 perpDir = Custom.PerpendicularVector(Custom.DirVec(posA, posB));
-                
+
 
                 Color newColA, newColB;
                 newColA = GetLerpedColor(line.a);
@@ -445,7 +442,7 @@ namespace HunterExpansion.CustomEffects
 
             for (int i = 0; i < lineRepresents.Count; i++)
             {
-                for(int j = 0;j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     (sLeaser.sprites[i + startIndex] as CustomFSprite).MoveVertice(j, drawVerticesBuffer[i][j] - camPos + drawCenter);
                 }

@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using HunterExpansion.CustomSave;
 using MoreSlugcats;
+using UnityEngine;
 using static CustomOracleTx.CustomOracleBehaviour;
 using Random = UnityEngine.Random;
-using HunterExpansion.CustomSave;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
-using RWCustom;
 
 namespace HunterExpansion.CustomOracle
 {

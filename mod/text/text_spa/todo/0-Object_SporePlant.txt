@@ -1,2 +1,0 @@
-0-0
-Oh, this is a beehive. These little creatures' strings are very special,<LINE>capable of strangling any creature in a short period of time. Please treat it with caution, <PlayerName>.

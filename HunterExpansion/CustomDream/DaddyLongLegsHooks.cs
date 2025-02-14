@@ -1,12 +1,4 @@
-﻿using CustomDreamTx;
-using HunterExpansion.CustomOracle;
-using HunterExpansion.CustomSave;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HunterExpansion
 {
@@ -149,7 +141,7 @@ namespace HunterExpansion
             if (flag)
             {
                 Color color = Color.Lerp(PlayerGraphics.DefaultSlugcatColor(SlugcatStats.Name.Red), Color.gray, 0.4f);
-                Color effectColor = new Color(0.57255f, 0.11373f, 0.22745f); 
+                Color effectColor = new Color(0.57255f, 0.11373f, 0.22745f);
                 for (int i = 0; i < (sLeaser.sprites[self.firstSprite] as TriangleMesh).vertices.Length; i++)
                 {
                     float floatPos = (float)i / (float)((sLeaser.sprites[self.firstSprite] as TriangleMesh).vertices.Length - 1);

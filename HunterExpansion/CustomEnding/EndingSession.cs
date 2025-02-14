@@ -1,18 +1,13 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using RWCustom;
-using MoreSlugcats;
-using System.Linq;
+﻿using HunterExpansion.CustomDream;
+using HunterExpansion.CustomEffects;
 using HunterExpansion.CustomOracle;
 using HunterExpansion.CustomSave;
-using HunterExpansion.CustomDream;
-using HunterExpansion.CustomEffects;
-using System;
-using JollyCoop;
-using Menu;
+using MoreSlugcats;
+using RWCustom;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
-using Expedition;
-using System.Reflection;
 
 namespace HunterExpansion.CustomEnding
 {
@@ -44,9 +39,9 @@ namespace HunterExpansion.CustomEnding
         {
             orig(self, abstractCreature, world);
 
-            openGate = false; 
+            openGate = false;
             openGateName = "";
-            openCount = 0; 
+            openCount = 0;
             noGrabbedCount = 0;
             isControled = false;
             goEnding = false;
@@ -291,7 +286,7 @@ namespace HunterExpansion.CustomEnding
                 {
                     openCount = 0;
                     openGate = true;
-                    if(fixedPearl.slatedForDeletetion)
+                    if (fixedPearl.slatedForDeletetion)
                         fixedPearl = null;
                     for (int k = greenSparks.Count - 1; k >= 0; k--)
                     {
@@ -827,7 +822,7 @@ namespace HunterExpansion.CustomEnding
                 int x = 0;
                 int y = 0;
                 this.inActionCounter++;
-                if(this.inActionCounter < 100)
+                if (this.inActionCounter < 100)
                 {
                     x = -1;
                     y = 1;
@@ -1035,8 +1030,8 @@ namespace HunterExpansion.CustomEnding
                         this.phase = Phase.Wait;
                         return;
                     }
-                    }
-                    else if (this.phase == Phase.Wait)
+                }
+                else if (this.phase == Phase.Wait)
                 {
                     int num = 3;
                     if (this.Player.slugcatStats.runspeedFac > 1.2f)
@@ -1109,13 +1104,13 @@ namespace HunterExpansion.CustomEnding
                     y = 1;
                 }
                 //如果玩家足够靠近NSH，并且还没有趴下，则趴下
-                else if(!NSHOracleMeetHunter.isControled && this.Player.bodyMode != Player.BodyModeIndex.Crawl)
+                else if (!NSHOracleMeetHunter.isControled && this.Player.bodyMode != Player.BodyModeIndex.Crawl)
                 {
                     x = 0;
                     y = -1;
                 }
                 //如果NSH说完话，玩家开始蜷缩身体
-                else if(NSHOracleMeetHunter.isControled)
+                else if (NSHOracleMeetHunter.isControled)
                 {
                     x = 0;
                     y = -1;

@@ -1,15 +1,8 @@
-﻿using System;
+﻿using HunterExpansion.CustomOracle;
+using HunterExpansion.CustomSave;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Security.Policy;
-using CoralBrain;
-using CustomDreamTx;
-using HunterExpansion.CustomDream;
-using HunterExpansion.CustomOracle;
-using HunterExpansion.CustomSave;
-using RWCustom;
-using Unity.Mathematics;
-using UnityEngine;
 
 namespace HunterExpansion
 {
@@ -142,7 +135,7 @@ namespace HunterExpansion
                                     oracleBehavior.generateKillingIntent = true;
                                 }
                             }
-                                
+
                             //让NSH在蛞蝓猫当面吃Moon神经元时不会晕倒
                             if (self.oracle != null && self.oracle.ID == NSHOracleRegistry.NSHOracle)
                             {

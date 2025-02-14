@@ -1,6 +1,5 @@
-﻿using UnityEngine;
+﻿using MoreSlugcats;
 using static CustomOracleTx.CustomOracleBehaviour;
-using MoreSlugcats;
 
 namespace HunterExpansion.CustomOracle
 {

@@ -1,11 +1,9 @@
-﻿using System;
+﻿using MoreSlugcats;
+using RWCustom;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using MoreSlugcats;
-using RWCustom;
 using UnityEngine;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -508,15 +506,15 @@ namespace HunterExpansion.CustomOracle
                         }
                     }
                 }
-                /*
-                else
+            /*
+            else
+            {
+                if (!(text == "miscBools"))
                 {
-                    if (!(text == "miscBools"))
-                    {
-                        goto IL_344;
-                    }
-                    this.unrecognizedMiscBools = SaveUtils.LoadBooleanArray(array2[1], this.miscBools);
-                }*/
+                    goto IL_344;
+                }
+                this.unrecognizedMiscBools = SaveUtils.LoadBooleanArray(array2[1], this.miscBools);
+            }*/
             IL_368:
                 i++;
                 continue;

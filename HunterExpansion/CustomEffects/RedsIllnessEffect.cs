@@ -1,8 +1,5 @@
-﻿using System;
-using CustomDreamTx;
-using RWCustom;
+﻿using RWCustom;
 using UnityEngine;
-using HunterExpansion.CustomDream;
 using Random = UnityEngine.Random;
 
 namespace HunterExpansion.CustomEffects

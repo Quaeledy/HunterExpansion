@@ -1,0 +1,2 @@
+0-0
+Oh, esto es una colmena. Las cuerdas de estas pequeñas criaturas son muy especiales, <LINE>capaces de atrapar a cualquier criatura en un corto período de tiempo. Trátala con cuidado, <PlayerName>.

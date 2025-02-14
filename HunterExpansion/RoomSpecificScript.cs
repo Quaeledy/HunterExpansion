@@ -1,21 +1,14 @@
-﻿using CustomSaveTx;
+﻿using HunterExpansion.CustomEnding;
+using HunterExpansion.CustomSave;
+using MoreSlugcats;
+using RWCustom;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using RWCustom;
-using MoreSlugcats;
-using HunterExpansion.CustomEnding;
-using HunterExpansion.CustomDream;
-using HunterExpansion.CustomEffects;
-using HunterExpansion.CustomSave;
-using Random = UnityEngine.Random;
 using System.Text.RegularExpressions;
-using System.IO;
-using HunterExpansion.CustomOracle;
-using System.Globalization;
+using UnityEngine;
 
 namespace HunterExpansion
 {
@@ -26,7 +19,7 @@ namespace HunterExpansion
             On.Room.ctor += Room_ctor;
             On.RoomSpecificScript.AddRoomSpecificScript += RoomSpecificScript_AddRoomSpecificScript;
         }
-        
+
         private static void Room_ctor(On.Room.orig_ctor orig, Room self, RainWorldGame game, World world, AbstractRoom abstractRoom)
         {
             orig.Invoke(self, game, world, abstractRoom);
@@ -43,7 +36,7 @@ namespace HunterExpansion
                 TravelCompletedSave.travelCompleted = true;
             }
         }
-        
+
         private static void RoomSpecificScript_AddRoomSpecificScript(On.RoomSpecificScript.orig_AddRoomSpecificScript orig, Room room)
         {
             orig.Invoke(room);
@@ -166,7 +159,7 @@ namespace HunterExpansion
             {
                 if (this.room.game.session.characterStats.name == Plugin.SlugName)
                 {
-                    if(self.manager.upcomingProcess == null)//不能和上面的if合并，因为下面的else
+                    if (self.manager.upcomingProcess == null)//不能和上面的if合并，因为下面的else
                     {/*
                         RainWorldGame game = this.room.game;
                         for (int l = 0; l < game.world.GetAbstractRoom(player.abstractCreature.pos).creatures.Count; l++)
@@ -215,8 +208,8 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && this.player.DangerPos.x <= 200f && 
-                        this.blackRect != null && this.blackRect.alpha == 1f && 
+                    if (player != null && this.player.DangerPos.x <= 200f &&
+                        this.blackRect != null && this.blackRect.alpha == 1f &&
                         PearlFixedSave.pearlFixed && EndingSession.openGate)
                     {
                         return true;
@@ -1375,7 +1368,7 @@ namespace HunterExpansion
                     return;
                 }
                 if (this.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Spear ||
-                    this.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer || 
+                    this.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer ||
                     this.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft <= 0)
                 {
                     Plugin.Log("Don't Spawn Aquamarine Pearl before Hunter Campaign.");

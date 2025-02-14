@@ -1,8 +1,6 @@
-﻿using System;
+﻿using HunterExpansion.CustomOracle;
 using UnityEngine;
-using MoreSlugcats;
 using Random = UnityEngine.Random;
-using HunterExpansion.CustomOracle;
 
 namespace HunterExpansion.CustomEffects
 {

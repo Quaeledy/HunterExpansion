@@ -1,7 +1,7 @@
-﻿using static CustomOracleTx.CustomOracleBehaviour;
-using MoreSlugcats;
-using UnityEngine;
+﻿using MoreSlugcats;
 using RWCustom;
+using UnityEngine;
+using static CustomOracleTx.CustomOracleBehaviour;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -80,7 +80,7 @@ namespace HunterExpansion.CustomOracle
             else if (action == NSHOracleBehaviorAction.MeetSofanthiel_Talk1 ||
                      action == NSHOracleBehaviorAction.MeetSofanthiel_Talk2)
             {
-                if (!hasTempt && !player.dead && player.mainBodyChunk.vel.magnitude < 4f && 
+                if (!hasTempt && !player.dead && player.mainBodyChunk.vel.magnitude < 4f &&
                     Custom.DistLess(player.mainBodyChunk.pos, oracle.firstChunk.pos, 200f))
                 {
                     hasTempt = true;

@@ -1,21 +1,19 @@
-﻿using System;
-using static CustomOracleTx.CustomOracleBehaviour;
-using HUD;
-using MoreSlugcats;
+﻿using CustomDreamTx;
 using CustomOracleTx;
-using CustomDreamTx;
+using CustomRegions.Mod;
+using HUD;
+using HunterExpansion.CustomDream;
+using HunterExpansion.CustomSave;
+using MoreSlugcats;
+using RWCustom;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using Random = UnityEngine.Random;
 using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Reflection;
 using System.Text;
-using RWCustom;
-using HunterExpansion.CustomSave;
-using HunterExpansion.CustomDream;
-using static System.Net.Mime.MediaTypeNames;
-using BepInEx;
+using System.Text.RegularExpressions;
+using Random = UnityEngine.Random;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -68,7 +66,7 @@ namespace HunterExpansion.CustomOracle
                 }
             }
         }
-        
+
         //用于加密文件
         public new void EncryptAllDialogue()
         {
@@ -76,7 +74,7 @@ namespace HunterExpansion.CustomOracle
             string modPath = "";
             for (int j = ModManager.ActiveMods.Count - 1; j >= 0; j--)
             {
-                if(ModManager.ActiveMods[j].id == Plugin.MOD_ID)
+                if (ModManager.ActiveMods[j].id == Plugin.MOD_ID)
                     modPath = ModManager.ActiveMods[j].path;
             }
             if (modPath == "")
@@ -712,7 +710,7 @@ namespace HunterExpansion.CustomOracle
             {
                 this.owner.PlayerEncountersWithoutMark();
             }
-                
+
         }
 
         public void ItemIntro()
@@ -728,7 +726,7 @@ namespace HunterExpansion.CustomOracle
 
                     else
                         this.events.Add(new Conversation.TextEvent(this, 0, this.Translate("Seems like you found something new again. Let me take a look."), 10));
-                        return;
+                    return;
                 case 2:
                     if (this.State.GetOpinion == NSHOracleState.PlayerOpinion.Likes)
                         this.events.Add(new Conversation.TextEvent(this, 0, this.Translate("Ah-Hah! You are making this into a habit! Let me take a close look."), 10));
@@ -743,9 +741,9 @@ namespace HunterExpansion.CustomOracle
                         this.events.Add(new Conversation.TextEvent(this, 0, this.Translate("Let's see, what do you have here this time?"), 10));
                     else
                         this.events.Add(new Conversation.TextEvent(this, 0, this.Translate("What is it again?"), 10));
-                        return;
+                    return;
                 default:
-                    if (this.State.GetOpinion == NSHOracleState.PlayerOpinion.Likes) 
+                    if (this.State.GetOpinion == NSHOracleState.PlayerOpinion.Likes)
                     {
                         int i = (this.owner is NSHOracleBehaviour && (this.owner as NSHOracleBehaviour).holdingObject != null) ? (this.owner as NSHOracleBehaviour).holdingObject.abstractPhysicalObject.ID.RandomSeed : Random.Range(0, 100000);
                         NSHConversation.LoadEventsFromFile(this, 205, null, true, i);
@@ -920,7 +918,7 @@ namespace HunterExpansion.CustomOracle
             {
                 Plugin.Log("LoadEventsFromFile: Error, NSHConversation is not exist!");
                 return;
-            }    
+            }
             SlugcatStats.Name currentSaveFile = self.currentSaveFile;
             LoadEventsFromFile(self, fileName, subfolderName, currentSaveFile, suffix, oneRandomLine, randomSeed);
         }
@@ -946,8 +944,8 @@ namespace HunterExpansion.CustomOracle
             {
                 text = AssetManager.ResolveFilePath(self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) +
                        Path.DirectorySeparatorChar.ToString() + subfolderName +
-                       Path.DirectorySeparatorChar.ToString() + fileName.ToString() + ".txt"); 
-                if (suffix != null)
+                       Path.DirectorySeparatorChar.ToString() + fileName.ToString() + ".txt");
+                if (suffix != null && currentSaveFile != null)
                 {
                     string text2 = text;
                     text = AssetManager.ResolveFilePath(string.Concat(new string[]
@@ -984,6 +982,26 @@ namespace HunterExpansion.CustomOracle
                         }
                     }
                 }
+                else if (suffix != null)
+                {
+                    string text2 = text;
+                    text = AssetManager.ResolveFilePath(string.Concat(new string[]
+                    {
+                        self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                        Path.DirectorySeparatorChar.ToString(),
+                        subfolderName,
+                        Path.DirectorySeparatorChar.ToString(),
+                        fileName.ToString(),
+                        "-",
+                        suffix,
+                        ".txt"
+                    }));
+                    if (!File.Exists(text))
+                    {
+                        Plugin.Log("NOT FOUND " + text);
+                        text = text2;
+                    }
+                }
                 else if (currentSaveFile != null)
                 {
                     string text2 = text;
@@ -1017,7 +1035,7 @@ namespace HunterExpansion.CustomOracle
                 languageID = InGameTranslator.LanguageID.English;
             }
             return;
-            IL_117:
+        IL_117:
             Plugin.Log("FOUND FILE!!! Load from flie: " + text);
             string text3 = File.ReadAllText(text, Encoding.UTF8);
             if (text3[0] != '0')
@@ -1031,7 +1049,7 @@ namespace HunterExpansion.CustomOracle
                 {
                     if (oneRandomLine)
                     {
-                        List<string> lines = new List<string>(); 
+                        List<string> lines = new List<string>();
                         for (int i = 1; i < array.Length; i++)
                         {
                             string[] array2 = LocalizationTranslator.ConsolidateLineInstructions(array[i]);
@@ -1200,7 +1218,7 @@ namespace HunterExpansion.CustomOracle
                 languageID = InGameTranslator.LanguageID.English;
             }
             return;
-            IL_117:
+        IL_117:
             Plugin.Log("FOUND FILE!!! Load from flie: " + text);
             string text3 = File.ReadAllText(text, Encoding.UTF8);
             if (text3[0] != '0')
@@ -1333,7 +1351,7 @@ namespace HunterExpansion.CustomOracle
                 return NSHMiscItemType.NSHOracleSwarmer;
             }
             if (testItem is SLOracleSwarmer ||
-                (testItem is SSOracleSwarmer && 
+                (testItem is SSOracleSwarmer &&
                  OracleSwarmerHooks.OracleSwarmerData.TryGetValue(testItem as OracleSwarmer, out var slOracleSwarmer) &&
                  slOracleSwarmer.spawnRegion == "DM"))
             {
@@ -1524,7 +1542,7 @@ namespace HunterExpansion.CustomOracle
             {
                 str = "pellet";
             }
-            if (currentSaveFile.value == "Outsider")
+            if (currentSaveFile != null && currentSaveFile.value == "Outsider")
             {
                 str = "moth";
             }
@@ -1592,6 +1610,97 @@ namespace HunterExpansion.CustomOracle
         public string Translate(string s)
         {
             return ReplaceParts(this, this.currentSaveFile, this.owner.Translate(s));
+        }
+
+        //物品对应对话id
+        public static Conversation.ID ItemToConversation(PhysicalObject item)
+        {
+            Conversation.ID id = Conversation.ID.None;
+            if (!(item is DataPearl))
+            {
+                id = Conversation.ID.Moon_Misc_Item;
+            }
+            else
+            {
+                DataPearl.AbstractDataPearl.DataPearlType type = (item as DataPearl).AbstractPearl.dataPearlType;
+                //有名字的珍珠
+                id = Conversation.DataPearlToConversation(type);
+                //NSH区域独有珍珠
+                /*
+                if (type.value == "NSH_Top_Pearl")
+                {
+                    id = NSHConversationID.NSH_Pearl_NSH_Top;
+                }
+                else if (type.value == "NSH_Box_Pearl")
+                {
+                    id = NSHConversationID.NSH_Pearl_NSH_Box;
+                }*/
+                //
+                //矛大师珍珠
+                if (item.abstractPhysicalObject.type == MoreSlugcatsEnums.AbstractObjectType.Spearmasterpearl)
+                {
+                    if (!(((item as DataPearl).AbstractPearl as SpearMasterPearl.AbstractSpearMasterPearl).broadcastTagged))
+                    {
+                        id = MoreSlugcatsEnums.ConversationID.Pebbles_Spearmaster_Read_Pearl;
+                    }
+                    else
+                    {
+                        id = MoreSlugcatsEnums.ConversationID.Moon_Spearmaster_Pearl;
+                    }
+                }
+                //普通珍珠？
+                else if (type == DataPearl.AbstractDataPearl.DataPearlType.Misc || type.Index == -1)
+                {
+                    id = Conversation.ID.Moon_Pearl_Misc;
+                }
+                else if (type == DataPearl.AbstractDataPearl.DataPearlType.Misc2)
+                {
+                    id = Conversation.ID.Moon_Pearl_Misc2;
+                }
+                //广播珍珠
+                else if (ModManager.MSC && type == MoreSlugcatsEnums.DataPearlType.BroadcastMisc)
+                {
+                    id = MoreSlugcatsEnums.ConversationID.Moon_Pearl_BroadcastMisc;
+                }
+                //FP演算室珍珠
+                else if (ModManager.MSC && type == DataPearl.AbstractDataPearl.DataPearlType.PebblesPearl && ((item as DataPearl).AbstractPearl as PebblesPearl.AbstractPebblesPearl).color >= 0)
+                {
+                    id = Conversation.ID.Moon_Pebbles_Pearl;
+                }
+                //其他珍珠
+                else
+                {
+                    //使用crs的珍珠
+                    id = ModDataPearlToConversation(type);
+                }
+            }
+            return id;
+        }
+
+        //从使用crs的珍珠获取对话id
+        public static Conversation.ID ModDataPearlToConversation(DataPearl.AbstractDataPearl.DataPearlType type)
+        {
+            Conversation.ID id = Conversation.DataPearlToConversation(type);
+            var PearlData = Type.GetType("CustomRegions.Collectables.PearlData,CustomRegionsSupport", true);
+            var CustomDataPearlsListInfo = PearlData.GetField("CustomDataPearlsList", BindingFlags.Static | BindingFlags.Public);
+            var CustomDataPearlsList = (Dictionary<DataPearl.AbstractDataPearl.DataPearlType, Structs.CustomPearl>)CustomDataPearlsListInfo.GetValue(null);
+            bool isCRSPearl = false;
+            foreach (KeyValuePair<DataPearl.AbstractDataPearl.DataPearlType, Structs.CustomPearl> keyValuePair in CustomDataPearlsList)
+            {
+                if (id == keyValuePair.Value.conversationID)
+                {
+                    id = new Conversation.ID(keyValuePair.Value.filePath, false);
+                    Plugin.Log("NSH Read A CRS Pearl, file id :" + id.ToString());
+                    isCRSPearl = true;
+                    break;
+                }
+            }
+            //其他mod的珍珠
+            if (!isCRSPearl)
+            {
+                Plugin.Log("NSH Read A Mod (not CRS) Pearl, file id :" + id.ToString());
+            }
+            return id;
         }
 
         public NSHOracleBehaviour owner;

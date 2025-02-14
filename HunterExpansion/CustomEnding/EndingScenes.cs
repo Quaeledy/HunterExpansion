@@ -1,20 +1,11 @@
-﻿using System;
+﻿using HunterExpansion.CustomSave;
+using Menu;
+using MoreSlugcats;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using HunterExpansion.CustomSave;
-using Menu;
-using UnityEngine;
-using RWCustom;
-using HUD;
-using MoreSlugcats;
 using System.Text.RegularExpressions;
-using System.Linq;
-using DevInterface;
-using Expedition;
-using JollyCoop;
-using JollyCoop.JollyMenu;
-using Kittehface.Framework20;
-using static System.Net.Mime.MediaTypeNames;
+using UnityEngine;
 
 namespace HunterExpansion.CustomEnding
 {
@@ -54,7 +45,7 @@ namespace HunterExpansion.CustomEnding
 
         public static SlugcatSelectMenu.SaveGameData SlugcatSelectMenu_MineForSaveData(On.Menu.SlugcatSelectMenu.orig_MineForSaveData orig, ProcessManager manager, SlugcatStats.Name slugcat)
         {
-            SlugcatSelectMenu.SaveGameData result =  orig(manager, slugcat);
+            SlugcatSelectMenu.SaveGameData result = orig(manager, slugcat);
 
             /*
             if (result != null)
@@ -64,7 +55,7 @@ namespace HunterExpansion.CustomEnding
                 Plugin.Log("result.altEnding: " + result.altEnding);
                 Plugin.Log("manager.rainWorld.progression.currentSaveState != null?" + (manager.rainWorld.progression.currentSaveState != null));
             }*/
-            
+
             if (result != null && result.altEnding && slugcat == Plugin.SlugName && result.cycle < RedsIllness.RedsCycles(result.redsExtraCycles))
             {
                 result.redsDeath = false;
@@ -123,7 +114,7 @@ namespace HunterExpansion.CustomEnding
             //orig必须在前面，否则无法继承base的属性
             if (ModManager.MSC && self.saveGameData.altEnding && slugcatNumber == SlugcatStats.Name.Red)
             {
-                if(self.markSquare != null)
+                if (self.markSquare != null)
                     self.Container.RemoveChild(self.markSquare);
                 if (self.markGlow != null)
                     self.Container.RemoveChild(self.markGlow);
@@ -151,7 +142,7 @@ namespace HunterExpansion.CustomEnding
                     return;
                 }
                 //否则，若红猫死亡，则使用业力花cg
-                else if((self as SlugcatSelectMenu.SlugcatPageContinue).saveGameData.redsDeath)
+                else if ((self as SlugcatSelectMenu.SlugcatPageContinue).saveGameData.redsDeath)
                 {
                     MenuScene.SceneID theHunter_AltEndScene = MenuSceneID.TheHunter_AltEndScene_Dead;
                     self.imagePos = new Vector2(683f, 484f);
@@ -272,7 +263,7 @@ namespace HunterExpansion.CustomEnding
                 self.sceneFolder = string.Concat(new string[]
                 {
                     "Scenes", Path.DirectorySeparatorChar.ToString(), "slugcat - hunter", Path.DirectorySeparatorChar.ToString(), "outro 3"
-                }); 
+                });
                 if (self.flatMode)
                 {
                     self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "CG-3-flat", new Vector2(683f, 384f), false, true));

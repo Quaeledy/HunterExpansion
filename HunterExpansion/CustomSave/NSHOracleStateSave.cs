@@ -1,12 +1,5 @@
 ﻿using HunterExpansion.CustomOracle;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace HunterExpansion.CustomSave
 {
@@ -88,14 +81,14 @@ namespace HunterExpansion.CustomSave
                     }
 
                 }
-                IL_559:
+            IL_559:
                 if (flag && array[i].Trim().Length > 0 && array2.Length >= 1)
                 {
                     self.unrecognizedSaveStrings.Add(array[i]);
                 }
                 i++;
                 continue;
-                IL_557:
+            IL_557:
                 flag = true;
                 goto IL_559;
             }

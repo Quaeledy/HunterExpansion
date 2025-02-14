@@ -1,21 +1,14 @@
-﻿using RWCustom;
-using CustomDreamTx;
-using static CustomOracleTx.CustomOracleBehaviour;
-using HunterExpansion.CustomSave;
-using UnityEngine;
-using Unity.Mathematics;
-using System.Collections.Generic;
+﻿using CustomDreamTx;
 using CustomOracleTx;
-using MoreSlugcats;
-using System;
-using Random = UnityEngine.Random;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Text;
-using HunterExpansion.CustomEnding;
-using HunterExpansion.CustomEffects;
 using HunterExpansion.CustomDream;
+using HunterExpansion.CustomEffects;
+using HunterExpansion.CustomEnding;
+using MoreSlugcats;
+using RWCustom;
+using System.Collections.Generic;
+using UnityEngine;
+using static CustomOracleTx.CustomOracleBehaviour;
+using Random = UnityEngine.Random;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -58,14 +51,14 @@ namespace HunterExpansion.CustomOracle
 
             isControled = false;
             hasSayHello = false;
-            playerWaitDeath = false; 
+            playerWaitDeath = false;
             hasTookPupsAway = false;
             fadeCounter = 0;
 
             Plugin.Log("NSH Oracle Meet Hunter!");
         }
 
-        public static bool SubBehaviourIsMeetHunter (CustomAction nextAction)
+        public static bool SubBehaviourIsMeetHunter(CustomAction nextAction)
         {
             return nextAction == NSHOracleBehaviorAction.MeetHunter_Init ||
                    nextAction == NSHOracleBehaviorAction.MeetHunter_GiveMark ||
@@ -87,7 +80,7 @@ namespace HunterExpansion.CustomOracle
         public override void Update()
         {
             base.Update();
-            if (player == null || oracle.room == null || !(oracle.room.world.game.session is StoryGameSession)) 
+            if (player == null || oracle.room == null || !(oracle.room.world.game.session is StoryGameSession))
                 return;
             if (oracle.room.world.game.session.characterStats.name != Plugin.SlugName)
             {
@@ -97,7 +90,7 @@ namespace HunterExpansion.CustomOracle
             NSHOracleState state = (this.owner as NSHOracleBehaviour).State;
             if (action == NSHOracleBehaviorAction.MeetHunter_Init)
             {
-                movementBehavior = CustomMovementBehavior.KeepDistance; 
+                movementBehavior = CustomMovementBehavior.KeepDistance;
                 if (state.playerEncountersState != GetPlayerEncountersState())
                 {
                     state.playerEncountersState = GetPlayerEncountersState();
@@ -304,10 +297,10 @@ namespace HunterExpansion.CustomOracle
                     //生成珍珠
                     int num = oracle.room.roomSettings.placedObjects.Count;
                     oracle.room.roomSettings.placedObjects.Add(new PlacedObject(PlacedObject.Type.DataPearl, null));
-                    DataPearl.AbstractDataPearl absAquamarinePearl = new DataPearl.AbstractDataPearl(oracle.room.world, 
-                                                                                                  AbstractPhysicalObject.AbstractObjectType.DataPearl, 
-                                                                                                  null, oracle.abstractPhysicalObject.pos, 
-                                                                                                  oracle.room.game.GetNewID(), 
+                    DataPearl.AbstractDataPearl absAquamarinePearl = new DataPearl.AbstractDataPearl(oracle.room.world,
+                                                                                                  AbstractPhysicalObject.AbstractObjectType.DataPearl,
+                                                                                                  null, oracle.abstractPhysicalObject.pos,
+                                                                                                  oracle.room.game.GetNewID(),
                                                                                                   oracle.room.abstractRoom.index,
                                                                                                   num,
                                                                                                   oracle.room.roomSettings.placedObjects[num].data as PlacedObject.ConsumableObjectData,
@@ -649,7 +642,7 @@ namespace HunterExpansion.CustomOracle
                     //NSH说完话了
                     if (owner.conversation.slatedForDeletion)
                     {
-                        if(fadeCounter == 0)
+                        if (fadeCounter == 0)
                         {
                             oracle.room.game.manager.musicPlayer.FadeOutAllSongs(80f);
                         }
@@ -658,7 +651,7 @@ namespace HunterExpansion.CustomOracle
                             fadeCounter++;
                             oracle.suppressConnectionFires = true;
                             isControled = true;
-                            if(fadeCounter > 60f)
+                            if (fadeCounter > 60f)
                                 this.owner.killFac += 0.0125f;
                             if (this.owner.killFac >= 1f)
                             {
@@ -675,7 +668,7 @@ namespace HunterExpansion.CustomOracle
                                 this.owner.killFac = 0f;
                             }
                         }
-                        if(player.dead)
+                        if (player.dead)
                         {
                             fadeCounter++;
                             if (fadeCounter == 1)
@@ -812,7 +805,7 @@ namespace HunterExpansion.CustomOracle
                 }
                 //再次判断，找到谁拿走了神经元（以防玩家拿了神经元又丢开，导致NSH没有反应，也防止其他生物之后捡起来）
                 if (inActionCounter == 60 && nshSwarmer != null && swarmerGrabber == null &&
-                    ((nshSwarmer.room != null && nshSwarmer.grabbedBy.Count > 0) || 
+                    ((nshSwarmer.room != null && nshSwarmer.grabbedBy.Count > 0) ||
                     player.objectInStomach == nshSwarmer.abstractPhysicalObject))
                 {
                     oracle.arm.isActive = true;
@@ -893,7 +886,7 @@ namespace HunterExpansion.CustomOracle
                         //甩开小偷
                         swarmerGrabber.mainBodyChunk.vel += Custom.RNV() * 10f;
                         swarmerGrabber.bodyChunks[1].vel += Custom.RNV() * 10f;
-                        
+
                         //特效
                         oracle.room.AddObject(new Explosion.ExplosionLight(swarmerGrabber.mainBodyChunk.pos, 150f, 1f, 8, Color.white));
                         for (int j = 0; j < 20; j++)
@@ -1039,7 +1032,7 @@ namespace HunterExpansion.CustomOracle
 
         //绿神经元的特效
         public static void NSHSwarmer_Effects(Player player, Oracle oracle, CustomOracleBehaviour owner)
-        {            
+        {
             if (!swarmerCreated)
             {
                 //生成神经元
@@ -1049,7 +1042,7 @@ namespace HunterExpansion.CustomOracle
                 swarmerLabels = new List<GlyphLabel>();
                 nshSwarmer.abstractPhysicalObject.RealizeInRoom();
             }
-            
+
             //神经元的属性
             if (nshSwarmer != null && nshSwarmer.room != null)
             {

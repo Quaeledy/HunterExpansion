@@ -1,19 +1,18 @@
 ﻿using BepInEx;
+using CustomDreamTx;
+using CustomOracleTx;
+using CustomSaveTx;
+using HunterExpansion.CustomCollections;
+using HunterExpansion.CustomDream;
+using HunterExpansion.CustomEffects;
+using HunterExpansion.CustomEnding;
+using HunterExpansion.CustomOracle;
+using HunterExpansion.CustomSave;
+using HunterExpansion.HRTalk;
+using MoreSlugcats;
 using System;
 using System.Security;
 using System.Security.Permissions;
-using UnityEngine;
-using MoreSlugcats;
-using CustomOracleTx;
-using CustomDreamTx;
-using CustomSaveTx;
-using HunterExpansion.CustomOracle;
-using HunterExpansion.CustomDream;
-using HunterExpansion.CustomSave;
-using HunterExpansion.CustomEnding;
-using HunterExpansion.HRTalk;
-using HunterExpansion.CustomCollections;
-using HunterExpansion.CustomEffects;
 
 [module: UnverifiableCode]
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -106,7 +105,7 @@ namespace HunterExpansion
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
             orig.Invoke(self);
-            
+
             if (IsInit) return;
             IsInit = true;
 

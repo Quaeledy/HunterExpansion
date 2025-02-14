@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using HunterExpansion.CustomOracle;
+﻿using CustomRegions.Mod;
 using MoreSlugcats;
-using System.Runtime;
-using static System.Net.Mime.MediaTypeNames;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System;
 
 namespace HunterExpansion.CustomSave
 {
@@ -50,7 +48,7 @@ namespace HunterExpansion.CustomSave
 
         private static void MiscProgressionData_FromString(On.PlayerProgression.MiscProgressionData.orig_FromString orig, PlayerProgression.MiscProgressionData self, string s)
         {
-            orig(self, s); 
+            orig(self, s);
             string[] array = Regex.Split(s, "<mpdA>");
             for (int i = 0; i < array.Length; i++)
             {
@@ -114,5 +112,32 @@ namespace HunterExpansion.CustomSave
             return true;
         }
         #endregion
+
+        public static DataPearl.AbstractDataPearl.DataPearlType[] GetCollectionReadableNSHPearls()
+        {
+            /* 备用
+            var PearlData = Type.GetType("CustomRegions.Collectables.PearlData,CustomRegionsSupport", true);
+            var CustomDataPearlsListInfo = PearlData.GetField("CustomDataPearlsList", BindingFlags.Static | BindingFlags.Public);
+            var CustomDataPearlsList = (Dictionary<DataPearl.AbstractDataPearl.DataPearlType, Structs.CustomPearl>)CustomDataPearlsListInfo.GetValue(null);
+
+            DataPearl.AbstractDataPearl.DataPearlType[] result = new DataPearl.AbstractDataPearl.DataPearlType[0];
+            //使用crs的珍珠
+            foreach (KeyValuePair<DataPearl.AbstractDataPearl.DataPearlType, Structs.CustomPearl> keyValuePair in CustomDataPearlsList)
+            {
+                DataPearl.AbstractDataPearl.DataPearlType dataPearlType = keyValuePair.Key;
+                if (dataPearlType.ToString().StartsWith("NSH_"))
+                {
+                    Array.Resize(ref result, result.Length + 1);
+                    result[result.Length - 1] = dataPearlType;
+                }
+            }
+            return result;
+            */
+            return new DataPearl.AbstractDataPearl.DataPearlType[]
+            {
+                new DataPearl.AbstractDataPearl.DataPearlType("NSH_Box_Pearl", false),
+                new DataPearl.AbstractDataPearl.DataPearlType("NSH_Top_Pearl", false)
+            };
+        }
     }
 }

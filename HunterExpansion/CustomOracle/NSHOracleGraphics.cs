@@ -1,16 +1,8 @@
-﻿using System;
+﻿using CustomOracleTx;
+using RWCustom;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CustomOracleTx;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using RWCustom;
-using static CustomOracleTx.CustomOracleBehaviour;
-using CustomDreamTx;
-using HunterExpansion.CustomDream;
-using System.Diagnostics;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -96,14 +88,14 @@ namespace HunterExpansion.CustomOracle
             firstArmBaseSprite = totalSprites;
             armBase = new ArmBase(this, firstArmBaseSprite);
             totalSprites += armBase.totalSprites;
-            
+
             //披肩
             cover = new GownCover[1];
-            for(int i = 0; i < 1; i++)
+            for (int i = 0; i < 1; i++)
                 cover[i] = new GownCover(this);
             coverSprite = totalSprites;
             totalSprites += 1;
-            
+
             //飘带
             ribbon = new GownRibbon[2];
             for (int i = 0; i < 2; i++)
@@ -185,7 +177,7 @@ namespace HunterExpansion.CustomOracle
                     for (int l = 4; l < 7; l++)
                     {
                         Color handColor = Gown_Color(gown, (float)l / 7f);
-                        (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4]     = handColor;
+                        (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 1] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 2] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 3] = handColor;
@@ -218,7 +210,7 @@ namespace HunterExpansion.CustomOracle
         public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             sLeaser.sprites = new FSprite[totalSprites];
-            
+
             sLeaser.containers = new FContainer[]
             {
                 new FContainer()
@@ -338,7 +330,7 @@ namespace HunterExpansion.CustomOracle
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
-            
+
             for (int i = 0; i < cover.Length; i++)
                 cover[i].DrawSprites(i, robeSprite, coverSprite + i, sLeaser, rCam, timeStacker, camPos);
             for (int i = 0; i < ribbon.Length; i++)
@@ -410,13 +402,13 @@ namespace HunterExpansion.CustomOracle
         {
             if (f <= 0.1f)
                 return NSHOracleColor.Violet;
-            else if(f == 1f)
+            else if (f == 1f)
                 return NSHOracleColor.DarkViolet;
             else
                 return Color.Lerp(NSHOracleColor.Violet, NSHOracleColor.DarkViolet, f + 0.1f);
         }
         #endregion
-        
+
         public class GownCover
         {
             public OracleGraphics owner;
@@ -487,7 +479,7 @@ namespace HunterExpansion.CustomOracle
                     Vector2 cA = shoulderPos + perpBodyDir * 3f * ((k == 1) ? -1f : 1f);
 
                     Vector2 vector14 = shoulderPos - perpBodyDir * 2f * ((k == 1) ? -1f : 1f);
-                    
+
 
                     for (int m = 0; m < 5; m++)
                     {
@@ -607,7 +599,7 @@ namespace HunterExpansion.CustomOracle
                 }
             }
         }
-        
+
         public class GownRibbon
         {
             public OracleGraphics owner;

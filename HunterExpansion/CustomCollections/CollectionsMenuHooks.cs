@@ -1,19 +1,14 @@
-﻿using HunterExpansion.CustomSave;
+﻿using HunterExpansion.CustomOracle;
+using HunterExpansion.CustomSave;
 using Menu;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MoreSlugcats;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Text;
+using System.Linq;
 using UnityEngine;
-using RWCustom;
-using MonoMod.Cil;
-using System;
-using Mono.Cecil.Cil;
-using System.Runtime.Remoting.Messaging;
-using HunterExpansion.CustomOracle;
-using Debug = UnityEngine.Debug;
 
 namespace HunterExpansion.CustomCollections
 {
@@ -36,6 +31,7 @@ namespace HunterExpansion.CustomCollections
             On.MoreSlugcats.CollectionsMenu.Singal += CollectionsMenu_Singal;
             On.MoreSlugcats.CollectionsMenu.InitLabelsFromPearlFile += CollectionsMenu_InitLabelsFromPearlFile;
             On.MoreSlugcats.CollectionsMenu.UpdateInfoText += CollectionsMenu_UpdateInfoText;
+            On.MoreSlugcats.CollectionsMenu.GetCollectionReadablePearls += CollectionsMenu_GetCollectionReadablePearls;
             On.RainWorldGame.ctor += RainWorldGame_ctor;
         }
         #region IL Hooks
@@ -58,7 +54,7 @@ namespace HunterExpansion.CustomCollections
                     c.Emit(OpCodes.Ldloc_S, (byte)8);//j
                     c.EmitDelegate<Func<bool, ProcessManager, CollectionsMenu, int, bool>>((getPebblesPearlDeciphered, manager, self, j) =>
                     {
-                            return getPebblesPearlDeciphered || DecipheredNSHPearlsSave.GetNSHPearlDeciphered(manager.rainWorld.progression.miscProgressionData, self.usedPearlTypes[j]);
+                        return getPebblesPearlDeciphered || DecipheredNSHPearlsSave.GetNSHPearlDeciphered(manager.rainWorld.progression.miscProgressionData, self.usedPearlTypes[j]);
                     });
                 }
             }
@@ -262,8 +258,12 @@ namespace HunterExpansion.CustomCollections
 
         public static void CollectionsMenu_Singal(On.MoreSlugcats.CollectionsMenu.orig_Singal orig, CollectionsMenu self, MenuObject sender, string message)
         {
-            orig(self, sender, message);
             DataPearl.AbstractDataPearl.DataPearlType dataPearlType = self.usedPearlTypes[self.selectedPearlInd];
+            if (DecipheredNSHPearlsSave.GetCollectionReadableNSHPearls().Contains(dataPearlType))
+                CollectionsMenu_Singal_ForNSHPearl(self, sender, message);
+            else
+                orig(self, sender, message);
+
             CollectionsMenu.PearlReadContext a = CollectionsMenu.PearlReadContext.UnreadMoon;
             SlugcatStats.Name saveFile = null;
             if (a == PearlReadContext_NSH)
@@ -327,6 +327,163 @@ namespace HunterExpansion.CustomCollections
                     self.rainWorld.progression.SaveProgression(false, true);
                 }
             }
+        }
+
+        public static DataPearl.AbstractDataPearl.DataPearlType[] CollectionsMenu_GetCollectionReadablePearls(On.MoreSlugcats.CollectionsMenu.orig_GetCollectionReadablePearls orig, CollectionsMenu self)
+        {
+            DataPearl.AbstractDataPearl.DataPearlType[] result = orig(self);
+            DataPearl.AbstractDataPearl.DataPearlType[] add = DecipheredNSHPearlsSave.GetCollectionReadableNSHPearls();
+            for (int i = 0; i < add.Length; i++)
+            {
+                Array.Resize(ref result, result.Length + 1);
+                result[result.Length - 1] = add[i];
+            }
+            return result;
+        }
+
+        public static string NSHDataPearlToFileID(DataPearl.AbstractDataPearl.DataPearlType type)
+        {
+            Conversation.ID a = NSHConversation.ModDataPearlToConversation(type);
+            string result = a.ToString();
+            Plugin.Log("type.ToString(): " + type.ToString());
+            Plugin.Log("a.ToString(): " + a.ToString());
+            return result;
+        }
+
+        public static void CollectionsMenu_Singal_ForNSHPearl(CollectionsMenu self, MenuObject sender, string message)
+        {
+            if (message == "BACK")
+            {
+                self.OnExit();
+            }
+            if (message.Contains("CHATLOG"))
+            {
+                self.ClearIteratorButtons();
+                self.PlaySound(SoundID.MENU_Button_Standard_Button_Pressed);
+                int num = 0;
+                int num2 = int.Parse(message.Substring(message.LastIndexOf("_") + 1), NumberStyles.Any, CultureInfo.InvariantCulture);
+                if (message.Contains("NORMAL"))
+                {
+                    num = num2 + self.prePebsBroadcastChatlogs.Count + self.postPebsBroadcastChatlogs.Count;
+                    self.InitLabelsFromChatlog(ChatlogData.getChatlog(self.usedChatlogs[num2]));
+                }
+                else if (message.Contains("PREPEB"))
+                {
+                    num = num2;
+                    self.InitLabelsFromChatlog(ChatlogData.getLinearBroadcast(num2, false));
+                }
+                else if (message.Contains("POSTPEB"))
+                {
+                    num = num2 + self.prePebsBroadcastChatlogs.Count;
+                    self.InitLabelsFromChatlog(ChatlogData.getLinearBroadcast(num2, true));
+                }
+                for (int i = 0; i < self.pearlButtons.Length; i++)
+                {
+                    self.pearlButtons[i].toggled = false;
+                }
+                for (int j = 0; j < self.chatlogButtons.Length; j++)
+                {
+                    self.chatlogButtons[j].toggled = false;
+                }
+                self.chatlogButtons[num].toggled = true;
+            }
+            if (message.Contains("PEARL") || message.Contains("TYPE"))
+            {
+                self.PlaySound(SoundID.MENU_Button_Standard_Button_Pressed);
+                if (message.Contains("PEARL"))
+                {
+                    self.selectedPearlInd = int.Parse(message.Substring(5), NumberStyles.Any, CultureInfo.InvariantCulture);
+                    for (int k = 0; k < self.pearlButtons.Length; k++)
+                    {
+                        self.pearlButtons[k].toggled = false;
+                    }
+                    for (int l = 0; l < self.chatlogButtons.Length; l++)
+                    {
+                        self.chatlogButtons[l].toggled = false;
+                    }
+                    self.pearlButtons[self.selectedPearlInd].toggled = true;
+                }
+                DataPearl.AbstractDataPearl.DataPearlType dataPearlType = self.usedPearlTypes[self.selectedPearlInd];
+                int num3 = 0;
+                int num4 = -1;
+                string suffix = NSHDataPearlToFileID(dataPearlType);
+                CollectionsMenu.PearlReadContext a = CollectionsMenu.PearlReadContext.UnreadMoon;
+                if (message.Contains("PEARL"))
+                {
+                    a = self.AddIteratorButtons(num3, num4);
+                    if (a == CollectionsMenu.PearlReadContext.UnreadPebbles)
+                    {
+                        a = CollectionsMenu.PearlReadContext.UnreadMoon;
+                        num3 = num4;
+                    }
+                }
+                else
+                {
+                    for (int m = 0; m < self.iteratorButtons.Length; m++)
+                    {
+                        if (self.iteratorButtons[m].signalText == message)
+                        {
+                            self.iteratorButtons[m].toggled = true;
+                        }
+                        else
+                        {
+                            self.iteratorButtons[m].toggled = false;
+                        }
+                        if (message.Contains("PEBBLES"))
+                        {
+                            if (num4 != -1)
+                            {
+                                a = CollectionsMenu.PearlReadContext.UnreadMoon;
+                                num3 = num4;
+                            }
+                            else
+                            {
+                                a = CollectionsMenu.PearlReadContext.Pebbles;
+                            }
+                        }
+                        if (message.Contains("DM"))
+                            a = CollectionsMenu.PearlReadContext.PastMoon;
+                        if (message.Contains("FUTURE"))
+                            a = CollectionsMenu.PearlReadContext.FutureMoon;
+                        if (message.Contains("NSH"))
+                            a = PearlReadContext_NSH;
+                    }
+                }
+                SlugcatStats.Name saveFile = null;
+                if (a == CollectionsMenu.PearlReadContext.Pebbles)
+                {
+                    saveFile = MoreSlugcatsEnums.SlugcatStatsName.Artificer;
+                }
+                if (a == CollectionsMenu.PearlReadContext.PastMoon)
+                {
+                    saveFile = MoreSlugcatsEnums.SlugcatStatsName.Spear;
+                }
+                if (a == CollectionsMenu.PearlReadContext.FutureMoon)
+                {
+                    saveFile = MoreSlugcatsEnums.SlugcatStatsName.Saint;
+                }
+                if (a == PearlReadContext_NSH)
+                {
+                    saveFile = Plugin.SlugName;
+                }
+                CollectionsMenu_InitLabelsFromPearlFile_ForNSHPearl(self, num3, saveFile, suffix);
+            }
+        }
+
+
+        public static void CollectionsMenu_InitLabelsFromPearlFile_ForNSHPearl(CollectionsMenu self, int id, SlugcatStats.Name saveFile, string suffix)
+        {
+            CollectionsMenu.ConversationLoader conversationLoader = new CollectionsMenu.ConversationLoader(self);
+            NSHConversation.LoadEventsFromFile(conversationLoader, id, "NSH", saveFile, suffix);
+            List<string> list = new List<string>();
+            for (int i = 0; i < conversationLoader.events.Count; i++)
+            {
+                if (conversationLoader.events[i] is Conversation.TextEvent)
+                {
+                    list.Add((conversationLoader.events[i] as Conversation.TextEvent).text);
+                }
+            }
+            self.InitLabelsFromChatlog(list.ToArray());
         }
     }
 }

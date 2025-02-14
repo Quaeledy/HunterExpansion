@@ -1,17 +1,9 @@
 ﻿using CustomDreamTx;
-using HunterExpansion.CustomOracle;
-using HunterExpansion.CustomSave;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using MoreSlugcats;
-using static CustomOracleTx.CustomOracleBehaviour;
-using RWCustom;
 using HunterExpansion.CustomEffects;
+using HunterExpansion.CustomOracle;
+using MoreSlugcats;
+using RWCustom;
+using UnityEngine;
 
 namespace HunterExpansion.CustomDream
 {

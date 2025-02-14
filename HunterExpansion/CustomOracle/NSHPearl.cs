@@ -1,16 +1,8 @@
-﻿using System;
+﻿using CustomOracleTx;
+using RWCustom;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CustomOracleTx;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using RWCustom;
-using static CustomOracleTx.CustomOracleBehaviour;
-using CustomDreamTx;
-using HunterExpansion.CustomDream;
-using static UnityEngine.RectTransform;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -171,7 +163,7 @@ namespace HunterExpansion.CustomOracle
                     newDist = 275f;
 
                 }
-                if(this.oracle == null)
+                if (this.oracle == null)
                 {
                     if (this != null && this.room.abstractRoom.name == "NSH_AI")
                     {
@@ -213,7 +205,7 @@ namespace HunterExpansion.CustomOracle
             //this.orbitFlattenFac = 0.99f;
 
             base.Update(eu);
-            
+
             if (swarmer != null && swarmer.room != null && this.oracle != null)
             {
                 //如果重力偏低，且没被抓住，且迭代器存在

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RWCustom;
 using UnityEngine;
-using RWCustom;
 using Random = UnityEngine.Random;
-using MoreSlugcats;
 
 namespace HunterExpansion.CustomEffects
 {

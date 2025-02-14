@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using static CustomOracleTx.CustomOracleBehaviour;
+﻿using HunterExpansion.CustomDream;
 using MoreSlugcats;
-using HunterExpansion.CustomDream;
 using RWCustom;
-using System.Collections.Generic;
+using UnityEngine;
+using static CustomOracleTx.CustomOracleBehaviour;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -76,7 +75,7 @@ namespace HunterExpansion.CustomOracle
                         (owner as NSHOracleBehaviour).PlayerEncountersAdd();
                         return;
                     }
-                    else if(state.playerEncountersWithMark == 1 && inActionCounter > 20)
+                    else if (state.playerEncountersWithMark == 1 && inActionCounter > 20)
                     {
                         owner.NewAction(NSHOracleBehaviorAction.MeetSpear_AfterAltEnd_2);
                         (owner as NSHOracleBehaviour).PlayerEncountersAdd();
@@ -148,7 +147,7 @@ namespace HunterExpansion.CustomOracle
                         if (player.FoodInStomach <= player.MaxFoodInStomach)
                         {
                             player.AddFood(player.MaxFoodInStomach);
-                        } 
+                        }
                         return;
                     }
                 }
@@ -197,7 +196,7 @@ namespace HunterExpansion.CustomOracle
                             (this.owner as NSHOracleBehaviour).idealShowMediaPos += Custom.RNV() * Random.value * 30f;
                             (this.owner as NSHOracleBehaviour).showMediaPos += Custom.RNV() * Random.value * 30f;
                         }
-                        (this.owner as NSHOracleBehaviour).showImage.setPos = new Vector2?((this.owner as NSHOracleBehaviour).showMediaPos); 
+                        (this.owner as NSHOracleBehaviour).showImage.setPos = new Vector2?((this.owner as NSHOracleBehaviour).showMediaPos);
                         this.owner.lookPoint = (this.owner as NSHOracleBehaviour).showMediaPos;
                     }
                     if (owner.conversation.slatedForDeletion)

@@ -1,8 +1,8 @@
-﻿using static CustomOracleTx.CustomOracleBehaviour;
-using MoreSlugcats;
-using UnityEngine;
+﻿using MoreSlugcats;
 using RWCustom;
 using System.Collections.Generic;
+using UnityEngine;
+using static CustomOracleTx.CustomOracleBehaviour;
 
 namespace HunterExpansion.CustomOracle
 {

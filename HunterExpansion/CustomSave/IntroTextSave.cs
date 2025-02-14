@@ -1,10 +1,5 @@
 ﻿using CustomSaveTx;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace HunterExpansion.CustomSave
 {
@@ -37,7 +32,7 @@ namespace HunterExpansion.CustomSave
                 result = "<mpdA>" + header;
                 for (int i = 0; i < introText.Length; i++)
                 {
-                    result +=  "<mpdB>" + i.ToString() + "<introText>" + introText[i].ToString();
+                    result += "<mpdB>" + i.ToString() + "<introText>" + introText[i].ToString();
                 }
             }
 
@@ -70,7 +65,7 @@ namespace HunterExpansion.CustomSave
         public override void ClearDataForNewSaveState(SlugcatStats.Name newSlugName)
         {
             base.ClearDataForNewSaveState(newSlugName);
-            for(int i = 0; i < introText.Length; i++)
+            for (int i = 0; i < introText.Length; i++)
             {
                 introText[i] = false;
             }

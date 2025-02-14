@@ -1,30 +1,17 @@
-﻿using System.Collections.Generic;
-using CustomOracleTx;
-using UnityEngine;
-using Random = UnityEngine.Random;
-using Debug = UnityEngine.Debug;
-using RWCustom;
+﻿using CoralBrain;
 using CustomDreamTx;
+using CustomOracleTx;
+using CustomRegions.Mod;
 using HunterExpansion.CustomDream;
-using CoralBrain;
-using Music;
 using HunterExpansion.CustomSave;
 using MoreSlugcats;
-using System.Text.RegularExpressions;
-using BepInEx;
-using IL;
-using On;
-using RewiredConsts;
-using UnityEngine.Diagnostics;
-using Kittehface.Framework20;
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.Networking.PlayerConnection;
-using System.Data;
+using Music;
+using RWCustom;
 using System;
-using CustomRegions.Mod;
-using CustomRegions.Collectables;
+using System.Collections.Generic;
 using System.Reflection;
-using static Menu.Remix.InternalOI;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -103,10 +90,10 @@ namespace HunterExpansion.CustomOracle
             this.InitStoryPearlCollection();
 
             setDream = false;
-            setPutDown = false; 
+            setPutDown = false;
             generateKillingIntent = false;
             landPos = Vector2.zero;
-            
+
             //清除旧梦境的影响
             if (NSHOracleMeetHunter.nshSwarmer != null)
             {
@@ -117,7 +104,7 @@ namespace HunterExpansion.CustomOracle
 
         public override void Update(bool eu)
         {
-            if(oracle.room.game.devToolsActive && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.L))
+            if (oracle.room.game.devToolsActive && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.L))
                 this.State.InfluenceLike(1f);
             if (player != null && generateKillingIntent)
             {
@@ -368,7 +355,7 @@ namespace HunterExpansion.CustomOracle
             if (this.interruptConversation != null)
             {
                 this.interruptConversation.Update();
-                if(this.interruptConversation.slatedForDeletion)
+                if (this.interruptConversation.slatedForDeletion)
                     this.interruptConversation = null;
             }
             if (!this.currSubBehavior.CurrentlyCommunicating)
@@ -749,7 +736,7 @@ namespace HunterExpansion.CustomOracle
                     {
                         subBehavior = new NSHOracleMeetHunter(this);
                     }
-                    else if(customSubBehaviourID == NSHOracleBehaviorSubBehavID.MeetSpear)
+                    else if (customSubBehaviourID == NSHOracleBehaviorSubBehavID.MeetSpear)
                     {
                         subBehavior = new NSHOracleMeetSpear(this);
                     }
@@ -812,8 +799,8 @@ namespace HunterExpansion.CustomOracle
                 if (player != null && player.room == oracle.room)
                 {
                     discoverCounter++;
-                    if (oracle.room.GetTilePosition(player.mainBodyChunk.pos).y < 32 && 
-                        (Custom.DistLess(player.mainBodyChunk.pos, oracle.firstChunk.pos, 150f) || 
+                    if (oracle.room.GetTilePosition(player.mainBodyChunk.pos).y < 32 &&
+                        (Custom.DistLess(player.mainBodyChunk.pos, oracle.firstChunk.pos, 150f) ||
                          !Custom.DistLess(player.mainBodyChunk.pos, oracle.room.MiddleOfTile(oracle.room.ShortcutLeadingToNode(0).StartTile), 150f)))// discoverCounter > 220 ||
                     {
                         SeePlayer();
@@ -892,8 +879,8 @@ namespace HunterExpansion.CustomOracle
                 if (player != null && player.room == oracle.room)
                 {
                     discoverCounter++;
-                    if (oracle.room.GetTilePosition(player.mainBodyChunk.pos).y < 32 && 
-                        (Custom.DistLess(player.mainBodyChunk.pos, oracle.firstChunk.pos, 150f) || 
+                    if (oracle.room.GetTilePosition(player.mainBodyChunk.pos).y < 32 &&
+                        (Custom.DistLess(player.mainBodyChunk.pos, oracle.firstChunk.pos, 150f) ||
                          !Custom.DistLess(player.mainBodyChunk.pos, oracle.room.MiddleOfTile(oracle.room.ShortcutLeadingToNode(0).StartTile), 150f)))//discoverCounter > 220 || 
                     {
                         SeePlayer();
@@ -997,7 +984,7 @@ namespace HunterExpansion.CustomOracle
                     SetNewDestination(landPos);
             }
             //base.Move();
-            
+
             bool flag = this.movementBehavior == CustomOracleBehaviour.CustomMovementBehavior.Idle;
             if (flag)
             {
@@ -1179,7 +1166,7 @@ namespace HunterExpansion.CustomOracle
             }
             return result;
         }
-        
+
         public override void UnconciousUpdate()
         {
             base.UnconciousUpdate();
@@ -1287,7 +1274,7 @@ namespace HunterExpansion.CustomOracle
                     NSHOracleMeetHunter.giveSwarmerToHunter = true;
                 }
             }
-            else if(eventName == "refuseRestartConversation")
+            else if (eventName == "refuseRestartConversation")
             {
                 this.refuseRestartConversation = true;
             }/*
@@ -1350,7 +1337,12 @@ namespace HunterExpansion.CustomOracle
                 this.conversation = null;
             }
             //找到物品对应的对话id
-            Conversation.ID id = ItemToConversation(item);
+            Conversation.ID id = NSHConversation.ItemToConversation(item);
+            //如果讨厌玩家，则拒绝解读
+            if (State.likesPlayer < 0f || State.GetOpinion == NSHOracleState.PlayerOpinion.Dislikes || State.GetOpinion == NSHOracleState.PlayerOpinion.NotSpeaking)
+            {
+                id = NSHConversationID.RefusingToInterpretItems;
+            }
             this.State.InfluenceLike(this.ItemInfluenceLike(item));
             SLOracleBehaviorHasMark.MiscItemType itemType = NSHConversation.TypeOfMiscItem(item);
             if (!(item is DataPearl))
@@ -1359,16 +1351,20 @@ namespace HunterExpansion.CustomOracle
             }
             else
             {
-                if (!State.significantPearls.Contains((item as DataPearl).AbstractPearl.dataPearlType))
+                if(id != NSHConversationID.RefusingToInterpretItems)
                 {
-                    State.significantPearls.Add((item as DataPearl).AbstractPearl.dataPearlType);
-                }
-                //应该是加入收藏的意思
-                if (State.likesPlayer >= 0f && ModManager.MSC && this.oracle.ID == NSHOracleRegistry.NSHOracle)
-                {
-                    this.isRepeatedDiscussion = DecipheredNSHPearlsSave.GetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType);
-                    if (canSlugUnderstandlanguage())
-                        DecipheredNSHPearlsSave.SetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType, false);
+                    if (!State.significantPearls.Contains((item as DataPearl).AbstractPearl.dataPearlType))
+                    {
+                        State.significantPearls.Add((item as DataPearl).AbstractPearl.dataPearlType);
+                    }
+                    //加入收藏
+                    if (State.likesPlayer >= 0f && ModManager.MSC && this.oracle.ID == NSHOracleRegistry.NSHOracle)
+                    {
+                        this.isRepeatedDiscussion = DecipheredNSHPearlsSave.GetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType);
+                        if (canSlugUnderstandlanguage())
+                            DecipheredNSHPearlsSave.SetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType, false);
+                    }
+                    Plugin.Log("NSH refuses to interpret pearl: " + (item as DataPearl).AbstractPearl.type.ToString());
                 }
                 this.itemConversation = new NSHConversation(this, this.currSubBehavior as NSHOracleMeetHunter, id, this.dialogBox, itemType);
                 State.totalPearlsBrought++;
@@ -1377,7 +1373,7 @@ namespace HunterExpansion.CustomOracle
                     Plugin.Log("pearls brought up: " + State.totalPearlsBrought.ToString());
                 }
             }
-            this.State.InfluenceLike(this.ItemInfluenceLikeAfterTalk(item)); 
+            this.State.InfluenceLike(this.ItemInfluenceLikeAfterTalk(item));
             if (!this.isRepeatedDiscussion)
             {
                 State.totalItemsBrought++;
@@ -1399,51 +1395,11 @@ namespace HunterExpansion.CustomOracle
             this.interruptConversation = new NSHConversation(this, this.currSubBehavior as NSHOracleMeetHunter, Conversation.ID.None, this.dialogBox, SLOracleBehaviorHasMark.MiscItemType.NA);
             if (State.GetOpinion == NSHOracleState.PlayerOpinion.Likes)
             {
-                NSHConversation.LoadEventsFromFile(this.interruptConversation, 207, null, true, i);/*
-                if (num == 0)
-                {
-                    s = "Lost patience, <PlayerName>?";
-                }
-                else if (num == 1)
-                {
-                    s = "Want to leave? In our creators, leaving early is a point deduction~";
-                }
-                else if (num == 2)
-                {
-                    s = "Go play, children.";
-                }
-                else if (num == 3)
-                {
-                    s = "Are you leaving? Did anything scare you?";
-                }
-                else
-                {
-                    s = "Are you leaving now? See you later.";
-                }*/
+                NSHConversation.LoadEventsFromFile(this.interruptConversation, 207, null, true, i);
             }
             else if (State.GetOpinion == NSHOracleState.PlayerOpinion.Neutral)
             {
-                NSHConversation.LoadEventsFromFile(this.interruptConversation, 208, null, true, i);/*
-                if (num == 0)
-                {
-                    s = "Lost patience?";
-                }
-                else if (num == 1)
-                {
-                    s = "Do you want to leave? Go quickly.";
-                }
-                else if (num == 2)
-                {
-                    s = "...";
-                }
-                else if (num == 3)
-                {
-                    s = "Are you leaving?";
-                }
-                else
-                {
-                    s = "Are you leaving now?";
-                }*/
+                NSHConversation.LoadEventsFromFile(this.interruptConversation, 208, null, true, i);
             }
             else
             {
@@ -1561,93 +1517,6 @@ namespace HunterExpansion.CustomOracle
             }
             return add;
         }
-
-        //物品对应对话id
-        public Conversation.ID ItemToConversation(PhysicalObject item)
-        {
-            Conversation.ID id = Conversation.ID.None;
-            if (!(item is DataPearl))
-            {
-                id = Conversation.ID.Moon_Misc_Item;
-            }
-            else
-            {
-                //有名字的珍珠
-                id = Conversation.DataPearlToConversation((item as DataPearl).AbstractPearl.dataPearlType);
-                //NSH区域独有珍珠
-                /*
-                if ((item as DataPearl).AbstractPearl.dataPearlType.value == "NSH_Top_Pearl")
-                {
-                    id = NSHConversationID.NSH_Pearl_NSH_Top;
-                }
-                else if ((item as DataPearl).AbstractPearl.dataPearlType.value == "NSH_Box_Pearl")
-                {
-                    id = NSHConversationID.NSH_Pearl_NSH_Box;
-                }*/
-                //
-                //矛大师珍珠
-                if (item.abstractPhysicalObject.type == MoreSlugcatsEnums.AbstractObjectType.Spearmasterpearl)
-                {
-                    if (!(((item as DataPearl).AbstractPearl as SpearMasterPearl.AbstractSpearMasterPearl).broadcastTagged))
-                    {
-                        id = MoreSlugcatsEnums.ConversationID.Pebbles_Spearmaster_Read_Pearl;
-                    }
-                    else
-                    {
-                        id = MoreSlugcatsEnums.ConversationID.Moon_Spearmaster_Pearl;
-                    }
-                }
-                //普通珍珠？
-                else if ((item as DataPearl).AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Misc || (item as DataPearl).AbstractPearl.dataPearlType.Index == -1)
-                {
-                    id = Conversation.ID.Moon_Pearl_Misc;
-                }
-                else if ((item as DataPearl).AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Misc2)
-                {
-                    id = Conversation.ID.Moon_Pearl_Misc2;
-                }
-                //广播珍珠
-                else if (ModManager.MSC && (item as DataPearl).AbstractPearl.dataPearlType == MoreSlugcatsEnums.DataPearlType.BroadcastMisc)
-                {
-                    id = MoreSlugcatsEnums.ConversationID.Moon_Pearl_BroadcastMisc;
-                }
-                //FP演算室珍珠
-                else if (ModManager.MSC && (item as DataPearl).AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.PebblesPearl && ((item as DataPearl).AbstractPearl as PebblesPearl.AbstractPebblesPearl).color >= 0)
-                {
-                    id = Conversation.ID.Moon_Pebbles_Pearl;
-                }
-                //其他珍珠
-                else
-                {
-                    var PearlData = Type.GetType("CustomRegions.Collectables.PearlData,CustomRegionsSupport", true);
-                    var CustomDataPearlsListInfo = PearlData.GetField("CustomDataPearlsList", BindingFlags.Static | BindingFlags.Public);
-                    var CustomDataPearlsList = (Dictionary<DataPearl.AbstractDataPearl.DataPearlType, Structs.CustomPearl>)CustomDataPearlsListInfo.GetValue(null);
-                    bool isCRSPearl = false;
-                    //使用crs的珍珠
-                    foreach (KeyValuePair<DataPearl.AbstractDataPearl.DataPearlType, Structs.CustomPearl> keyValuePair in CustomDataPearlsList)
-                    {
-                        if (id == keyValuePair.Value.conversationID)
-                        {
-                            isCRSPearl = true;
-                            id = new Conversation.ID(keyValuePair.Value.filePath, false);
-                            Plugin.Log("NSH Read A CRS Pearl, file id :" + id.ToString());
-                            break;
-                        }
-                    }
-                    //其他mod的珍珠
-                    if (!isCRSPearl)
-                    {
-                        Plugin.Log("NSH Read A Mod (not CRS) Pearl, file id :" + id.ToString());
-                    }
-                } 
-            }
-            //如果讨厌玩家，则拒绝解读
-            if (State.likesPlayer < 0f || State.GetOpinion == NSHOracleState.PlayerOpinion.Dislikes || State.GetOpinion == NSHOracleState.PlayerOpinion.NotSpeaking)
-            {
-                id = NSHConversationID.RefusingToInterpretItems;
-            }
-            return id;
-        }
         #endregion
 
         #region 储存珍珠和物品
@@ -1666,7 +1535,7 @@ namespace HunterExpansion.CustomOracle
                         this.readDataPearlOrbits.Add(abstractDataPearl);
                     }
                 }
-                else if((abstractWorldEntity as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.FireEgg)
+                else if ((abstractWorldEntity as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.FireEgg)
                 {
                     this.readItemOrbits.Add(abstractWorldEntity);
                 }
@@ -1711,7 +1580,7 @@ namespace HunterExpansion.CustomOracle
 
         public void UpdateStoryPearlCollection()
         {
-            List<DataPearl.AbstractDataPearl> list = new List<DataPearl.AbstractDataPearl>(); 
+            List<DataPearl.AbstractDataPearl> list = new List<DataPearl.AbstractDataPearl>();
             List<AbstractWorldEntity> list2 = new List<AbstractWorldEntity>();
             int num = 0;
             //判断珍珠
@@ -1751,7 +1620,7 @@ namespace HunterExpansion.CustomOracle
                     DataPearl.AbstractDataPearl abstractDataPearl3 = abstractDataPearl2;
                     Plugin.Log(str + ((abstractDataPearl3 != null) ? abstractDataPearl3.ToString() : null));
                 }
-                if(this.readPearlGlyphs.ContainsKey(abstractDataPearl2))
+                if (this.readPearlGlyphs.ContainsKey(abstractDataPearl2))
                     this.readPearlGlyphs[abstractDataPearl2].Destroy();//不进行if判断的话，这一行将导致带珍珠用Warp传送到NSH房间会引起游戏崩溃
                 this.readPearlGlyphs.Remove(abstractDataPearl2);
                 this.readDataPearlOrbits.Remove(abstractDataPearl2);

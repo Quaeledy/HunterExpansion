@@ -59,10 +59,10 @@ Oh... don't you want me to do this?|Oh... ¿no quieres que haga esto?
 Um... I will continue.|Um... prosigo.
 //NSH招呼猎手
 Good morning. Come here, my little messenger. Come to me.|Buenos días. Ven aquí, mi pequeño mensajero. Ven a mí.
-Good morning, messenger.|早上好，信使。
-Oh, you're with your friend. But we need some time alone, I believe. Can you come back for me after you take it to somewhere safe?|噢，你还带着你的小朋友，但我想我们需要单独的空间，<LINE>你可以把它带到安全的地方再回来找我吗？
-Oh, you're with your friends. But we need some time alone, I believe. Can you come back for me after you take them to somewhere safe?|噢，你还带着你的小朋友们，但我想我们需要单独的空间，<LINE>你可以把它们带到安全的地方再回来找我吗？
-Welcome back, my messenger. Come, Come here.|欢迎回来，我的小信使。来吧，来我这里。
+Good morning, messenger.|Buenos días, mensajero.
+Oh, you're with your friend. But we need some time alone, I believe. Can you come back for me after you take it to somewhere safe?|Oh, estás con tu cachorro. Pero necesitamos un tiempo a solas, creo. ¿Puedes volver a buscarme después de que lo lleves a un lugar seguro?
+Oh, you're with your friends. But we need some time alone, I believe. Can you come back for me after you take them to somewhere safe?|Oh, estás con tus cachorros. Pero necesitamos un tiempo a solas, creo. ¿Puedes volver a buscarme después de que los lleves a un lugar seguro?
+Welcome back, my messenger. Come, Come here.|Bienvenido de nuevo, mi mensajero. Ven, ven aquí.
 
 
 //NSH被攻击
@@ -73,8 +73,8 @@ I have already warned you.|Te he avisado.
 
 
 //当着NSH的面食用神经元
-Creature, are you intentionally provoking me?|野兽，你在有意激怒我吗？
-Okay, if you brought it to me just for this moment, feel free.|好吧，如果你把它带到我面前就是为了这一刻，请便。
+Creature, are you intentionally provoking me?|Criatura, ¿me estás provocando intencionadamente?
+Okay, if you brought it to me just for this moment, feel free.|Está bien, le sobran las neuronas, siéntete libre.
 
 
 //NSH读白色珍珠及彩色珍珠引语
@@ -104,6 +104,8 @@ What is it again?|¿Otra vez esto de nuevo?
 
 //NSH解读的火虫卵被拿走时
 Oh, of course, you can take it away anytime!|¡Oh, por supuesto, puedes llevártelo cuando quieras!
+//NSH保管的奇点炸弹被拿走时
+You can take it, but don't attack me anymore.|Puedes cogerlo, pero no me ataques más.
 
 //NSH解读SL_chimney珍珠补充内容
 I have to say, you are really cute!|¡Tengo que decir que eres realmente lindo!

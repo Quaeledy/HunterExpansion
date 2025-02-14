@@ -1,13 +1,5 @@
-﻿using System.Collections.Generic;
-using CustomOracleTx;
+﻿using CustomOracleTx;
 using UnityEngine;
-using Random = UnityEngine.Random;
-using RWCustom;
-using CustomDreamTx;
-using HunterExpansion.CustomDream;
-using HunterExpansion;
-using HunterExpansion.CustomSave;
-using MoreSlugcats;
 
 namespace HunterExpansion.CustomOracle
 {

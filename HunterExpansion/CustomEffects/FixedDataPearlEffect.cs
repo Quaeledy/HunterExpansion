@@ -1,10 +1,7 @@
 ﻿using HunterExpansion.CustomSave;
-using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,7 +17,7 @@ namespace HunterExpansion.CustomEffects
         private static void DataPearl_InitiateSprites(On.DataPearl.orig_InitiateSprites orig, DataPearl self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig.Invoke(self, sLeaser, rCam);
-            if(self.AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Red_stomach && PearlFixedSave.pearlFixed && self.room != null)
+            if (self.AbstractPearl.dataPearlType == DataPearl.AbstractDataPearl.DataPearlType.Red_stomach && PearlFixedSave.pearlFixed && self.room != null)
             {
                 self.room.AddObject(new FixedDataPearlEffect(self, self.room));
             }
@@ -113,7 +110,7 @@ namespace HunterExpansion.CustomEffects
             insideLozengeMesh.SetVertice(3, Vector3.right * 6f);
             insideLozengeMesh.SetVertice(4, Vector3.back * 6f);
 
-            for(int i = 5;i <= 8; i++)
+            for (int i = 5; i <= 8; i++)
             {
                 insideLozengeMesh.SetVertice(i, insideLozengeMesh.GetOrigVertice(i - 4));
             }
@@ -128,7 +125,7 @@ namespace HunterExpansion.CustomEffects
 
         void CreateSmallLozengeMeshes()
         {
-            for(int i = 0;i < SmallLozengeCount; i++)
+            for (int i = 0; i < SmallLozengeCount; i++)
             {
                 Mesh3D.TriangleFacet[] facets = new Mesh3D.TriangleFacet[]
                 {
@@ -163,18 +160,18 @@ namespace HunterExpansion.CustomEffects
         void CreateDotMatrixMesh()
         {
             List<Mesh3D.TriangleFacet> facets = new List<Mesh3D.TriangleFacet>();//6x6x6
-            for(int i = 0;i < 216;i += 3)
+            for (int i = 0; i < 216; i += 3)
             {
                 facets.Add(new Mesh3D.TriangleFacet(i, i + 1, i + 2));
             }
             dotMatrixMesh = new Mesh3D();
             dotMatrixMesh.SetFacet(facets.ToArray());
-            
-            for(int z = 0;z < 6; z++)
+
+            for (int z = 0; z < 6; z++)
             {
-                for(int y = 0;y < 6;y++)
+                for (int y = 0; y < 6; y++)
                 {
-                    for(int x = 0;x < 6; x++)
+                    for (int x = 0; x < 6; x++)
                     {
                         dotMatrixMesh.SetVertice(z + y * 6 + x * 36, (new Vector3(3 - x, 3 - y, 3 - z) - Vector3.one * 0.5f) * dotMatrixGridWidth);
                     }
@@ -197,7 +194,7 @@ namespace HunterExpansion.CustomEffects
             //testLabel = new FLabel(Custom.GetFont(), "");
             sLeaser.sprites = new FSprite[totalSprites];
             insideLozengeMeshRenderer.InitSprites(sLeaser, rCam);
-            for(int i = 0;i < smallLozengeMeshRenderers.Count;i++)
+            for (int i = 0; i < smallLozengeMeshRenderers.Count; i++)
             {
                 smallLozengeMeshRenderers[i].InitSprites(sLeaser, rCam);
             }
@@ -210,7 +207,7 @@ namespace HunterExpansion.CustomEffects
             if (newContatiner == null)
                 newContatiner = rCam.ReturnFContainer("Foreground");
 
-            if(testLabel != null)
+            if (testLabel != null)
             {
                 newContatiner.RemoveChild(testLabel);
                 newContatiner.AddChild(testLabel);
@@ -223,7 +220,7 @@ namespace HunterExpansion.CustomEffects
             }
 
             insideLozengeMeshRenderer.AddToContainer(sLeaser, newContatiner);
-            foreach(var renderer in smallLozengeMeshRenderers)
+            foreach (var renderer in smallLozengeMeshRenderers)
                 renderer.AddToContainer(sLeaser, newContatiner);
         }
 
@@ -238,7 +235,7 @@ namespace HunterExpansion.CustomEffects
             base.Update(eu);
             pos = bindPearl.firstChunk.pos;
 
-            if (movementUnstableFactor > 0f) 
+            if (movementUnstableFactor > 0f)
                 movementUnstableFactor -= MovementUnstableRecoverVel;
             movementUnstableFactor += (pos - lastPos).magnitude * MovementToUnstableFactor;
             if (movementUnstableFactor > 1f)
@@ -261,7 +258,7 @@ namespace HunterExpansion.CustomEffects
                 {
                     insideLozengeMeshRenderer.SetVerticeColor(FrontColor * 0.1f, true);
                     insideLozengeMeshRenderer.SetVerticeColor(BackColor * 0.1f, false);
-                    for(int i = 0; i < smallLozengeMeshRenderers.Count; i++)
+                    for (int i = 0; i < smallLozengeMeshRenderers.Count; i++)
                     {
                         smallLozengeMeshRenderers[i].SetVerticeColor(FrontColor * 0.1f, true);
                         smallLozengeMeshRenderers[i].SetVerticeColor(BackColor * 0.1f, false);
@@ -292,10 +289,10 @@ namespace HunterExpansion.CustomEffects
                 insideLozengeMesh.Update();
                 insideLozengeMeshRenderer.Update();
 
-                for(int i = 0;i < smallLozengeMeshes.Count;i++)
+                for (int i = 0; i < smallLozengeMeshes.Count; i++)
                 {
                     smallLozengeMeshes[i].localRotation = new Vector3(0f, (smallLozengeMeshes[i].localRotation.y + i + 1f) % 360f, 0f);
-                    smallLozengeMeshes[i].globalRotation = new Vector3(smallLozengeMeshes[i].globalRotation.x, (smallLozengeMeshes[i].globalRotation.y - 2f - i) % 360f, Mathf.Sin(Time.time * 0.2f * (i/3f + 1f)) * 30f);
+                    smallLozengeMeshes[i].globalRotation = new Vector3(smallLozengeMeshes[i].globalRotation.x, (smallLozengeMeshes[i].globalRotation.y - 2f - i) % 360f, Mathf.Sin(Time.time * 0.2f * (i / 3f + 1f)) * 30f);
                     smallLozengeMeshes[i].Update();
                 }
             }
@@ -316,12 +313,12 @@ namespace HunterExpansion.CustomEffects
             Vector2 smoothPos = Vector2.Lerp(lastPos, pos, timeStacker);
             insideLozengeMeshRenderer.DrawSprites(sLeaser, rCam, timeStacker, camPos, smoothPos);
 
-            for(int i = 0;i < smallLozengeMeshRenderers.Count;i++)
+            for (int i = 0; i < smallLozengeMeshRenderers.Count; i++)
             {
                 smallLozengeMeshRenderers[i].DrawSprites(sLeaser, rCam, timeStacker, camPos, smoothPos);
             }
 
-            if(testLabel != null)
+            if (testLabel != null)
             {
                 testLabel.SetPosition(pos - camPos + new Vector2(50f, -50f));
             }
@@ -340,7 +337,7 @@ namespace HunterExpansion.CustomEffects
                     if (!value)
                     {
                         counter = 0;
-                        foreach(var track in tracks)
+                        foreach (var track in tracks)
                             track.Update(counter);
                     }
                 }
@@ -395,7 +392,7 @@ namespace HunterExpansion.CustomEffects
 
             void InitSmallLozengesAnimation()
             {
-                for(int i = 0;i < effect.smallLozengeMeshes.Count;i++)
+                for (int i = 0; i < effect.smallLozengeMeshes.Count; i++)
                 {
                     int localIndex = i;
                     var scaleTrack = new Track<float>(
@@ -439,7 +436,7 @@ namespace HunterExpansion.CustomEffects
             {
                 if (!enable)
                     return;
-                foreach(var track in tracks)
+                foreach (var track in tracks)
                 {
                     track.Update(counter);
                 }
@@ -454,7 +451,7 @@ namespace HunterExpansion.CustomEffects
                 public AnimationTimeLine timeLine;
 
                 public Action<T> SetValue;
-                public Func<T,T,float,T> LerpValue;
+                public Func<T, T, float, T> LerpValue;
 
                 public T defaultValue;
 
@@ -480,7 +477,7 @@ namespace HunterExpansion.CustomEffects
                     KeyValuePair<int, T> currentFrame = keyFrames[0];
                     KeyValuePair<int, T> nextFrame = keyFrames[0];
 
-                    for(int i = 0;i < keyFrames.Count - 1; i++)
+                    for (int i = 0; i < keyFrames.Count - 1; i++)
                     {
                         if (keyFrames[i].Key <= counter && keyFrames[i + 1].Key >= counter)
                         {
@@ -489,12 +486,12 @@ namespace HunterExpansion.CustomEffects
                         }
                     }
 
-                    if(counter >= keyFrames.Last().Key)
+                    if (counter >= keyFrames.Last().Key)
                     {
                         currentFrame = nextFrame = keyFrames.Last();
                     }
 
-                    if(currentFrame.Key == nextFrame.Key)
+                    if (currentFrame.Key == nextFrame.Key)
                     {
                         SetValue.Invoke(nextFrame.Value);
                     }
@@ -513,9 +510,9 @@ namespace HunterExpansion.CustomEffects
                 void Update(int counter);
             }
 
-            static float EaseInOutCubic(float x) 
+            static float EaseInOutCubic(float x)
             {
-                return x< 0.5 ? 4 * x* x* x : 1 - Mathf.Pow(-2 * x + 2, 3) / 2;
+                return x < 0.5 ? 4 * x * x * x : 1 - Mathf.Pow(-2 * x + 2, 3) / 2;
             }
         }
     }

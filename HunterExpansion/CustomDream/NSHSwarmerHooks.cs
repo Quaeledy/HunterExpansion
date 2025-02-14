@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HunterExpansion.CustomOracle;
 using UnityEngine;
-using RWCustom;
-using HunterExpansion.CustomOracle;
-using Random = UnityEngine.Random;
 
 namespace HunterExpansion
 {
@@ -177,7 +170,7 @@ namespace HunterExpansion
 
         public static Color NSHSwarmer_Color(NSHSwarmer self)
         {
-            Color newColor = Color.Lerp(self.myColor, NSHOracleColor.Purple, ((float) colorCount) / ((float) colorCycle));
+            Color newColor = Color.Lerp(self.myColor, NSHOracleColor.Purple, ((float)colorCount) / ((float)colorCycle));
             return newColor;
         }
         /*

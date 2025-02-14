@@ -1,17 +1,13 @@
-﻿using HunterExpansion.CustomOracle;
+﻿using HunterExpansion.CustomEffects;
+using HunterExpansion.CustomOracle;
 using HunterExpansion.CustomSave;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using MoreSlugcats;
-using UnityEngine;
-using RWCustom;
-using HunterExpansion.CustomEffects;
-using MonoMod.Cil;
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using MoreSlugcats;
+using RWCustom;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace HunterExpansion.CustomEnding

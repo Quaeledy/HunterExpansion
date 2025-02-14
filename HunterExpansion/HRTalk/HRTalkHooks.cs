@@ -1,12 +1,12 @@
 ﻿using HunterExpansion.CustomOracle;
 using HunterExpansion.CustomSave;
-using MonoMod.Cil;
-using System;
-using UnityEngine;
 //using Debug = UnityEngine.Debug;
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MoreSlugcats;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace HunterExpansion.HRTalk
@@ -74,7 +74,7 @@ namespace HunterExpansion.HRTalk
                     c.EmitDelegate<Action>(() =>
                     {
                         if (!NSHHasSpawn)
-                            NSHOracleRegistry.currentLoadingRoom = "HR_AI"; 
+                            NSHOracleRegistry.currentLoadingRoom = "HR_AI";
                         if (!SRSHasSpawn)
                             SRSOracleRegistry.currentLoadingRoom = "HR_AI";
                     });
@@ -207,7 +207,7 @@ namespace HunterExpansion.HRTalk
         private static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-            
+
             NSHHasSpawn = false;
             SRSHasSpawn = false;
         }
@@ -245,7 +245,7 @@ namespace HunterExpansion.HRTalk
                         {
                             if ((physicalObject as Oracle).ID == NSHOracleRegistry.NSHOracle)
                             {
-                                NSHHasSpawn = true; 
+                                NSHHasSpawn = true;
                                 Plugin.Log("NSH oracle has spawn!");
                                 break;
                             }
@@ -261,7 +261,7 @@ namespace HunterExpansion.HRTalk
                 if (oracleHasSpawn && !NSHHasSpawn)//如果之前的迭代器已经生成了，但NSH还没生成
                     NSHOracleRegistry.currentLoadingRoom = "HR_AI";
                 else
-                    NSHOracleRegistry.currentLoadingRoom = "NSH_AI"; 
+                    NSHOracleRegistry.currentLoadingRoom = "NSH_AI";
                 if (oracleHasSpawn && !SRSHasSpawn)//如果之前的迭代器已经生成了，但SRS还没生成
                     SRSOracleRegistry.currentLoadingRoom = "HR_AI";
                 else

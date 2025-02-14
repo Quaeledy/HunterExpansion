@@ -1,21 +1,11 @@
 ﻿using BepInEx.Logging;
-using HunterExpansion.CustomDream;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using HUD;
-using Menu;
 using HunterExpansion.CustomSave;
-using MoreSlugcats;
-using JollyCoop.JollyHUD;
-using RWCustom;
-using HunterExpansion.CustomEnding;
+using Menu;
 using MonoMod.RuntimeDetour;
-using System.Reflection;
+using MoreSlugcats;
 using System.Globalization;
+using System.Reflection;
 
 namespace HunterExpansion
 {
@@ -67,7 +57,7 @@ namespace HunterExpansion
         //业力门封锁图案
         public static void Map_ctor(On.HUD.Map.orig_ctor orig, Map self, HUD.HUD hud, Map.MapData mapData)
         {
-            orig(self, hud, mapData); 
+            orig(self, hud, mapData);
             SaveState saveState = null;
             if (hud.owner.GetOwnerType() == HUD.HUD.OwnerType.Player || hud.owner.GetOwnerType() == HUD.HUD.OwnerType.FastTravelScreen || hud.owner.GetOwnerType() == HUD.HUD.OwnerType.RegionOverview || (ModManager.MSC && hud.owner.GetOwnerType() == MoreSlugcatsEnums.OwnerType.SafariOverseer))
             {

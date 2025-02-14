@@ -1,19 +1,18 @@
-﻿using static CustomOracleTx.CustomOracleBehaviour;
-using MoreSlugcats;
+﻿using MoreSlugcats;
 using UnityEngine;
-using HunterExpansion.CustomEffects;
+using static CustomOracleTx.CustomOracleBehaviour;
 using OraclePanicDisplay = HunterExpansion.CustomEffects.OraclePanicDisplay;
 
 namespace HunterExpansion.CustomOracle
 {
     public class NSHOracleMeetSaint : NSHConversationBehaviour
     {
-        public OraclePanicDisplay panicObject; 
+        public OraclePanicDisplay panicObject;
         public int panicTimer;
         public int timeUntilNextPanic;
         public float lastGetToWork;
         public float lowGravity;
-        public bool gravOn; 
+        public bool gravOn;
         public bool firstMetOnThisCycle;
 
         public override bool Gravity

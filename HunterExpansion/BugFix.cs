@@ -1,19 +1,15 @@
-﻿using UnityEngine;
-using HUD;
+﻿using CustomDreamTx;
+using HunterExpansion.CustomDream;
+using HunterExpansion.CustomOracle;
+using HunterExpansion.CustomSave;
+using Menu;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MoreSlugcats;
 using RWCustom;
-using MonoMod.Cil;
-using Mono.Cecil.Cil;
 using System;
-using MonoMod;
-using HunterExpansion.CustomOracle;
-using Menu;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using CustomDreamTx;
-using CustomSaveTx;
-using HunterExpansion.CustomSave;
-using HunterExpansion.CustomDream;
 
 namespace HunterExpansion
 {
@@ -146,7 +142,7 @@ namespace HunterExpansion
                     c.Emit(OpCodes.Ldloc_S, (byte)14);
                     c.EmitDelegate<Func<bool, FastTravelScreen, int, bool>>((flag, self, num3) =>
                     {
-                        return flag || 
+                        return flag ||
                                (Regex.Split(self.currentShelter, "_")[0] == "NSH" &&
                                 self.allRegions[self.accessibleRegions[num3]].name == self.currentShelter.Substring(0, 3));
                     });
@@ -313,7 +309,7 @@ namespace HunterExpansion
                         if (TravelDreamRegistry.modifyScribbleDreamScreen)
                         {
                             TravelDreamRegistry.modifyScribbleDreamScreen = false;
-                            self.currentMainLoop = new DreamScreen(self); 
+                            self.currentMainLoop = new DreamScreen(self);
                         }
                     });
                 }
@@ -379,7 +375,7 @@ namespace HunterExpansion
         private static void Custom_Log(On.RWCustom.Custom.orig_Log orig, params string[] values)
         {
             orig(values);
-            for(int i = 0; i < values.Length; i++)
+            for (int i = 0; i < values.Length; i++)
                 Plugin.Log("Custom_Log: " + values[i]);
         }
 
@@ -444,7 +440,7 @@ namespace HunterExpansion
 
         private static void SpecialEvent_Activate(On.Conversation.SpecialEvent.orig_Activate orig, Conversation.SpecialEvent self)
         {
-            orig(self); 
+            orig(self);
             if (self.owner.interfaceOwner is NSHOracleBehaviour)
                 (self.owner.interfaceOwner as NSHOracleBehaviour).SpecialEvent(self.eventName);
         }
@@ -459,7 +455,7 @@ namespace HunterExpansion
                     dream.focusSlugcat = saveState.saveStateNumber;
                 }
             }
-            if ((denPosition == "GATE_NSH_DGL" || denPosition == "GATE_SB_OE" || denPosition == "GATE_OE_SU") && 
+            if ((denPosition == "GATE_NSH_DGL" || denPosition == "GATE_SB_OE" || denPosition == "GATE_OE_SU") &&
                 !TravelCompletedSave.travelCompleted)
             {
                 cyclesSinceLastFamilyDream = 0;//屏蔽FamilyDream计数，防止被原本的方法干扰
@@ -469,9 +465,9 @@ namespace HunterExpansion
 
         private static float OverseerAbstractAI_HowInterestingIsCreature(On.OverseerAbstractAI.orig_HowInterestingIsCreature orig, OverseerAbstractAI self, AbstractCreature testCrit)
         {
-            if (testCrit == null || 
-                testCrit.realizedCreature == null || 
-                testCrit.realizedCreature.room == null || 
+            if (testCrit == null ||
+                testCrit.realizedCreature == null ||
+                testCrit.realizedCreature.room == null ||
                 testCrit.realizedCreature.room.IsGateRoom())
                 return 0f;
             return orig(self, testCrit);

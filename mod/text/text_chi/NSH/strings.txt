@@ -104,6 +104,8 @@ What is it again?|又是什么东西？
 
 //NSH解读的火虫卵被拿走时
 Oh, of course, you can take it away anytime!|噢，当然，你可以随时拿走它！
+//NSH保管的奇点炸弹被拿走时
+You can take it, but don't attack me anymore.|你可以拿走，但不要再攻击我了。
 
 //NSH解读SL_chimney珍珠补充内容
 I have to say, you are really cute!|我得说，你们真的很可爱！

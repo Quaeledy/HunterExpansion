@@ -1,19 +1,9 @@
-﻿using BepInEx.Logging;
+﻿using HunterExpansion.CustomSave;
 using MonoMod.RuntimeDetour;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using MoreSlugcats;
+using System.IO;
+using System.Reflection;
 using UnityEngine;
-using HunterExpansion.CustomSave;
-using Expedition;
-using RWCustom;
-using System.Globalization;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace HunterExpansion.CustomEnding
 {
@@ -149,8 +139,8 @@ namespace HunterExpansion.CustomEnding
             }
             bool result = orig(self);
             //NSH封锁了业力门
-            if (self.room.world.region.name == "NSH" && 
-                self.room.abstractRoom.name.Contains("AVA") || 
+            if (self.room.world.region.name == "NSH" &&
+                self.room.abstractRoom.name.Contains("AVA") ||
                 (self.room.abstractRoom.name.Contains("DGL") && self.karmaRequirements[(!self.letThroughDir) ? 1 : 0] == HunterExpansionEnums.GateRequirement.NSHLock))
             {
                 return HunterExpansionEnums.GateRequirement.customNSHGateRequirements(self);
@@ -175,7 +165,7 @@ namespace HunterExpansion.CustomEnding
             Plugin.Log("Get Proper Region Acronym (Orinal): " + baseAcronym);
             string result = orig(character, baseAcronym);
             string text = baseAcronym;
-            if (PearlFixedSave.pearlFixed && 
+            if (PearlFixedSave.pearlFixed &&
                 (EndingSession.openGate || (character != Plugin.SlugName && EndingSession.openCount > 0))
                 && text == "OE")
             {

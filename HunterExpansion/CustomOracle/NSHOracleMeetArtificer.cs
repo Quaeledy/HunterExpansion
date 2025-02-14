@@ -1,6 +1,5 @@
-﻿using UnityEngine;
+﻿using MoreSlugcats;
 using static CustomOracleTx.CustomOracleBehaviour;
-using MoreSlugcats;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -20,7 +19,7 @@ namespace HunterExpansion.CustomOracle
         public override void Update()
         {
             base.Update();
-            if (player == null || oracle.room == null || !(oracle.room.world.game.session is StoryGameSession)) 
+            if (player == null || oracle.room == null || !(oracle.room.world.game.session is StoryGameSession))
                 return;
             if (oracle.room.world.game.session.characterStats.name != MoreSlugcatsEnums.SlugcatStatsName.Artificer)
             {
