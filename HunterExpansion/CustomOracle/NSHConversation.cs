@@ -2,6 +2,7 @@
 using CustomOracleTx;
 using CustomRegions.Mod;
 using HUD;
+using HunterExpansion.CustomCollections;
 using HunterExpansion.CustomDream;
 using HunterExpansion.CustomSave;
 using MoreSlugcats;
@@ -13,7 +14,9 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 using Random = UnityEngine.Random;
+using CustomRegions.Collectables;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -935,6 +938,7 @@ namespace HunterExpansion.CustomOracle
             LoadEventsFromFile(self, fileName, subfolderName, currentSaveFile, suffix, oneRandomLine, randomSeed);
         }
 
+        //常规读取
         public static void LoadEventsFromFile(Conversation self, int fileName, string subfolderName, SlugcatStats.Name currentSaveFile, string suffix = null, bool oneRandomLine = false, int randomSeed = 0)
         {
             Plugin.Log("~~~LOAD CONVO " + subfolderName + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + (suffix == null ? "" : "-" + suffix.ToString()));
@@ -1035,7 +1039,7 @@ namespace HunterExpansion.CustomOracle
                 languageID = InGameTranslator.LanguageID.English;
             }
             return;
-        IL_117:
+            IL_117:
             Plugin.Log("FOUND FILE!!! Load from flie: " + text);
             string text3 = File.ReadAllText(text, Encoding.UTF8);
             if (text3[0] != '0')
@@ -1154,7 +1158,8 @@ namespace HunterExpansion.CustomOracle
                 UnityEngine.Debug.LogException(e);
             }
         }
-
+        
+        //房间旁白读取
         public static void LoadEventsFromFile(RoomChatTx self, int fileName, string subfolderName, DialogBox dialogBox, string suffix = null, bool oneRandomLine = false, int randomSeed = 0)
         {
             Plugin.Log("~~~LOAD CONVO " + subfolderName + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + (suffix == null ? "" : "-" + suffix.ToString()));
@@ -1170,34 +1175,14 @@ namespace HunterExpansion.CustomOracle
                     string text2 = text;
                     text = AssetManager.ResolveFilePath(string.Concat(new string[]
                     {
-                    self.room.game.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
-                    Path.DirectorySeparatorChar.ToString(),
-                    subfolderName,
-                    Path.DirectorySeparatorChar.ToString(),
-                    fileName.ToString(),
-                    "-",
-                    suffix,
-                    ".txt"
-                    }));
-                    if (!File.Exists(text))
-                    {
-                        Plugin.Log("NOT FOUND " + text);
-                        text = text2;
-                    }
-                }
-                if (suffix != null)
-                {
-                    string text2 = text;
-                    text = AssetManager.ResolveFilePath(string.Concat(new string[]
-                    {
-                    self.room.game.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
-                    Path.DirectorySeparatorChar.ToString(),
-                    subfolderName,
-                    Path.DirectorySeparatorChar.ToString(),
-                    fileName.ToString(),
-                    "-",
-                    suffix,
-                    ".txt"
+                        self.room.game.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                        Path.DirectorySeparatorChar.ToString(),
+                        subfolderName,
+                        Path.DirectorySeparatorChar.ToString(),
+                        fileName.ToString(),
+                        "-",
+                        suffix,
+                        ".txt"
                     }));
                     if (!File.Exists(text))
                     {
@@ -1218,7 +1203,7 @@ namespace HunterExpansion.CustomOracle
                 languageID = InGameTranslator.LanguageID.English;
             }
             return;
-        IL_117:
+            IL_117:
             Plugin.Log("FOUND FILE!!! Load from flie: " + text);
             string text3 = File.ReadAllText(text, Encoding.UTF8);
             if (text3[0] != '0')
@@ -1336,6 +1321,238 @@ namespace HunterExpansion.CustomOracle
                 self.events.Add(new RoomChatTx.TextEvent(self, "TEXT ERROR", dialogBox, 0, 100));
                 UnityEngine.Debug.LogException(e);
             }
+        }
+        
+        //CRS特供
+        public static void LoadEventsFromFileForCRS(Conversation self, CollectionsMenu.PearlReadContext reader, SlugcatStats.Name saveFile, string fileName)
+        {
+            bool inReaderFolder = false;
+            bool hasSuffixFile = false;
+            string saveFileSuffix = (saveFile == null ? "" : "-" + saveFile.value);
+            if (reader == CollectionsMenuHooks.PearlReadContext_NSH)
+                fileName = "0-" + fileName;
+            if (reader != null)
+            {
+                hasSuffixFile = File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+                {
+                   self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
+                    Path.DirectorySeparatorChar,
+                    reader.ToString(),
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    saveFileSuffix,
+                    ".txt"
+                }))) || 
+                File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+                {
+                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
+                    Path.DirectorySeparatorChar.ToString(),
+                    reader.ToString(),
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    saveFileSuffix,
+                    ".txt"
+                })));
+
+                inReaderFolder = hasSuffixFile ||
+                File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+                {
+                   self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
+                    Path.DirectorySeparatorChar,
+                    reader.ToString(),
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    ".txt"
+                }))) ||
+                File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+                {
+                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
+                    Path.DirectorySeparatorChar.ToString(),
+                    reader.ToString(),
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    ".txt"
+                })));
+            }
+            else
+            {
+                hasSuffixFile = File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+                {
+                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    saveFileSuffix,
+                    ".txt"
+                }))) || File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+                {
+                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    saveFileSuffix,
+                    ".txt"
+                })));
+            }
+
+            string subfolderName = (inReaderFolder ? Path.DirectorySeparatorChar.ToString() + reader.ToString() : "");
+            string suffix = (hasSuffixFile ? saveFileSuffix : "");
+            Plugin.Log("~~~LOAD CONVO " + subfolderName + fileName.ToString() + saveFileSuffix);
+
+            InGameTranslator.LanguageID languageID = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage;
+            string path;
+            for (; ; )
+            {
+                path = AssetManager.ResolveFilePath(string.Concat(new string[]
+                {
+                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                    subfolderName,
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    suffix,
+                    ".txt"
+                }));
+                if (File.Exists(path))
+                {
+                    goto IL_117;
+                }
+                Plugin.Log("NOT FOUND " + path);
+                if (languageID == InGameTranslator.LanguageID.English)
+                {
+                    break;
+                }
+                Plugin.Log("RETRY WITH ENGLISH");
+                languageID = InGameTranslator.LanguageID.English;
+            }
+            return;
+            IL_117:
+            Plugin.Log("FOUND FILE!!! Load from flie: " + path);
+            string[] array = new string[] {};
+            //NSH的文件使用游戏的方法来解密
+            if (reader == CollectionsMenuHooks.PearlReadContext_NSH)
+            {
+                string text3 = File.ReadAllText(path, Encoding.UTF8);
+                if (text3[0] != '0')
+                {
+                    text3 = Custom.xorEncrypt(text3, 54 + 0 + (int)self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage * 7);
+                }
+                array = Regex.Split(ReplaceParts(self, saveFile, text3), "\r\n");
+            }
+            //CRS的文件使用CRS的解密
+            else
+            {/*
+                var Encryption = Type.GetType("CustomRegions.Collectables.Encryption,CustomRegionsSupport", true);
+                var DecryptCustomTextInfo = Encryption.GetMethod("DecryptCustomText", BindingFlags.Static | BindingFlags.Public);
+                object[] parameters = { path, languageID, fileName };
+                text3 = (string)DecryptCustomTextInfo.Invoke(null, parameters);
+                array = Regex.Split(text3, "\r\n");
+                CustomRegions.Collectables.CustomConvo.ParseConvoText(self, array, false, 0);*/
+                string text = InGameTranslator.EncryptDecryptFile(path, false, true);
+                array = Regex.Split(text, "\n|\r\n|\r");
+            }
+
+            try
+            {
+                if (Regex.Split(array[0], "-").Length <= 1)
+                {
+                    Plugin.Log("Text Error! Read as: " + Regex.Split(array[0], "-")[0]);
+                    return;
+                }
+                if ((reader == CollectionsMenuHooks.PearlReadContext_NSH && Regex.Split(array[0], "-")[1] == "0") ||
+                    (reader != CollectionsMenuHooks.PearlReadContext_NSH && Regex.Split(array[0], "-")[1] == fileName))
+                {
+                    for (int j = 1; j < array.Length; j++)
+                    {
+                        string[] array3 = LocalizationTranslator.ConsolidateLineInstructions(array[j]);
+                        if (array3.Length == 3)
+                        {
+                            int num;
+                            int num2;
+                            if (ModManager.MSC && !int.TryParse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture, out num) && int.TryParse(array3[2], NumberStyles.Any, CultureInfo.InvariantCulture, out num2))
+                            {
+                                self.events.Add(new Conversation.TextEvent(self, int.Parse(array3[0], NumberStyles.Any, CultureInfo.InvariantCulture), array3[1], int.Parse(array3[2], NumberStyles.Any, CultureInfo.InvariantCulture)));
+                            }
+                            else
+                            {
+                                self.events.Add(new Conversation.TextEvent(self, int.Parse(array3[0], NumberStyles.Any, CultureInfo.InvariantCulture), array3[2], int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
+                            }
+                        }
+                        else if (array3.Length == 2)
+                        {
+                            if (array3[0] == "SPECEVENT")
+                            {
+                                Plugin.Log("SPECEVENT : " + array3[1]);
+                                self.events.Add(new Conversation.SpecialEvent(self, 0, array3[1]));
+                            }
+                            else if (array3[0] == "PEBBLESWAIT")
+                            {
+                                Plugin.Log("WAIT : " + int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture));
+                                if (self is NSHConversation)
+                                    self.events.Add(new NSHConversation.PauseAndWaitForStillEvent(self, null, int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
+                                else
+                                    self.events.Add(new SSOracleBehavior.PebblesConversation.PauseAndWaitForStillEvent(self, null, int.Parse(array3[1], NumberStyles.Any, CultureInfo.InvariantCulture)));
+                                //备注：文件中的时间约为代码中的8倍。
+                            }
+                        }
+                        else if (array3.Length == 1 && array3[0].Length > 0)
+                        {
+                            self.events.Add(new Conversation.TextEvent(self, 0, array3[0], 0));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Plugin.Log("TEXT ERROR");
+                self.events.Add(new Conversation.TextEvent(self, 0, "TEXT ERROR", 100));
+                UnityEngine.Debug.LogException(e);
+            }
+        }
+
+        public static bool EventsFileExistsForCRS(RainWorld rw, string fileName, CollectionsMenu.PearlReadContext reader = null, SlugcatStats.Name saveFile = null)
+        {
+            bool result = false;
+            bool inTextFolder = false;
+            bool inReaderFolder = false;
+            string saveFileSuffix = (saveFile == null ? "" : "-" + saveFile.value);
+            if (reader != null)
+            {
+                string subfolderName = reader.ToString();
+                inReaderFolder = File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+                {
+                    rw.inGameTranslator.SpecificTextFolderDirectory(),
+                    Path.DirectorySeparatorChar,
+                    subfolderName,
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    saveFileSuffix,
+                    ".txt"
+                }))) || File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+                {
+                    rw.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
+                    Path.DirectorySeparatorChar.ToString(),
+                    subfolderName,
+                    Path.DirectorySeparatorChar.ToString(),
+                    fileName,
+                    saveFileSuffix,
+                    ".txt"
+                })));
+            }
+            inTextFolder = File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+            {
+                rw.inGameTranslator.SpecificTextFolderDirectory(),
+                Path.DirectorySeparatorChar.ToString(),
+                fileName,
+                saveFileSuffix,
+                ".txt"
+            }))) || File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
+            {
+                rw.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
+                Path.DirectorySeparatorChar.ToString(),
+                fileName,
+                saveFileSuffix,
+                ".txt"
+            })));
+            result = inTextFolder || inReaderFolder;
+            return result;
         }
 
         public static SLOracleBehaviorHasMark.MiscItemType TypeOfMiscItem(PhysicalObject testItem)

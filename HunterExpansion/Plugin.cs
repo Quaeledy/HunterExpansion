@@ -21,7 +21,7 @@ using System.Security.Permissions;
 
 namespace HunterExpansion
 {
-    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.0")]
+    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.2")]
     public class Plugin : BaseUnityPlugin
     {
         static public readonly string MOD_ID = "Quaeledy.hunterexpansion";

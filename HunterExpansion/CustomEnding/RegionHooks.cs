@@ -146,8 +146,7 @@ namespace HunterExpansion.CustomEnding
                 return HunterExpansionEnums.GateRequirement.customNSHGateRequirements(self);
             }
             //珍珠解锁业力门
-            if ((self.room.game.session as StoryGameSession).saveStateNumber == SlugcatStats.Name.Red &&
-                EndingSession.openGate && EndingSession.openGateName == self.room.abstractRoom.name && self.EnergyEnoughToOpen)
+            if (EndingSession.openGate && EndingSession.openGateName == self.room.abstractRoom.name && self.EnergyEnoughToOpen)
             {
                 return true;
             }

@@ -14,7 +14,7 @@ namespace HunterExpansion.CustomCollections
 {
     public class CollectionsMenuHooks
     {
-        private static readonly CollectionsMenu.PearlReadContext PearlReadContext_NSH = new CollectionsMenu.PearlReadContext("NSH", true);
+        public static readonly CollectionsMenu.PearlReadContext PearlReadContext_NSH = new CollectionsMenu.PearlReadContext("NSH", true);
         private static readonly SlugcatStats.Name NSH = new SlugcatStats.Name("NSH", false);
         static bool flag_NSH_1 = false;
         static bool flag_NSH_2 = false;
@@ -258,9 +258,16 @@ namespace HunterExpansion.CustomCollections
 
         public static void CollectionsMenu_Singal(On.MoreSlugcats.CollectionsMenu.orig_Singal orig, CollectionsMenu self, MenuObject sender, string message)
         {
+            if (message.Contains("PEARL"))
+            {
+                self.selectedPearlInd = int.Parse(message.Substring(5), NumberStyles.Any, CultureInfo.InvariantCulture);
+            }
             DataPearl.AbstractDataPearl.DataPearlType dataPearlType = self.usedPearlTypes[self.selectedPearlInd];
             if (DecipheredNSHPearlsSave.GetCollectionReadableNSHPearls().Contains(dataPearlType))
-                CollectionsMenu_Singal_ForNSHPearl(self, sender, message);
+            {
+                Plugin.Log("Use SingalForCRS to singal DataPearl: " + dataPearlType.ToString());
+                SingalForCRS(self, sender, message);
+            }
             else
                 orig(self, sender, message);
 
@@ -345,12 +352,10 @@ namespace HunterExpansion.CustomCollections
         {
             Conversation.ID a = NSHConversation.ModDataPearlToConversation(type);
             string result = a.ToString();
-            Plugin.Log("type.ToString(): " + type.ToString());
-            Plugin.Log("a.ToString(): " + a.ToString());
             return result;
         }
 
-        public static void CollectionsMenu_Singal_ForNSHPearl(CollectionsMenu self, MenuObject sender, string message)
+        public static void SingalForCRS(CollectionsMenu self, MenuObject sender, string message)
         {
             if (message == "BACK")
             {
@@ -406,11 +411,11 @@ namespace HunterExpansion.CustomCollections
                 DataPearl.AbstractDataPearl.DataPearlType dataPearlType = self.usedPearlTypes[self.selectedPearlInd];
                 int num3 = 0;
                 int num4 = -1;
-                string suffix = NSHDataPearlToFileID(dataPearlType);
+                string fileName = NSHDataPearlToFileID(dataPearlType);
                 CollectionsMenu.PearlReadContext a = CollectionsMenu.PearlReadContext.UnreadMoon;
                 if (message.Contains("PEARL"))
                 {
-                    a = self.AddIteratorButtons(num3, num4);
+                    a = AddIteratorButtonsForCRS(self, fileName);
                     if (a == CollectionsMenu.PearlReadContext.UnreadPebbles)
                     {
                         a = CollectionsMenu.PearlReadContext.UnreadMoon;
@@ -466,15 +471,14 @@ namespace HunterExpansion.CustomCollections
                 {
                     saveFile = Plugin.SlugName;
                 }
-                CollectionsMenu_InitLabelsFromPearlFile_ForNSHPearl(self, num3, saveFile, suffix);
+                InitLabelsFromPearlFileForCRS(self, a, saveFile, fileName);
             }
         }
 
-
-        public static void CollectionsMenu_InitLabelsFromPearlFile_ForNSHPearl(CollectionsMenu self, int id, SlugcatStats.Name saveFile, string suffix)
+        public static void InitLabelsFromPearlFileForCRS(CollectionsMenu self, CollectionsMenu.PearlReadContext reader, SlugcatStats.Name saveFile, string fileName)
         {
             CollectionsMenu.ConversationLoader conversationLoader = new CollectionsMenu.ConversationLoader(self);
-            NSHConversation.LoadEventsFromFile(conversationLoader, id, "NSH", saveFile, suffix);
+            NSHConversation.LoadEventsFromFileForCRS(conversationLoader, reader, saveFile, fileName);
             List<string> list = new List<string>();
             for (int i = 0; i < conversationLoader.events.Count; i++)
             {
@@ -484,6 +488,168 @@ namespace HunterExpansion.CustomCollections
                 }
             }
             self.InitLabelsFromChatlog(list.ToArray());
+        }
+
+        public static CollectionsMenu.PearlReadContext AddIteratorButtonsForCRS(CollectionsMenu self, string fileName)
+        {
+            bool flag = self.DMStoryFinished();
+            bool flag2 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName);
+            bool flag3 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName, CollectionsMenu.PearlReadContext.PastMoon, MoreSlugcatsEnums.SlugcatStatsName.Spear);
+            bool flag4 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName, CollectionsMenu.PearlReadContext.FutureMoon, MoreSlugcatsEnums.SlugcatStatsName.Saint);
+            bool flag5 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName, CollectionsMenu.PearlReadContext.Pebbles, MoreSlugcatsEnums.SlugcatStatsName.Artificer);
+            bool flag6 = false;//pebAltPearlIndex != -1 && Conversation.EventsFileExists(self.rainWorld, pebAltPearlIndex);
+            bool flag7 = flag2 && (self.debug_enableAllButtons || self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]));
+            bool flag8 = flag4 && (self.debug_enableAllButtons || self.manager.rainWorld.progression.miscProgressionData.GetFuturePearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]));
+            bool flag9 = flag3 && (self.debug_enableAllButtons || self.manager.rainWorld.progression.miscProgressionData.GetDMPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]) || (flag && self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd])));
+            bool flag10 = (flag5 || flag6) && (self.debug_enableAllButtons || self.manager.rainWorld.progression.miscProgressionData.GetPebblesPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]));
+            if (flag2 && !flag4 && self.manager.rainWorld.progression.miscProgressionData.GetFuturePearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]))
+            {
+                flag7 = true;
+            }
+            if (flag2 && !flag5 && !flag6 && self.manager.rainWorld.progression.miscProgressionData.GetPebblesPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]))
+            {
+                flag7 = true;
+            }
+            if (flag2 && !flag3 && self.manager.rainWorld.progression.miscProgressionData.GetDMPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]))
+            {
+                flag7 = true;
+            }
+            bool flag_NSH_1 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName, PearlReadContext_NSH);
+            bool flag_NSH_2 = flag_NSH_1 && 
+                (self.debug_enableAllButtons || DecipheredNSHPearlsSave.GetNSHPearlDeciphered(self.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]));// || (flag && self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]))); ;
+            if (flag2 && !flag_NSH_1 && DecipheredNSHPearlsSave.GetNSHPearlDeciphered(self.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]))
+            {
+                flag7 = true;
+            }
+            self.ClearIteratorButtons();
+            int num = 0;
+            if (flag2)
+            {
+                num++;
+            }
+            if (flag3)
+            {
+                num++;
+            }
+            if (flag5 || flag6)
+            {
+                num++;
+            }
+            if (flag4)
+            {
+                num++;
+            }
+            if (flag_NSH_1)
+            {
+                num++;
+            }
+            if (num == 0)
+            {
+                return CollectionsMenu.PearlReadContext.UnreadMoon;
+            }
+            self.iteratorSprites = new FSprite[num];
+            self.iteratorButtons = new SimpleButton[num];
+            int num2 = 0;
+            float num3 = 10f;
+            float num4 = 42f;
+            Vector2 vector = new Vector2((float)((int)(self.textBoxBorder.pos.x + self.textBoxBorder.size.x - num4 - 20f)), (float)((int)(self.textBoxBorder.pos.y + self.textBoxBorder.size.y - num4 - 20f)));
+            CollectionsMenu.PearlReadContext pearlReadContext = CollectionsMenu.PearlReadContext.UnreadMoon;
+            if (flag2)
+            {
+                self.iteratorButtons[num2] = new SimpleButton(self, self.pages[0], "", "TYPE_MOON", new Vector2((float)((int)(vector.x - (num3 + num4) * (float)num2)), vector.y), new Vector2(num4, num4));
+                self.iteratorButtons[num2].buttonBehav.greyedOut = !flag7;
+                self.iteratorSprites[num2] = new FSprite(flag7 ? "GuidanceMoon" : "Sandbox_SmallQuestionmark", true);
+                self.iteratorSprites[num2].x = (float)((int)(self.iteratorButtons[num2].pos.x + self.iteratorButtons[num2].size.x / 2f - (1366f - self.manager.rainWorld.options.ScreenSize.x) / 2f));
+                self.iteratorSprites[num2].y = (float)((int)(self.iteratorButtons[num2].pos.y + self.iteratorButtons[num2].size.y / 2f));
+                self.pages[0].subObjects.Add(self.iteratorButtons[num2]);
+                self.pages[0].Container.AddChild(self.iteratorSprites[num2]);
+                if (pearlReadContext == CollectionsMenu.PearlReadContext.UnreadMoon && flag7)
+                {
+                    self.iteratorButtons[num2].toggled = true;
+                    pearlReadContext = CollectionsMenu.PearlReadContext.StandardMoon;
+                }
+                num2++;
+            }
+            if (flag3)
+            {
+                self.iteratorButtons[num2] = new SimpleButton(self, self.pages[0], "", "TYPE_DM", new Vector2((float)((int)(vector.x - (num3 + num4) * (float)num2)), vector.y), new Vector2(num4, num4));
+                self.iteratorButtons[num2].buttonBehav.greyedOut = !flag9;
+                self.iteratorSprites[num2] = new FSprite(flag9 ? "GuidanceMoon" : "Sandbox_SmallQuestionmark", true);
+                self.iteratorSprites[num2].color = Color.yellow;
+                self.iteratorSprites[num2].x = (float)((int)(self.iteratorButtons[num2].pos.x + self.iteratorButtons[num2].size.x / 2f - (1366f - self.manager.rainWorld.options.ScreenSize.x) / 2f));
+                self.iteratorSprites[num2].y = (float)((int)(self.iteratorButtons[num2].pos.y + self.iteratorButtons[num2].size.y / 2f));
+                self.pages[0].subObjects.Add(self.iteratorButtons[num2]);
+                self.pages[0].Container.AddChild(self.iteratorSprites[num2]);
+                if (pearlReadContext == CollectionsMenu.PearlReadContext.UnreadMoon && flag9)
+                {
+                    self.iteratorButtons[num2].toggled = true;
+                    pearlReadContext = CollectionsMenu.PearlReadContext.PastMoon;
+                }
+                num2++;
+            }
+            if (flag5 || flag6)
+            {
+                self.iteratorButtons[num2] = new SimpleButton(self, self.pages[0], "", "TYPE_PEBBLES", new Vector2((float)((int)(vector.x - (num3 + num4) * (float)num2)), vector.y), new Vector2(num4, num4));
+                self.iteratorButtons[num2].buttonBehav.greyedOut = !flag10;
+                self.iteratorSprites[num2] = new FSprite(flag10 ? "GuidancePebbles" : "Sandbox_SmallQuestionmark", true);
+                self.iteratorSprites[num2].color = new Color(0.44705883f, 0.9019608f, 0.76862746f);
+                self.iteratorSprites[num2].x = (float)((int)(self.iteratorButtons[num2].pos.x + self.iteratorButtons[num2].size.x / 2f - (1366f - self.manager.rainWorld.options.ScreenSize.x) / 2f));
+                self.iteratorSprites[num2].y = (float)((int)(self.iteratorButtons[num2].pos.y + self.iteratorButtons[num2].size.y / 2f));
+                self.pages[0].subObjects.Add(self.iteratorButtons[num2]);
+                self.pages[0].Container.AddChild(self.iteratorSprites[num2]);
+                if (pearlReadContext == CollectionsMenu.PearlReadContext.UnreadMoon && flag10)
+                {
+                    self.iteratorButtons[num2].toggled = true;
+                    if (flag5)
+                    {
+                        pearlReadContext = CollectionsMenu.PearlReadContext.Pebbles;
+                    }
+                    else
+                    {
+                        pearlReadContext = CollectionsMenu.PearlReadContext.UnreadPebbles;
+                    }
+                }
+                num2++;
+            }
+            if (flag4)
+            {
+                self.iteratorButtons[num2] = new SimpleButton(self, self.pages[0], "", "TYPE_FUTURE", new Vector2((float)((int)(vector.x - (num3 + num4) * (float)num2)), vector.y), new Vector2(num4, num4));
+                self.iteratorButtons[num2].buttonBehav.greyedOut = !flag8;
+                self.iteratorSprites[num2] = new FSprite(flag8 ? "GuidanceMoon" : "Sandbox_SmallQuestionmark", true);
+                self.iteratorSprites[num2].color = new Color(0.29411766f, 0.45490196f, 0.5254902f);
+                self.iteratorSprites[num2].x = (float)((int)(self.iteratorButtons[num2].pos.x + self.iteratorButtons[num2].size.x / 2f - (1366f - self.manager.rainWorld.options.ScreenSize.x) / 2f));
+                self.iteratorSprites[num2].y = (float)((int)(self.iteratorButtons[num2].pos.y + self.iteratorButtons[num2].size.y / 2f));
+                self.pages[0].subObjects.Add(self.iteratorButtons[num2]);
+                self.pages[0].Container.AddChild(self.iteratorSprites[num2]);
+                if (pearlReadContext == CollectionsMenu.PearlReadContext.UnreadMoon && flag8)
+                {
+                    self.iteratorButtons[num2].toggled = true;
+                    pearlReadContext = CollectionsMenu.PearlReadContext.FutureMoon;
+                }
+                num2++;
+            }
+            if (flag_NSH_1)
+            {
+                self.iteratorButtons[num2] = new SimpleButton(self, self.pages[0], "", "TYPE_NSH", new Vector2((float)((int)(vector.x - (num3 + num4) * (float)num2)), vector.y), new Vector2(num4, num4));
+                self.iteratorButtons[num2].buttonBehav.greyedOut = !flag_NSH_2;
+                self.iteratorSprites[num2] = new FSprite(flag_NSH_2 ? "GuidanceNSH" : "Sandbox_SmallQuestionmark", true);
+                self.iteratorSprites[num2].color = new Color(0.75f, 1f, 0.75f);
+                self.iteratorSprites[num2].x = (float)((int)(self.iteratorButtons[num2].pos.x + self.iteratorButtons[num2].size.x / 2f - (1366f - self.manager.rainWorld.options.ScreenSize.x) / 2f));
+                self.iteratorSprites[num2].y = (float)((int)(self.iteratorButtons[num2].pos.y + self.iteratorButtons[num2].size.y / 2f));
+                self.pages[0].subObjects.Add(self.iteratorButtons[num2]);
+                self.pages[0].Container.AddChild(self.iteratorSprites[num2]);
+                if (pearlReadContext == CollectionsMenu.PearlReadContext.UnreadMoon && flag_NSH_2)
+                {
+                    self.iteratorButtons[num2].toggled = true;
+                    pearlReadContext = PearlReadContext_NSH;
+                }
+                num2++;
+            }
+            if (pearlReadContext == CollectionsMenu.PearlReadContext.StandardMoon)
+            {
+                return CollectionsMenu.PearlReadContext.UnreadMoon;
+            }
+            return pearlReadContext;
         }
     }
 }
