@@ -22,7 +22,7 @@ namespace HunterExpansion.CustomOracle
 
         public override void LoadSLPearlConversation(SLOracleBehaviorHasMark.MoonConversation self, SlugcatStats.Name saveFile, bool oneRandomLine, int randomSeed)
         {
-            int extralingerfactor = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
+            int extralingerfactor = Custom.rainWorld.inGameTranslator.currentLanguage == InGameTranslator.LanguageID.Chinese ? 1 : 0;
             //开场白
             int i = Random.Range(0, 100000);
             NSHConversation.LoadEventsFromFile(self, 201, null, true, i);

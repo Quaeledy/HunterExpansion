@@ -21,11 +21,12 @@ using System.Security.Permissions;
 
 namespace HunterExpansion
 {
-    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.2")]
+    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.3")]
     public class Plugin : BaseUnityPlugin
     {
         static public readonly string MOD_ID = "Quaeledy.hunterexpansion";
         static public SlugcatStats.Name SlugName = SlugcatStats.Name.Red;
+        static public SlugcatStats.Timeline SlugTimeline = SlugcatStats.Timeline.Red;
         public static SlugcatStats.Name AllSlugcats = new SlugcatStats.Name("AllSlugcat", false);
         private bool IsInit;
 
@@ -150,6 +151,12 @@ namespace HunterExpansion
                 RegionGateHooks.Init();
                 //绿珍珠的特效
                 FixedDataPearlEffect.HooksOn();
+                /*
+                //mod兼容
+                if (ModManager.ActiveMods.Any(mod => mod.id == "sabreml.collectionlabels"))
+                {
+                    CollectionLabelsHooks.Init();
+                }*/
 
                 //基于EmgTx的内容
                 CustomDreamRx.ApplyTreatment(new HunterDreamRegistry());

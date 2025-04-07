@@ -8,9 +8,9 @@ namespace HunterExpansion
         {
             On.DaddyLongLegs.Update += DaddyLongLegs_Update;
             On.DaddyGraphics.ApplyPalette += DaddyGraphics_ApplyPalette;
-            On.DaddyGraphics.DaddyTubeGraphic.ApplyPalette += DaddyTubeGraphic_ApplyPalette;
+            //On.DaddyGraphics.DaddyTubeGraphic.ApplyPalette += DaddyTubeGraphic_ApplyPalette;
             On.DaddyGraphics.DaddyDangleTube.ApplyPalette += DaddyDangleTube_ApplyPalette;
-            On.DaddyGraphics.DaddyDeadLeg.ApplyPalette += DaddyDeadLeg_ApplyPalette;
+            //On.DaddyGraphics.DaddyDeadLeg.ApplyPalette += DaddyDeadLeg_ApplyPalette;
 
             On.DaddyCorruption.Update += DaddyCorruption_Update;
             On.DaddyCorruption.CorruptionTube.TubeGraphic.ApplyPalette += CorruptionTube_ApplyPalette;
@@ -42,7 +42,7 @@ namespace HunterExpansion
                 }
             }
         }
-
+        /*
         public static void DaddyTubeGraphic_ApplyPalette(On.DaddyGraphics.DaddyTubeGraphic.orig_ApplyPalette orig, DaddyGraphics.DaddyTubeGraphic self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
@@ -68,7 +68,7 @@ namespace HunterExpansion
                     }
                 }
             }
-        }
+        }*/
 
         public static void DaddyDangleTube_ApplyPalette(On.DaddyGraphics.DaddyDangleTube.orig_ApplyPalette orig, DaddyGraphics.DaddyDangleTube self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
@@ -91,7 +91,7 @@ namespace HunterExpansion
                 }
             }
         }
-
+        /*
         public static void DaddyDeadLeg_ApplyPalette(On.DaddyGraphics.DaddyDeadLeg.orig_ApplyPalette orig, DaddyGraphics.DaddyDeadLeg self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             orig(self, sLeaser, rCam, palette);
@@ -117,7 +117,7 @@ namespace HunterExpansion
                     }
                 }
             }
-        }
+        }*/
         #endregion
 
         #region 腐化墙

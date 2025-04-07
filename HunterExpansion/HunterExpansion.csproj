@@ -5,6 +5,7 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 	<ItemGroup>
+		<Compile Remove="CollectionLabelsHooks.cs" />
 		<Compile Remove="CustomOracle\NSHMeetOtherOracle.cs" />
 		<Compile Remove="CustomOracle\SRSMeetOtherOracle.cs" />
 		<Compile Remove="CustomSave\AltEndingSave.cs" />
@@ -16,6 +17,10 @@
 	  </Reference>
 	  <Reference Include="BepInEx">
 	    <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\Rain World\BepInEx\core\BepInEx.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="CollectionLabels">
+	    <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\312520\2944480166\plugins\CollectionLabels.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	  <Reference Include="CustomRegionsSupport">

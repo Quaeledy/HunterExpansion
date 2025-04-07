@@ -20,9 +20,9 @@ namespace HunterExpansion
             On.RoomSpecificScript.AddRoomSpecificScript += RoomSpecificScript_AddRoomSpecificScript;
         }
 
-        private static void Room_ctor(On.Room.orig_ctor orig, Room self, RainWorldGame game, World world, AbstractRoom abstractRoom)
+        private static void Room_ctor(On.Room.orig_ctor orig, Room self, RainWorldGame game, World world, AbstractRoom abstractRoom, bool devUI)
         {
-            orig.Invoke(self, game, world, abstractRoom);
+            orig.Invoke(self, game, world, abstractRoom, devUI);
 
             if (self.abstractRoom.name == "GATE_SB_OE" ||
                 self.abstractRoom.name == "SB_GOR02" ||
@@ -1351,8 +1351,9 @@ namespace HunterExpansion
                     PearlFixedSave.pearlFixed = false;
                 }
                 else if (this.room.game != null && this.room.game.IsStorySession &&
-                         this.room.game.session.characterStats.name != Plugin.SlugName &&
-                         this.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft >= 0)
+                         //this.room.game.session.characterStats.name != Plugin.SlugName &&
+                         //this.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft >= 0 &&
+                         this.room.game.TimelinePoint.Index > Plugin.SlugTimeline.Index)
                 {
                     PearlFixedSave.pearlFixed = true;
                 }
@@ -1367,9 +1368,10 @@ namespace HunterExpansion
                     this.Destroy();
                     return;
                 }
-                if (this.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Spear ||
+                if (/*this.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Spear ||
                     this.room.game.session.characterStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer ||
-                    this.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft <= 0)
+                    this.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft <= 0*/
+                    this.room.game.TimelinePoint.Index < Plugin.SlugTimeline.Index)
                 {
                     Plugin.Log("Don't Spawn Aquamarine Pearl before Hunter Campaign.");
                     this.Destroy();
@@ -1392,8 +1394,9 @@ namespace HunterExpansion
 
                 Vector2 vector = new Vector2(531f, 310f);
                 AbstractCreature firstAlivePlayer = this.room.game.FirstAlivePlayer;
-                if (this.room.game.session.characterStats.name != Plugin.SlugName &&
-                    this.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft >= 0 &&
+                if (/*this.room.game.session.characterStats.name != Plugin.SlugName &&
+                    this.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft >= 0 &&*/
+                    this.room.game.TimelinePoint.Index > Plugin.SlugTimeline.Index &&
                     this.aquamarinePearl == null)// && !(this.room.game.session as StoryGameSession).saveState.miscWorldSaveData.pebblesEnergyTaken
                 {
                     //生成珍珠

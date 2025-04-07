@@ -4,6 +4,7 @@ using Menu;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MoreSlugcats;
+using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -150,9 +151,9 @@ namespace HunterExpansion.CustomCollections
                     c.Emit(OpCodes.Ldloc_S, (byte)6);
                     c.EmitDelegate<Func<CollectionsMenu, int, bool, bool, bool>>((self, pearlIndex, flag2, flag7) =>
                     {
-                        flag_NSH_1 = Conversation.EventsFileExists(self.rainWorld, pearlIndex, NSH);
-                        flag_NSH_2 = flag_NSH_1 && (self.debug_enableAllButtons || DecipheredNSHPearlsSave.GetNSHPearlDeciphered(self.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]));// || (flag && self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]))); ;
-                        if (flag2 && !flag_NSH_1 && DecipheredNSHPearlsSave.GetNSHPearlDeciphered(self.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]))
+                        flag_NSH_1 = Conversation.EventsFileExists(Custom.rainWorld, pearlIndex, NSH);
+                        flag_NSH_2 = flag_NSH_1 && (self.debug_enableAllButtons || DecipheredNSHPearlsSave.GetNSHPearlDeciphered(Custom.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]));// || (flag && self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]))); ;
+                        if (flag2 && !flag_NSH_1 && DecipheredNSHPearlsSave.GetNSHPearlDeciphered(Custom.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]))
                         {
                             return true;
                         }
@@ -493,11 +494,11 @@ namespace HunterExpansion.CustomCollections
         public static CollectionsMenu.PearlReadContext AddIteratorButtonsForCRS(CollectionsMenu self, string fileName)
         {
             bool flag = self.DMStoryFinished();
-            bool flag2 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName);
-            bool flag3 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName, CollectionsMenu.PearlReadContext.PastMoon, MoreSlugcatsEnums.SlugcatStatsName.Spear);
-            bool flag4 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName, CollectionsMenu.PearlReadContext.FutureMoon, MoreSlugcatsEnums.SlugcatStatsName.Saint);
-            bool flag5 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName, CollectionsMenu.PearlReadContext.Pebbles, MoreSlugcatsEnums.SlugcatStatsName.Artificer);
-            bool flag6 = false;//pebAltPearlIndex != -1 && Conversation.EventsFileExists(self.rainWorld, pebAltPearlIndex);
+            bool flag2 = NSHConversation.EventsFileExistsForCRS(Custom.rainWorld, fileName);
+            bool flag3 = NSHConversation.EventsFileExistsForCRS(Custom.rainWorld, fileName, CollectionsMenu.PearlReadContext.PastMoon, MoreSlugcatsEnums.SlugcatStatsName.Spear);
+            bool flag4 = NSHConversation.EventsFileExistsForCRS(Custom.rainWorld, fileName, CollectionsMenu.PearlReadContext.FutureMoon, MoreSlugcatsEnums.SlugcatStatsName.Saint);
+            bool flag5 = NSHConversation.EventsFileExistsForCRS(Custom.rainWorld, fileName, CollectionsMenu.PearlReadContext.Pebbles, MoreSlugcatsEnums.SlugcatStatsName.Artificer);
+            bool flag6 = false;//pebAltPearlIndex != -1 && Conversation.EventsFileExists(Custom.rainWorld, pebAltPearlIndex);
             bool flag7 = flag2 && (self.debug_enableAllButtons || self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]));
             bool flag8 = flag4 && (self.debug_enableAllButtons || self.manager.rainWorld.progression.miscProgressionData.GetFuturePearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]));
             bool flag9 = flag3 && (self.debug_enableAllButtons || self.manager.rainWorld.progression.miscProgressionData.GetDMPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]) || (flag && self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd])));
@@ -514,10 +515,10 @@ namespace HunterExpansion.CustomCollections
             {
                 flag7 = true;
             }
-            bool flag_NSH_1 = NSHConversation.EventsFileExistsForCRS(self.rainWorld, fileName, PearlReadContext_NSH);
-            bool flag_NSH_2 = flag_NSH_1 && 
-                (self.debug_enableAllButtons || DecipheredNSHPearlsSave.GetNSHPearlDeciphered(self.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]));// || (flag && self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]))); ;
-            if (flag2 && !flag_NSH_1 && DecipheredNSHPearlsSave.GetNSHPearlDeciphered(self.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]))
+            bool flag_NSH_1 = NSHConversation.EventsFileExistsForCRS(Custom.rainWorld, fileName, PearlReadContext_NSH);
+            bool flag_NSH_2 = flag_NSH_1 &&
+                (self.debug_enableAllButtons || DecipheredNSHPearlsSave.GetNSHPearlDeciphered(Custom.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]));// || (flag && self.manager.rainWorld.progression.miscProgressionData.GetPearlDeciphered(self.usedPearlTypes[self.selectedPearlInd]))); ;
+            if (flag2 && !flag_NSH_1 && DecipheredNSHPearlsSave.GetNSHPearlDeciphered(Custom.rainWorld.progression.miscProgressionData, self.usedPearlTypes[self.selectedPearlInd]))
             {
                 flag7 = true;
             }

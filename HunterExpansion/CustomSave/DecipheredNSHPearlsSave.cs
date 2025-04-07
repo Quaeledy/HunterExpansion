@@ -1,9 +1,6 @@
-﻿using CustomRegions.Mod;
-using MoreSlugcats;
+﻿using MoreSlugcats;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text.RegularExpressions;
-using System;
 
 namespace HunterExpansion.CustomSave
 {

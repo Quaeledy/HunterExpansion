@@ -89,7 +89,7 @@ namespace HunterExpansion.CustomOracle
                     }
                 }
                 //矛大师已经见过FP后的对话，用FP是否读过矛大师珍珠来判断
-                else if (this.owner.rainWorld.progression.miscProgressionData.decipheredPebblesPearls.Contains(MoreSlugcatsEnums.DataPearlType.Spearmasterpearl))
+                else if (Custom.rainWorld.progression.miscProgressionData.decipheredPebblesPearls.Contains(MoreSlugcatsEnums.DataPearlType.Spearmasterpearl))
                 {
                     if (state.playerEncountersWithMark == 0 && inActionCounter > 20)
                     {
@@ -431,7 +431,7 @@ namespace HunterExpansion.CustomOracle
         {
             if (oracle.room.game.rainWorld.progression.currentSaveState.deathPersistentSaveData.altEnding)
                 return 2;
-            else if (this.owner.rainWorld.progression.miscProgressionData.decipheredPebblesPearls.Contains(MoreSlugcatsEnums.DataPearlType.Spearmasterpearl))
+            else if (Custom.rainWorld.progression.miscProgressionData.decipheredPebblesPearls.Contains(MoreSlugcatsEnums.DataPearlType.Spearmasterpearl))
                 return 1;
             else
                 return 0;

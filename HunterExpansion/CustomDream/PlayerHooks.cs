@@ -1,7 +1,6 @@
 ﻿using CustomDreamTx;
 using HunterExpansion.CustomEffects;
 using HunterExpansion.CustomOracle;
-using MoreSlugcats;
 using RWCustom;
 using UnityEngine;
 
@@ -33,13 +32,13 @@ namespace HunterExpansion.CustomDream
         public static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
         {
             orig(self, abstractCreature, world);
-            if (world.game.IsStorySession && world.game.session.characterStats.name != Plugin.SlugName)
-                return;
-
-            //第一场梦境：需要幼崽体型
-            if (CustomDreamRx.currentActivateNormalDream != null && CustomDreamRx.currentActivateNormalDream.activateDreamID == DreamID.HunterDream_0)
+            if (world.game.IsStorySession && world.game.session.characterStats.name == Plugin.SlugName)
             {
-                self.playerState.isPup = true;
+                //第一场梦境：需要幼崽体型
+                if (CustomDreamRx.currentActivateNormalDream != null && CustomDreamRx.currentActivateNormalDream.activateDreamID == DreamID.HunterDream_0)
+                {
+                    self.playerState.isPup = true;
+                }
             }
         }
 
@@ -176,7 +175,7 @@ namespace HunterExpansion.CustomDream
                         //生成香菇
                         if (corruptionSpawn == 400)
                         {
-                            SpawnCreatureInDen(self.room, "NSH_AITEST", 1, MoreSlugcatsEnums.CreatureTemplateType.TerrorLongLegs, 20);
+                            SpawnCreatureInDen(self.room, "NSH_AITEST", 1, DLCSharedEnums.CreatureTemplateType.TerrorLongLegs, 20);
                         }
                         corruptionSpawn++;
                     }

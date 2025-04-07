@@ -14,9 +14,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 using Random = UnityEngine.Random;
-using CustomRegions.Collectables;
 
 namespace HunterExpansion.CustomOracle
 {
@@ -39,35 +37,12 @@ namespace HunterExpansion.CustomOracle
         public NSHConversation(NSHOracleBehaviour owner, NSHOracleMeetHunter convBehav, Conversation.ID id, DialogBox dialogBox, SLOracleBehaviorHasMark.MiscItemType describeItem) : base(owner, id, dialogBox)
         {
             //EncryptAllDialogue();
-            if ((owner as NSHOracleBehaviour).canSlugUnderstandlanguage())
-            {
-                this.owner = owner;
-                this.convBehav = convBehav;
-                this.describeItem = describeItem;
-                this.currentSaveFile = owner.oracle.room.game.GetStorySession.saveStateNumber;
-                this.AddEvents();
-            }
-            else
-            {
-                switch (Random.Range(0, 5))
-                {
-                    case 0:
-                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_1, 0f, 1f, 1.25f);
-                        break;
-                    case 1:
-                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_2, 0f, 1f, 1.25f);
-                        break;
-                    case 2:
-                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_LongDialogue_3, 0f, 1f, 1.25f);
-                        break;
-                    case 3:
-                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_1, 0f, 1f, 1.25f);
-                        break;
-                    case 4:
-                        owner.oracle.room.PlaySound(NSHOracleSoundID.NSH_AI_ShortDialogue_2, 0f, 1f, 1.25f);
-                        break;
-                }
-            }
+
+            this.owner = owner;
+            this.convBehav = convBehav;
+            this.describeItem = describeItem;
+            this.currentSaveFile = owner.oracle.room.game.GetStorySession.saveStateNumber;
+            this.AddEvents();
         }
 
         //用于加密文件
@@ -942,11 +917,11 @@ namespace HunterExpansion.CustomOracle
         public static void LoadEventsFromFile(Conversation self, int fileName, string subfolderName, SlugcatStats.Name currentSaveFile, string suffix = null, bool oneRandomLine = false, int randomSeed = 0)
         {
             Plugin.Log("~~~LOAD CONVO " + subfolderName + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + (suffix == null ? "" : "-" + suffix.ToString()));
-            InGameTranslator.LanguageID languageID = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage;
+            InGameTranslator.LanguageID languageID = Custom.rainWorld.inGameTranslator.currentLanguage;
             string text;
             for (; ; )
             {
-                text = AssetManager.ResolveFilePath(self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) +
+                text = AssetManager.ResolveFilePath(Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) +
                        Path.DirectorySeparatorChar.ToString() + subfolderName +
                        Path.DirectorySeparatorChar.ToString() + fileName.ToString() + ".txt");
                 if (suffix != null && currentSaveFile != null)
@@ -954,7 +929,7 @@ namespace HunterExpansion.CustomOracle
                     string text2 = text;
                     text = AssetManager.ResolveFilePath(string.Concat(new string[]
                     {
-                        self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                        Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
                         Path.DirectorySeparatorChar.ToString(),
                         subfolderName,
                         Path.DirectorySeparatorChar.ToString(),
@@ -970,7 +945,7 @@ namespace HunterExpansion.CustomOracle
                         Plugin.Log("NOT FOUND " + text);
                         text = AssetManager.ResolveFilePath(string.Concat(new string[]
                         {
-                            self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                            Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
                             Path.DirectorySeparatorChar.ToString(),
                             subfolderName,
                             Path.DirectorySeparatorChar.ToString(),
@@ -991,7 +966,7 @@ namespace HunterExpansion.CustomOracle
                     string text2 = text;
                     text = AssetManager.ResolveFilePath(string.Concat(new string[]
                     {
-                        self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                        Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
                         Path.DirectorySeparatorChar.ToString(),
                         subfolderName,
                         Path.DirectorySeparatorChar.ToString(),
@@ -1011,7 +986,7 @@ namespace HunterExpansion.CustomOracle
                     string text2 = text;
                     text = AssetManager.ResolveFilePath(string.Concat(new string[]
                     {
-                        self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                        Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
                         Path.DirectorySeparatorChar.ToString(),
                         subfolderName,
                         Path.DirectorySeparatorChar.ToString(),
@@ -1039,12 +1014,12 @@ namespace HunterExpansion.CustomOracle
                 languageID = InGameTranslator.LanguageID.English;
             }
             return;
-            IL_117:
+        IL_117:
             Plugin.Log("FOUND FILE!!! Load from flie: " + text);
             string text3 = File.ReadAllText(text, Encoding.UTF8);
             if (text3[0] != '0')
             {
-                text3 = Custom.xorEncrypt(text3, 54 + fileName + (int)self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage * 7);
+                text3 = Custom.xorEncrypt(text3, 54 + fileName + (int)Custom.rainWorld.inGameTranslator.currentLanguage * 7);
             }
             string[] array = Regex.Split(ReplaceParts(self, currentSaveFile, text3), "\r\n");
             try
@@ -1158,7 +1133,7 @@ namespace HunterExpansion.CustomOracle
                 UnityEngine.Debug.LogException(e);
             }
         }
-        
+
         //房间旁白读取
         public static void LoadEventsFromFile(RoomChatTx self, int fileName, string subfolderName, DialogBox dialogBox, string suffix = null, bool oneRandomLine = false, int randomSeed = 0)
         {
@@ -1203,7 +1178,7 @@ namespace HunterExpansion.CustomOracle
                 languageID = InGameTranslator.LanguageID.English;
             }
             return;
-            IL_117:
+        IL_117:
             Plugin.Log("FOUND FILE!!! Load from flie: " + text);
             string text3 = File.ReadAllText(text, Encoding.UTF8);
             if (text3[0] != '0')
@@ -1322,7 +1297,7 @@ namespace HunterExpansion.CustomOracle
                 UnityEngine.Debug.LogException(e);
             }
         }
-        
+
         //CRS特供
         public static void LoadEventsFromFileForCRS(Conversation self, CollectionsMenu.PearlReadContext reader, SlugcatStats.Name saveFile, string fileName)
         {
@@ -1335,17 +1310,17 @@ namespace HunterExpansion.CustomOracle
             {
                 hasSuffixFile = File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
                 {
-                   self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
+                   Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
                     Path.DirectorySeparatorChar,
                     reader.ToString(),
                     Path.DirectorySeparatorChar.ToString(),
                     fileName,
                     saveFileSuffix,
                     ".txt"
-                }))) || 
+                }))) ||
                 File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
                 {
-                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
+                    Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
                     Path.DirectorySeparatorChar.ToString(),
                     reader.ToString(),
                     Path.DirectorySeparatorChar.ToString(),
@@ -1357,7 +1332,7 @@ namespace HunterExpansion.CustomOracle
                 inReaderFolder = hasSuffixFile ||
                 File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
                 {
-                   self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
+                   Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
                     Path.DirectorySeparatorChar,
                     reader.ToString(),
                     Path.DirectorySeparatorChar.ToString(),
@@ -1366,7 +1341,7 @@ namespace HunterExpansion.CustomOracle
                 }))) ||
                 File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
                 {
-                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
+                    Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
                     Path.DirectorySeparatorChar.ToString(),
                     reader.ToString(),
                     Path.DirectorySeparatorChar.ToString(),
@@ -1378,14 +1353,14 @@ namespace HunterExpansion.CustomOracle
             {
                 hasSuffixFile = File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
                 {
-                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
+                    Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(),
                     Path.DirectorySeparatorChar.ToString(),
                     fileName,
                     saveFileSuffix,
                     ".txt"
                 }))) || File.Exists(AssetManager.ResolveFilePath(string.Concat(new object[]
                 {
-                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
+                    Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(InGameTranslator.LanguageID.English),
                     Path.DirectorySeparatorChar.ToString(),
                     fileName,
                     saveFileSuffix,
@@ -1397,13 +1372,13 @@ namespace HunterExpansion.CustomOracle
             string suffix = (hasSuffixFile ? saveFileSuffix : "");
             Plugin.Log("~~~LOAD CONVO " + subfolderName + fileName.ToString() + saveFileSuffix);
 
-            InGameTranslator.LanguageID languageID = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage;
+            InGameTranslator.LanguageID languageID = Custom.rainWorld.inGameTranslator.currentLanguage;
             string path;
             for (; ; )
             {
                 path = AssetManager.ResolveFilePath(string.Concat(new string[]
                 {
-                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                    Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
                     subfolderName,
                     Path.DirectorySeparatorChar.ToString(),
                     fileName,
@@ -1423,16 +1398,16 @@ namespace HunterExpansion.CustomOracle
                 languageID = InGameTranslator.LanguageID.English;
             }
             return;
-            IL_117:
+        IL_117:
             Plugin.Log("FOUND FILE!!! Load from flie: " + path);
-            string[] array = new string[] {};
+            string[] array = new string[] { };
             //NSH的文件使用游戏的方法来解密
             if (reader == CollectionsMenuHooks.PearlReadContext_NSH)
             {
                 string text3 = File.ReadAllText(path, Encoding.UTF8);
                 if (text3[0] != '0')
                 {
-                    text3 = Custom.xorEncrypt(text3, 54 + 0 + (int)self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage * 7);
+                    text3 = Custom.xorEncrypt(text3, 54 + 0 + (int)Custom.rainWorld.inGameTranslator.currentLanguage * 7);
                 }
                 array = Regex.Split(ReplaceParts(self, saveFile, text3), "\r\n");
             }
@@ -1666,7 +1641,7 @@ namespace HunterExpansion.CustomOracle
             }
             if (testItem is SlimeMold)
             {
-                if (ModManager.MSC && testItem.abstractPhysicalObject.type == MoreSlugcatsEnums.AbstractObjectType.Seed)
+                if (ModManager.MSC && testItem.abstractPhysicalObject.type == DLCSharedEnums.AbstractObjectType.Seed)
                 {
                     return MoreSlugcatsEnums.MiscItemType.Seed;
                 }
@@ -1763,7 +1738,7 @@ namespace HunterExpansion.CustomOracle
             {
                 str = "moth";
             }
-            if (capitalized && InGameTranslator.LanguageID.UsesCapitals(self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage))
+            if (capitalized && InGameTranslator.LanguageID.UsesCapitals(Custom.rainWorld.inGameTranslator.currentLanguage))
             {
                 text = char.ToUpper(text[0]).ToString() + text.Substring(1);
             }
@@ -1797,7 +1772,7 @@ namespace HunterExpansion.CustomOracle
                     str = "Naturalist";
                     break;
             }
-            if (capitalized && InGameTranslator.LanguageID.UsesCapitals(self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage))
+            if (capitalized && InGameTranslator.LanguageID.UsesCapitals(Custom.rainWorld.inGameTranslator.currentLanguage))
             {
                 text = char.ToUpper(text[0]).ToString() + text.Substring(1);
             }

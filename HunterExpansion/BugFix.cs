@@ -9,7 +9,6 @@ using MoreSlugcats;
 using RWCustom;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace HunterExpansion
 {
@@ -21,20 +20,15 @@ namespace HunterExpansion
             IL.DataPearl.Update += DataPearl_UpdateIL;
             //这是在修进入NSH区域就报错的问题
             IL.OverseersWorldAI.DirectionFinder.ctor += DirectionFinder_ctorIL;
-            //这是在修区域菜单无法找到“NSH”区域的问题
-            IL.Menu.FastTravelScreen.ctor += FastTravelScreen_ctorIL;
-            IL.Menu.FastTravelScreen.FinalizeRegionSwitch += FastTravelScreen_FinalizeRegionSwitchIL;/*
             //这是在修离开NSH区域后，NSH房间的珍珠丢失的问题（回到NSH区域的下一个循环将重新生成）
             //这是在不开启重要物品追踪的情况下，让NSH的房间也能存东西
-            //IL.RegionState.AdaptWorldToRegionState += RegionState_AdaptWorldToRegionStateIL;
-            //这是让读取避难所前两个字母作为区域名，变成在NSH区域读前三个字母
-            //IL.SaveState.SaveToString += SaveState_SaveToStringIL;
+            IL.RegionState.AdaptWorldToRegionState += RegionState_AdaptWorldToRegionStateIL;
             //这是在修多人联机时，梦境结束会卡在雨眠界面，雨眠cg疯狂抖动的问题
-            //IL.RainWorldGame.CommunicateWithUpcomingProcess += RainWorldGame_CommunicateWithUpcomingProcessIL;*/
+            //IL.RainWorldGame.CommunicateWithUpcomingProcess += RainWorldGame_CommunicateWithUpcomingProcessIL;
             //这是在修NSH外缘业力门传送去郊区会卡住的问题
             IL.FliesWorldAI.ctor += FliesWorldAI_ctorIL;
             //这是修复胖猫不能正常触发去NSH过场cg的问题
-            IL.ProcessManager.PostSwitchMainProcess += ProcessManager_PostSwitchMainProcessIL;
+            IL.ProcessManager.PostSwitchMainProcess += ProcessManager_PostSwitchMainProcessIL; 
         }
 
         public static void Init()
@@ -47,11 +41,12 @@ namespace HunterExpansion
             //这是在修NSH区域迭代器主板闪烁总为红光的问题
             On.SuperStructureFuses.ctor += SuperStructureFuses_ctor;
             //这是在修过业力门进结局卡住的问题
-            On.WorldLoader.SpawnerStabilityCheck += WorldLoader_SpawnerStabilityCheck;
+            //On.WorldLoader.SpawnerStabilityCheck += WorldLoader_SpawnerStabilityCheck;
             //这是在修区域菜单无法找到“NSH”区域的问题
-            On.PlayerProgression.MiscProgressionData.ConditionalShelterData.GetShelterRegion += ConditionalShelterData_GetShelterRegion;
+            //On.PlayerProgression.MiscProgressionData.ConditionalShelterData.GetShelterRegion += ConditionalShelterData_GetShelterRegion;
             //这是预防读不到NSH区域的避难所
-            On.PlayerProgression.MiscProgressionData.SaveDiscoveredShelter += MiscProgressionData_SaveDiscoveredShelter;/*
+            //On.PlayerProgression.MiscProgressionData.SaveDiscoveredShelter += MiscProgressionData_SaveDiscoveredShelter;
+            ///*
             //这是在修Emgtx的bug，解决与速通计时器的冲突
             //On.MoreSlugcats.SpeedRunTimer.Update += SpeedRunTimer_Update;
             //这是在修warp传送到sb_oe业力门时，先传送到oe区域，再想传送到sb区域，会传送不了
@@ -128,149 +123,11 @@ namespace HunterExpansion
             }
         }
 
-        private static void FastTravelScreen_ctorIL(ILContext il)
-        {
-            try
-            {
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.After,
-                    (i) => i.MatchCallvirt<String>("Substring"),
-                    (i) => i.Match(OpCodes.Call)))
-                {
-                    Plugin.Log("FastTravelScreen_ctorIL MatchFind!");
-                    c.Emit(OpCodes.Ldarg_0);
-                    c.Emit(OpCodes.Ldloc_S, (byte)14);
-                    c.EmitDelegate<Func<bool, FastTravelScreen, int, bool>>((flag, self, num3) =>
-                    {
-                        return flag ||
-                               (Regex.Split(self.currentShelter, "_")[0] == "NSH" &&
-                                self.allRegions[self.accessibleRegions[num3]].name == self.currentShelter.Substring(0, 3));
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
-        }
-
-        private static void FastTravelScreen_FinalizeRegionSwitchIL(ILContext il)
-        {
-            try
-            {
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.After,
-                    (i) => i.MatchCallvirt<String>("Substring"),
-                    (i) => i.Match(OpCodes.Ldarg_0),
-                    (i) => i.Match(OpCodes.Ldfld),
-                    (i) => i.Match(OpCodes.Ldarg_0),
-                    (i) => i.Match(OpCodes.Ldfld),
-                    (i) => i.Match(OpCodes.Ldarg_1),
-                    (i) => i.Match(OpCodes.Callvirt),
-                    (i) => i.Match(OpCodes.Ldelem_Ref),
-                    (i) => i.Match(OpCodes.Ldfld),
-                    (i) => i.Match(OpCodes.Call)))
-                {
-                    Plugin.Log("FastTravelScreen_FinalizeRegionSwitchIL 0 MatchFind!");
-                    c.Emit(OpCodes.Ldarg_0);
-                    c.Emit(OpCodes.Ldarg_1);
-                    c.EmitDelegate<Func<bool, FastTravelScreen, int, bool>>((flag, self, newRegion) =>
-                    {
-                        return flag ||
-                               (self.currentShelter != null &&
-                                Regex.Split(self.currentShelter, "_")[0] == "NSH" &&
-                                self.allRegions[self.accessibleRegions[newRegion]].name == self.currentShelter.Substring(0, 3));
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
-            try
-            {
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.After,
-                    (i) => i.MatchCallvirt<String>("Substring"),
-                    (i) => i.Match(OpCodes.Ldarg_0),
-                    (i) => i.Match(OpCodes.Ldfld),
-                    (i) => i.Match(OpCodes.Ldarg_0),
-                    (i) => i.Match(OpCodes.Ldfld),
-                    (i) => i.Match(OpCodes.Ldarg_1),
-                    (i) => i.Match(OpCodes.Callvirt),
-                    (i) => i.Match(OpCodes.Ldelem_Ref),
-                    (i) => i.Match(OpCodes.Ldfld),
-                    (i) => i.Match(OpCodes.Call)))
-                {
-                    Plugin.Log("FastTravelScreen_FinalizeRegionSwitchIL 1 MatchFind!");
-                    c.Emit(OpCodes.Ldarg_0);
-                    c.Emit(OpCodes.Ldarg_1);
-                    c.Emit(OpCodes.Ldloc_S, (byte)9);
-                    c.EmitDelegate<Func<bool, FastTravelScreen, int, int, bool>>((flag, self, newRegion, k) =>
-                    {
-                        return flag ||
-                               (self.playerShelters[k] != null &&
-                                Regex.Split(self.playerShelters[k], "_")[0] == "NSH" &&
-                                self.allRegions[self.accessibleRegions[newRegion]].name == self.playerShelters[k].Substring(0, 3));
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
-        }
-
-        private static void RainWorldGame_CommunicateWithUpcomingProcessIL(ILContext il)
-        {
-            try
-            {
-                ILCursor c = new ILCursor(il);
-                ILCursor find = new ILCursor(il);
-                ILLabel pos = null;
-                //找到循环结束的地方
-                if (find.TryGotoNext(MoveType.After,
-                    (i) => i.MatchCallvirt(out var method) && method.Name == "AddRange"))//(i) => i.MatchCallvirt<List<PlayerSessionRecord.KillRecord>>("AddRange")
-                {
-                    pos = find.MarkLabel();
-                    Plugin.Log("RainWorldGame_CommunicateWithUpcomingProcessIL Find Pos to MarkLabel!");
-                }
-                //当self.GetStorySession.playerSessionRecords[i] == null时，需要跳过这一循环
-
-                //对self.GetStorySession.playerSessionRecords[i]进行null检查
-                if (c.TryGotoNext(MoveType.After,
-                    (i) => i.MatchLdsfld<ModManager>("CoopAvailable"),
-                    (i) => i.Match(OpCodes.Brfalse_S),
-                    (i) => i.Match(OpCodes.Ldc_I4_1),
-                    (i) => i.MatchStloc(8),
-                    (i) => i.Match(OpCodes.Br_S),
-                    (i) => i.Match(OpCodes.Ldarg_0)))
-                {
-                    Plugin.Log("RainWorldGame_CommunicateWithUpcomingProcessIL MatchFind!");
-                    if (pos != null)
-                    {
-                        c.Emit(OpCodes.Ldloc_S, (byte)8);//找到i的本地变量
-                        c.EmitDelegate<Func<RainWorldGame, int, bool>>((self, i) =>
-                        {
-                            return (self.GetStorySession.playerSessionRecords[i] != null);
-                        });
-                        c.Emit(OpCodes.Brfalse_S, pos);
-                        c.Emit(OpCodes.Ldarg_0);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
-        }
-
         private static void FliesWorldAI_ctorIL(ILContext il)
         {
             try
             {
                 ILCursor c = new ILCursor(il);
-                //当NSH还没在魔方节点生成时，需要把房间设为HR_AI
                 if (c.TryGotoNext(MoveType.After,
                     (i) => i.Match(OpCodes.Ldarg_1),
                     (i) => i.MatchLdfld<World>("region"),
@@ -297,7 +154,6 @@ namespace HunterExpansion
             try
             {
                 ILCursor c = new ILCursor(il);
-                //当NSH还没在魔方节点生成时，需要把房间设为HR_AI
                 if (c.TryGotoNext(MoveType.After,
                     (i) => i.MatchNewobj<MoreSlugcats.ScribbleDreamScreen>(),
                     (i) => i.MatchStfld<ProcessManager>("currentMainLoop")))
@@ -345,7 +201,7 @@ namespace HunterExpansion
                 Debug.LogException(e);
             }
         }
-
+        */
         public static void RegionState_AdaptWorldToRegionStateIL(ILContext il)
         {
             try
@@ -353,11 +209,11 @@ namespace HunterExpansion
                 ILCursor c = new ILCursor(il);
                 //对self.room.game.GetStorySession.playerSessionRecords[num]进行null检查
                 if (c.TryGotoNext(MoveType.After,
-                    (i) => i.MatchStloc(11)))//stloc.s 11
+                    (i) => i.MatchStloc(10)))//stloc.s 10
                 {
                     Plugin.Log("RegionState_AdaptWorldToRegionStateIL MatchFind!");
-                    c.Emit(OpCodes.Ldloc_S, (byte)11);//找到flag3的本地变量
-                    c.Emit(OpCodes.Ldloc_S, (byte)10);//找到abstractRoom的本地变量
+                    c.Emit(OpCodes.Ldloc_S, (byte)10);//找到flag3的本地变量
+                    c.Emit(OpCodes.Ldloc_S, (byte)9);//找到abstractRoom的本地变量
                     c.EmitDelegate<Func<bool, AbstractRoom, bool>>((flag3, abstractRoom) =>
                     {
                         return flag3 || abstractRoom.name == "NSH_AI";
@@ -370,7 +226,7 @@ namespace HunterExpansion
                 Debug.LogException(e);
             }
         }
-        */
+        
         #endregion
         private static void Custom_Log(On.RWCustom.Custom.orig_Log orig, params string[] values)
         {
@@ -407,35 +263,6 @@ namespace HunterExpansion
             if (self.worldName == "NSH")
                 return;
             orig(self, spawner);
-        }
-
-        private static string ConditionalShelterData_GetShelterRegion(On.PlayerProgression.MiscProgressionData.ConditionalShelterData.orig_GetShelterRegion orig, PlayerProgression.MiscProgressionData.ConditionalShelterData self)
-        {
-            string result = orig(self);
-            if (Regex.Split(self.shelterName, "_")[0] == "NSH")
-            {
-                result = "NSH";
-            }
-            return result;
-        }
-
-        private static void MiscProgressionData_SaveDiscoveredShelter(On.PlayerProgression.MiscProgressionData.orig_SaveDiscoveredShelter orig, PlayerProgression.MiscProgressionData self, string roomName)
-        {
-            if (Regex.Split(roomName, "_")[0] == "NSH")
-            {
-                string key = "NSH";
-                self.updateConditionalShelters(roomName, self.currentlySelectedSinglePlayerSlugcat);
-                if (!self.discoveredShelters.ContainsKey(key) || self.discoveredShelters[key] == null)
-                {
-                    self.discoveredShelters[key] = new List<string>();
-                }
-                if (!self.discoveredShelters[key].Contains(roomName))
-                {
-                    self.discoveredShelters[key].Add(roomName);
-                }
-                return;
-            }
-            orig(self, roomName);
         }
 
         private static void SpecialEvent_Activate(On.Conversation.SpecialEvent.orig_Activate orig, Conversation.SpecialEvent self)

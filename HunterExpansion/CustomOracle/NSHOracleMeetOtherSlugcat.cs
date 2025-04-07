@@ -1,4 +1,5 @@
 ﻿using MoreSlugcats;
+using RWCustom;
 using System.IO;
 using static CustomOracleTx.CustomOracleBehaviour;
 
@@ -149,11 +150,11 @@ namespace HunterExpansion.CustomOracle
         public static bool TryFindEventsFile(Conversation self, int fileName, string subfolderName, string suffix = null, bool oneRandomLine = false, int randomSeed = 0)
         {
             Plugin.Log("~~~TRY FIND " + subfolderName + Path.DirectorySeparatorChar.ToString() + fileName.ToString() + (suffix == null ? "" : "-" + suffix.ToString()));
-            InGameTranslator.LanguageID languageID = self.interfaceOwner.rainWorld.inGameTranslator.currentLanguage;
+            InGameTranslator.LanguageID languageID = Custom.rainWorld.inGameTranslator.currentLanguage;
             string text;
             for (; ; )
             {
-                text = AssetManager.ResolveFilePath(self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) +
+                text = AssetManager.ResolveFilePath(Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID) +
                        Path.DirectorySeparatorChar.ToString() + subfolderName +
                        Path.DirectorySeparatorChar.ToString() + fileName.ToString() + ".txt");
                 if (suffix != null)
@@ -161,7 +162,7 @@ namespace HunterExpansion.CustomOracle
                     string text2 = text;
                     text = AssetManager.ResolveFilePath(string.Concat(new string[]
                     {
-                    self.interfaceOwner.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
+                    Custom.rainWorld.inGameTranslator.SpecificTextFolderDirectory(languageID),
                     Path.DirectorySeparatorChar.ToString(),
                     subfolderName,
                     Path.DirectorySeparatorChar.ToString(),

@@ -1,15 +1,12 @@
 ﻿using CoralBrain;
 using CustomDreamTx;
 using CustomOracleTx;
-using CustomRegions.Mod;
 using HunterExpansion.CustomDream;
 using HunterExpansion.CustomSave;
 using MoreSlugcats;
 using Music;
 using RWCustom;
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -514,7 +511,7 @@ namespace HunterExpansion.CustomOracle
                         //flag4表示了几种NSH不做解读的情况
                         bool flag4 = (this.currSubBehavior is NSHOracleMeetSofanthiel) ||
                                      ((this.currSubBehavior is NSHOracleMeetSaint) && (this.currSubBehavior as NSHOracleMeetSaint).panicObject != null) ||
-                                     ((this.currSubBehavior is NSHOracleMeetSpear) && this.rainWorld.progression.miscProgressionData.decipheredPebblesPearls.Contains(MoreSlugcatsEnums.DataPearlType.Spearmasterpearl)) ||
+                                     ((this.currSubBehavior is NSHOracleMeetSpear) && Custom.rainWorld.progression.miscProgressionData.decipheredPebblesPearls.Contains(MoreSlugcatsEnums.DataPearlType.Spearmasterpearl)) ||
                                      ((this.currSubBehavior is NSHOracleMeetHunter) && oracle.room.game.rainWorld.progression.currentSaveState.miscWorldSaveData.SLOracleState.neuronsLeft <= 0 && !oracle.room.game.rainWorld.progression.currentSaveState.deathPersistentSaveData.altEnding) ||
                                      CustomDreamRx.currentActivateNormalDream != null;
                         if (((this.currSubBehavior is NSHOracleMeetSpear) && (physicalObject is SpearMasterPearl)) ||
@@ -891,7 +888,7 @@ namespace HunterExpansion.CustomOracle
 
         public void AddConversationEvents(NSHConversation conv, Conversation.ID id)
         {
-            if (State.GetOpinion == NSHOracleState.PlayerOpinion.NotSpeaking)
+            if (State.GetOpinion == NSHOracleState.PlayerOpinion.NotSpeaking || !this.canSlugUnderstandlanguage())
             {
                 return;
             }
@@ -1351,7 +1348,7 @@ namespace HunterExpansion.CustomOracle
             }
             else
             {
-                if(id != NSHConversationID.RefusingToInterpretItems)
+                if (id != NSHConversationID.RefusingToInterpretItems)
                 {
                     if (!State.significantPearls.Contains((item as DataPearl).AbstractPearl.dataPearlType))
                     {
@@ -1360,9 +1357,9 @@ namespace HunterExpansion.CustomOracle
                     //加入收藏
                     if (State.likesPlayer >= 0f && ModManager.MSC && this.oracle.ID == NSHOracleRegistry.NSHOracle)
                     {
-                        this.isRepeatedDiscussion = DecipheredNSHPearlsSave.GetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType);
+                        this.isRepeatedDiscussion = DecipheredNSHPearlsSave.GetNSHPearlDeciphered(Custom.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType);
                         if (canSlugUnderstandlanguage())
-                            DecipheredNSHPearlsSave.SetNSHPearlDeciphered(this.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType, false);
+                            DecipheredNSHPearlsSave.SetNSHPearlDeciphered(Custom.rainWorld.progression.miscProgressionData, (item as DataPearl).AbstractPearl.dataPearlType, false);
                     }
                     Plugin.Log("NSH refuses to interpret pearl: " + (item as DataPearl).AbstractPearl.type.ToString());
                 }
@@ -1539,7 +1536,7 @@ namespace HunterExpansion.CustomOracle
                 {
                     this.readItemOrbits.Add(abstractWorldEntity);
                 }
-                else if ((abstractWorldEntity as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.SingularityBomb)
+                else if ((abstractWorldEntity as AbstractPhysicalObject).type == DLCSharedEnums.AbstractObjectType.SingularityBomb)
                 {
                     this.readItemOrbits.Add(abstractWorldEntity);
                 }
@@ -1646,7 +1643,7 @@ namespace HunterExpansion.CustomOracle
                         num++;
                     }
                     //会保存奇点炸弹
-                    else if ((abstractWorldEntity as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.SingularityBomb)
+                    else if ((abstractWorldEntity as AbstractPhysicalObject).type == DLCSharedEnums.AbstractObjectType.SingularityBomb)
                     {
                         (obj as SingularityBomb).activateSingularity = false;
                         (obj as SingularityBomb).ignited = false;
@@ -1713,7 +1710,7 @@ namespace HunterExpansion.CustomOracle
                 {
                     if ((abstractWorldEntity2 as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.FireEgg)
                         this.dialogBox.NewMessage(this.Translate("Oh, of course, you can take it away anytime!"), 10);
-                    if ((abstractWorldEntity2 as AbstractPhysicalObject).type == MoreSlugcatsEnums.AbstractObjectType.SingularityBomb)
+                    if ((abstractWorldEntity2 as AbstractPhysicalObject).type == DLCSharedEnums.AbstractObjectType.SingularityBomb)
                         this.dialogBox.NewMessage(this.Translate("You can take it, but don't attack me anymore."), 10);
                 }
             }

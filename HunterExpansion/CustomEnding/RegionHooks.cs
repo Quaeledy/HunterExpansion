@@ -18,7 +18,7 @@ namespace HunterExpansion.CustomEnding
         public static void Init()
         {
             //区域名相关
-            On.Region.GetProperRegionAcronym += Region_GetProperRegionAcronym;
+            On.Region.GetProperRegionAcronym_Timeline_string += Region_GetProperRegionAcronym_Timeline_string;
             On.OverWorld.GetRegion_string += OverWorld_GetRegion_string;
 
             //业力门相关（还有一个地图显示业力门符号的方法在HUD里）
@@ -159,13 +159,13 @@ namespace HunterExpansion.CustomEnding
             return result;
         }
 
-        public static string Region_GetProperRegionAcronym(On.Region.orig_GetProperRegionAcronym orig, SlugcatStats.Name character, string baseAcronym)
+        public static string Region_GetProperRegionAcronym_Timeline_string(On.Region.orig_GetProperRegionAcronym_Timeline_string orig, SlugcatStats.Timeline character, string baseAcronym)
         {
             Plugin.Log("Get Proper Region Acronym (Orinal): " + baseAcronym);
             string result = orig(character, baseAcronym);
             string text = baseAcronym;
             if (PearlFixedSave.pearlFixed &&
-                (EndingSession.openGate || (character != Plugin.SlugName && EndingSession.openCount > 0))
+                (EndingSession.openGate || (character != Plugin.SlugTimeline && EndingSession.openCount > 0))
                 && text == "OE")
             {
                 text = "NSH";

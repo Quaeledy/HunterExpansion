@@ -50,7 +50,8 @@ namespace HunterExpansion.CustomOracle
             totalSprites += halo.totalSprites;
 
             //袍子
-            gown = new Gown(this);
+            gowns = new Gown[1];
+            gowns[0] = new Gown(this, 0);
             robeSprite = totalSprites;
             totalSprites++;
 
@@ -164,11 +165,11 @@ namespace HunterExpansion.CustomOracle
                 }
 
                 sLeaser.sprites[HandSprite(k, 0)].color = color;
-                if (gown != null)
+                if (gowns != null)
                 {
                     for (int l = 0; l < 4; l++)
                     {
-                        Color handColor = Gown_Color(gown, (float)l / 7f);
+                        Color handColor = Gown_Color(gowns[0], (float)l / 7f);
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 1] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 2] = handColor;
@@ -176,7 +177,7 @@ namespace HunterExpansion.CustomOracle
                     }
                     for (int l = 4; l < 7; l++)
                     {
-                        Color handColor = Gown_Color(gown, (float)l / 7f);
+                        Color handColor = Gown_Color(gowns[0], (float)l / 7f);
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 1] = handColor;
                         (sLeaser.sprites[HandSprite(k, 1)] as TriangleMesh).verticeColors[l * 4 + 2] = handColor;
@@ -228,25 +229,25 @@ namespace HunterExpansion.CustomOracle
                 armJointGraphics[j].InitiateSprites(sLeaser, rCam);
             }
 
-            if (gown != null)
+            if (gowns != null)
             {
                 if (NSHOracleRegistry.isCorrupted)
                 {
-                    sLeaser.sprites[robeSprite] = TriangleMesh.MakeGridMesh("MoonCloakTex", gown.divs - 1);
+                    sLeaser.sprites[robeSprite] = TriangleMesh.MakeGridMesh("MoonCloakTex", gowns[0].divs - 1);
                 }
                 else
                 {
-                    sLeaser.sprites[robeSprite] = TriangleMesh.MakeGridMesh("Futile_White", gown.divs - 1);
+                    sLeaser.sprites[robeSprite] = TriangleMesh.MakeGridMesh("Futile_White", gowns[0].divs - 1);
                 }
-                for (int i = 0; i < gown.divs; i++)
+                for (int i = 0; i < gowns[0].divs; i++)
                 {
-                    for (int j = 0; j < gown.divs; j++)
+                    for (int j = 0; j < gowns[0].divs; j++)
                     {
-                        (sLeaser.sprites[robeSprite] as TriangleMesh).verticeColors[j * gown.divs + i] = gown.Color((float)i / (float)(gown.divs - 1));
+                        (sLeaser.sprites[robeSprite] as TriangleMesh).verticeColors[j * gowns[0].divs + i] = gowns[0].Color((float)i / (float)(gowns[0].divs - 1));
                     }
                 }
                 /*
-                gown.InitiateSprite(robeSprite, sLeaser, rCam);
+                gowns[0].InitiateSprite(robeSprite, sLeaser, rCam);
                 if (NSHOracleRegistry.isCorrupted)
                     sLeaser.sprites[robeSprite].element = Futile.atlasManager.GetElementWithName("MoonCloakTex");*/
             }
@@ -454,14 +455,14 @@ namespace HunterExpansion.CustomOracle
             {
                 for (int x = 0; x < divs; x++)
                 {
-                    Vector2 delta = owner.gown.clothPoints[x, 0, 0] - owner.gown.clothPoints[0, 0, 0];
-                    collarPos[x] = owner.gown.clothPoints[0, 0, 0] + delta / 2.5f;
+                    Vector2 delta = owner.gowns[0].clothPoints[x, 0, 0] - owner.gowns[0].clothPoints[0, 0, 0];
+                    collarPos[x] = owner.gowns[0].clothPoints[0, 0, 0] + delta / 2.5f;
                 }
 
                 for (int y = 0; y < divs; y++)
                 {
-                    Vector2 delta = owner.gown.clothPoints[5, y, 0] - owner.gown.clothPoints[5, 0, 0];
-                    midColPos[y] = owner.gown.clothPoints[5, 0, 0] + delta / 6f;
+                    Vector2 delta = owner.gowns[0].clothPoints[5, y, 0] - owner.gowns[0].clothPoints[5, 0, 0];
+                    midColPos[y] = owner.gowns[0].clothPoints[5, 0, 0] + delta / 6f;
                 }
             }
 
