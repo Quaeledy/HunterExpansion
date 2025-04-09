@@ -9,6 +9,7 @@ using MoreSlugcats;
 using RWCustom;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace HunterExpansion
 {
@@ -24,7 +25,7 @@ namespace HunterExpansion
             //这是在不开启重要物品追踪的情况下，让NSH的房间也能存东西
             IL.RegionState.AdaptWorldToRegionState += RegionState_AdaptWorldToRegionStateIL;
             //这是在修多人联机时，梦境结束会卡在雨眠界面，雨眠cg疯狂抖动的问题
-            //IL.RainWorldGame.CommunicateWithUpcomingProcess += RainWorldGame_CommunicateWithUpcomingProcessIL;
+            IL.RainWorldGame.CommunicateWithUpcomingProcess += RainWorldGame_CommunicateWithUpcomingProcessIL;
             //这是在修NSH外缘业力门传送去郊区会卡住的问题
             IL.FliesWorldAI.ctor += FliesWorldAI_ctorIL;
             //这是修复胖猫不能正常触发去NSH过场cg的问题
@@ -46,7 +47,6 @@ namespace HunterExpansion
             //On.PlayerProgression.MiscProgressionData.ConditionalShelterData.GetShelterRegion += ConditionalShelterData_GetShelterRegion;
             //这是预防读不到NSH区域的避难所
             //On.PlayerProgression.MiscProgressionData.SaveDiscoveredShelter += MiscProgressionData_SaveDiscoveredShelter;
-            ///*
             //这是在修Emgtx的bug，解决与速通计时器的冲突
             //On.MoreSlugcats.SpeedRunTimer.Update += SpeedRunTimer_Update;
             //这是在修warp传送到sb_oe业力门时，先传送到oe区域，再想传送到sb区域，会传送不了
@@ -64,7 +64,10 @@ namespace HunterExpansion
             On.OverseerAbstractAI.HowInterestingIsCreature += OverseerAbstractAI_HowInterestingIsCreature;
             //这是修复圣猫想去NSH，跳崖后卡死的问题
             On.MoreSlugcats.BlizzardGraphics.InitiateSprites += BlizzardGraphics_InitiateSprites;
+            //这是修复warp到其他区域导致卡死的问题
+            On.RegionState.AdaptRegionStateToWorld += RegionState_AdaptRegionStateToWorld;
         }
+
         #region IL Hooks
         private static void DataPearl_UpdateIL(ILContext il)
         {
@@ -207,7 +210,6 @@ namespace HunterExpansion
             try
             {
                 ILCursor c = new ILCursor(il);
-                //对self.room.game.GetStorySession.playerSessionRecords[num]进行null检查
                 if (c.TryGotoNext(MoveType.After,
                     (i) => i.MatchStloc(10)))//stloc.s 10
                 {
@@ -226,13 +228,65 @@ namespace HunterExpansion
                 Debug.LogException(e);
             }
         }
-        
+
+        private static void RainWorldGame_CommunicateWithUpcomingProcessIL(ILContext il)
+        {
+            try
+            {
+                ILCursor c = new ILCursor(il);
+                ILCursor find = new ILCursor(il);
+                ILLabel pos = null;
+                //找到循环结束的地方
+                if (find.TryGotoNext(MoveType.After,
+                    (i) => i.MatchCallvirt(out var method) && method.Name == "AddRange"))//(i) => i.MatchCallvirt<List<PlayerSessionRecord.KillRecord>>("AddRange")
+                {
+                    pos = find.MarkLabel();
+                    Plugin.Log("RainWorldGame_CommunicateWithUpcomingProcessIL Find Pos to MarkLabel!");
+                }
+                //当self.GetStorySession.playerSessionRecords[i] == null时，需要跳过这一循环
+
+                //对self.GetStorySession.playerSessionRecords[i]进行null检查
+                if (c.TryGotoNext(MoveType.After,
+                    (i) => i.MatchLdsfld<ModManager>("CoopAvailable"),
+                    (i) => i.Match(OpCodes.Brfalse_S),
+                    (i) => i.Match(OpCodes.Ldc_I4_1),
+                    (i) => i.MatchStloc(10),
+                    (i) => i.Match(OpCodes.Br_S),
+                    (i) => i.Match(OpCodes.Ldarg_0)))
+                {
+                    Plugin.Log("RainWorldGame_CommunicateWithUpcomingProcessIL MatchFind!");
+                    if (pos != null)
+                    {
+                        c.Emit(OpCodes.Ldloc_S, (byte)10);//找到i的本地变量
+                        c.EmitDelegate<Func<RainWorldGame, int, bool>>((self, i) =>
+                        {
+                            return (self.GetStorySession.playerSessionRecords[i] != null);
+                        });
+                        c.Emit(OpCodes.Brfalse_S, pos);
+                        c.Emit(OpCodes.Ldarg_0);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
+        }
         #endregion
         private static void Custom_Log(On.RWCustom.Custom.orig_Log orig, params string[] values)
         {
             orig(values);
             for (int i = 0; i < values.Length; i++)
                 Plugin.Log("Custom_Log: " + values[i]);
+        }
+
+        private static void RegionState_AdaptRegionStateToWorld(On.RegionState.orig_AdaptRegionStateToWorld orig, RegionState self, int playerShelter, int activeGate)
+        {
+            if (self.world == null && self.saveState.saveStateNumber == Plugin.SlugName)
+            {
+                return;
+            }
+            orig(self, playerShelter, activeGate);
         }
 
         private static string ItemSymbol_SpriteNameForItem(On.ItemSymbol.orig_SpriteNameForItem orig, AbstractPhysicalObject.AbstractObjectType itemType, int intData)

@@ -152,7 +152,7 @@ namespace HunterExpansion
             {
                 if (hunterHud != null)
                     hunterHud.Destroy();
-
+                Plugin.Log("Try spawn HunterMessionHud.");
                 hunterHud = new HunterMessionHud(self);
             }
         }
@@ -181,7 +181,7 @@ namespace HunterExpansion
                 return;
 
             //开局提示
-            if (!IntroTextSave.introText[0] && room.roomSettings.name == "LF_H01")
+            if (!IntroTextSave.introText[0] && room.abstractRoom .name == "LF_H01")
             {
                 room.AddObject(new IntroText1(room));
                 IntroTextSave.introText[0] = true;

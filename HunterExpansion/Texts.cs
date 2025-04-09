@@ -22,7 +22,7 @@ namespace HunterExpansion
             {
                 return;
             }
-
+            Plugin.Log("Texts Update.");
             if (room.game.session.Players[0].realizedCreature != null && room.game.cameras[0].hud != null &&
                 room.game.cameras[0].hud.textPrompt != null && room.game.cameras[0].hud.textPrompt.messages.Count < 1)
             {
@@ -33,8 +33,10 @@ namespace HunterExpansion
                     foreach (var text in texts)
                         transTest += Custom.rainWorld.inGameTranslator.Translate(text);
 
-                    room.game.cameras[0].hud.textPrompt.AddMessage(transTest, messageList[index].wait, messageList[index].time, false, ModManager.MMF);
+                    room.game.cameras[0].hud.textPrompt.AddMessage(transTest, messageList[index].wait, messageList[index].time, false, true);
+                    //room.game.cameras[0].hud.textPrompt.AddMessage(transTest, messageList[index].wait, messageList[index].time, false, ModManager.MMF);
                     index++;
+                    Plugin.Log("Texts AddMessage: " + transTest);
                 }
                 else
                     slatedForDeletetion = true;
