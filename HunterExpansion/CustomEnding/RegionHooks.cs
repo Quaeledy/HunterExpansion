@@ -24,7 +24,8 @@ namespace HunterExpansion.CustomEnding
             //业力门相关（还有一个地图显示业力门符号的方法在HUD里）
             On.RegionGate.KarmaBlinkRed += RegionGate_KarmaBlinkRed;
             On.GateKarmaGlyph.Update += GateKarmaGlyph_Update;
-            Hook hook = new Hook(typeof(RegionGate).GetProperty("MeetRequirement", RegionHooks.propFlags).GetGetMethod(), typeof(RegionHooks).GetMethod("RegionGate_get_MeetRequirement", RegionHooks.methodFlags));
+            Hook hook = new Hook(typeof(RegionGate).GetProperty("MeetRequirement", RegionHooks.propFlags).GetGetMethod(), 
+                                 typeof(RegionHooks).GetMethod("RegionGate_get_MeetRequirement", RegionHooks.methodFlags));
             /*
             //自定义的倒塌业力门相关
             On.RegionGate.ChangeDoorStatus += RegionGate_ChangeDoorStatus;
