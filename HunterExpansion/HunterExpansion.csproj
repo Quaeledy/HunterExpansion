@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net48</TargetFramework>
+		<TargetFramework>net481</TargetFramework>
 		<OutputType>Library</OutputType>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
@@ -25,6 +25,10 @@
 	  </Reference>
 	  <Reference Include="CustomRegionsSupport">
 	    <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\312520\2941565790\newest\plugins\CustomRegionsSupport.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="CWStuff">
+	    <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\312520\3232063592\newest\plugins\CWStuff.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	  <Reference Include="EmgTx">

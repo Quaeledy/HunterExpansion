@@ -2,6 +2,7 @@
 using CustomDreamTx;
 using CustomOracleTx;
 using CustomSaveTx;
+using CWStuff;
 using HunterExpansion.CustomCollections;
 using HunterExpansion.CustomDream;
 using HunterExpansion.CustomEffects;
@@ -11,8 +12,10 @@ using HunterExpansion.CustomSave;
 using HunterExpansion.HRTalk;
 using MoreSlugcats;
 using System;
+using System.Linq;
 using System.Security;
 using System.Security.Permissions;
+using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
 
 [module: UnverifiableCode]
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -21,7 +24,7 @@ using System.Security.Permissions;
 
 namespace HunterExpansion
 {
-    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.6")]
+    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.8")]
     public class Plugin : BaseUnityPlugin
     {
         static public readonly string MOD_ID = "Quaeledy.hunterexpansion";
@@ -112,6 +115,7 @@ namespace HunterExpansion
 
             try
             {
+                UnityEngine.Debug.Log($"Try to load Plugin {Plugin.MOD_ID}...");
                 //各种IL
                 HRTalkHooks.InitIL();
                 CollectionsMenuHooks.InitIL();
@@ -204,6 +208,43 @@ namespace HunterExpansion
             Futile.atlasManager.LoadAtlas("atlases/smallKarmaNoRingNSH");
             Futile.atlasManager.LoadAtlas("atlases/gateSymbolNSH");
             Futile.atlasManager.LoadAtlas("atlases/NSHRibbonTex");
+        }
+
+        public static int RedsCycles(bool extraCycles, Menu.SlugcatSelectMenu.SaveGameData saveGameData)
+        {
+            int redsCycles = RedsIllness.RedsCycles(extraCycles);
+            if (ShouldRedsCyclesWithMod())
+                redsCycles = RedsCyclesWithMod(extraCycles, saveGameData);
+            return redsCycles;
+        }
+        public static int RedsCycles(bool extraCycles, SaveState saveState)
+        {
+            int redsCycles = RedsIllness.RedsCycles(extraCycles);
+            if (ShouldRedsCyclesWithMod())
+                redsCycles = RedsCyclesWithMod(extraCycles, saveState);
+            return redsCycles;
+        }
+        public static int RedsCyclesWithMod(bool extraCycles, Menu.SlugcatSelectMenu.SaveGameData saveGameData)
+        {
+            int redsCycles = RedsIllness.RedsCycles(extraCycles);
+
+            if (ModManager.ActiveMods.Any(mod => mod.id == "myr.chasing_wind"))
+                redsCycles = CWStuff.CWOracleHooks.CWGameRedCycles(redsCycles, saveGameData);
+
+            return redsCycles;
+        }
+        public static int RedsCyclesWithMod(bool extraCycles, SaveState saveState)
+        {
+            int redsCycles = RedsIllness.RedsCycles(extraCycles);
+
+            if (ModManager.ActiveMods.Any(mod => mod.id == "myr.chasing_wind"))
+                redsCycles = CWStuff.CWOracleHooks.CWWorldRedCycles(redsCycles, saveState);
+
+            return redsCycles;
+        }
+        public static bool ShouldRedsCyclesWithMod()
+        {
+            return ModManager.ActiveMods.Any(mod => mod.id == "myr.chasing_wind");
         }
     }
 }

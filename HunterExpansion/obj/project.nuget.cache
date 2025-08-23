@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "v+NWLyzqA9E=",
+  "dgSpecHash": "lin97Z/RZmY=",
   "success": true,
   "projectFilePath": "D:\\Collection\\Rain World\\Mod\\Code\\HunterExpansion\\HunterExpansion\\HunterExpansion.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\lenovo\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "C:\\Users\\lenovo\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net481\\1.0.3\\microsoft.netframework.referenceassemblies.net481.1.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

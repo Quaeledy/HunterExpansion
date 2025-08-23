@@ -1,0 +1,8 @@
+D:\Collection\Rain World\Mod\Code\HunterExpansion\HunterExpansion\bin\Debug\net481\HunterExpansion.dll
+D:\Collection\Rain World\Mod\Code\HunterExpansion\HunterExpansion\bin\Debug\net481\HunterExpansion.pdb
+D:\Collection\Rain World\Mod\Code\HunterExpansion\HunterExpansion\obj\Debug\net481\HunterExpansion.csproj.AssemblyReference.cache
+D:\Collection\Rain World\Mod\Code\HunterExpansion\HunterExpansion\obj\Debug\net481\HunterExpansion.GeneratedMSBuildEditorConfig.editorconfig
+D:\Collection\Rain World\Mod\Code\HunterExpansion\HunterExpansion\obj\Debug\net481\HunterExpansion.csproj.CoreCompileInputs.cache
+D:\Collection\Rain World\Mod\Code\HunterExpansion\HunterExpansion\obj\Debug\net481\HunterExpansion.sourcelink.json
+D:\Collection\Rain World\Mod\Code\HunterExpansion\HunterExpansion\obj\Debug\net481\HunterExpansion.dll
+D:\Collection\Rain World\Mod\Code\HunterExpansion\HunterExpansion\obj\Debug\net481\HunterExpansion.pdb

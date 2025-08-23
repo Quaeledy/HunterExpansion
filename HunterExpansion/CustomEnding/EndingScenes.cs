@@ -56,7 +56,7 @@ namespace HunterExpansion.CustomEnding
                 Plugin.Log("manager.rainWorld.progression.currentSaveState != null?" + (manager.rainWorld.progression.currentSaveState != null));
             }*/
 
-            if (result != null && result.altEnding && slugcat == Plugin.SlugName && result.cycle < RedsIllness.RedsCycles(result.redsExtraCycles))
+            if (result != null && result.altEnding && slugcat == Plugin.SlugName && result.cycle < Plugin.RedsCycles(result.redsExtraCycles, result))
             {
                 result.redsDeath = false;
             }
@@ -67,7 +67,7 @@ namespace HunterExpansion.CustomEnding
                 SaveState saveState = manager.rainWorld.progression.currentSaveState;
                 if (slugcat == Plugin.SlugName)
                 {
-                    if (saveState.cycleNumber < RedsIllness.RedsCycles(saveState.redExtraCycles))//saveState.deathPersistentSaveData.redsDeath && 
+                    if (saveState.cycleNumber < Plugin.RedsCycles(saveState.redExtraCycles, saveState))//saveState.deathPersistentSaveData.redsDeath && 
                     {
                         saveState.deathPersistentSaveData.redsDeath = false;
                     }
@@ -76,27 +76,7 @@ namespace HunterExpansion.CustomEnding
                         saveState.deathPersistentSaveData.redsDeath = true;
                     }
                     result.redsDeath = saveState.deathPersistentSaveData.redsDeath;
-                    /*
-                    if (result != null)
-                        Plugin.Log("0 result.redsDeath: " + result.redsDeath);*/
                 }
-                /*
-                //修改其他猫的选猫的区域名问题
-                if (result.shelterName == "GATE_NSH_DGL" && saveState.denPosition == "GATE_NSH_DGL")
-                {
-                    result.shelterName = "NSH_S01";
-                }
-                //这两个需要注意一下怎么不和其他mod冲突，最好是能判断蛞蝓猫现在所处的区域名
-                if (result.shelterName == "GATE_SB_OE" && saveState.denPosition == "GATE_SB_OE" && 
-                    saveState.progression.miscProgressionData.regionsVisited.ContainsKey("NSH"))
-                {
-                    result.shelterName = "SB_S01";
-                }
-                if (result.shelterName == "GATE_OE_SU" && saveState.denPosition == "GATE_OE_SU" && 
-                    saveState.progression.miscProgressionData.regionsVisited.ContainsKey("NSH"))
-                {
-                    result.shelterName = "SU_S01";
-                }*/
             }
 
             return result;
@@ -799,12 +779,12 @@ namespace HunterExpansion.CustomEnding
                     self.manager.musicPlayer.FadeOutAllSongs(20f);
                 }
                 //分支结局：时间足够回去
-                if (RedsIllness.RedsCycles(saveState.redExtraCycles) - saveState.cycleNumber >= 15)
+                if (Plugin.RedsCycles(saveState.redExtraCycles, saveState) - saveState.cycleNumber >= 15)
                 {
                     Plugin.Log("Hunter AltEnd: Return!");
                     saveState.deathPersistentSaveData.redsDeath = false;
                     saveState.deathPersistentSaveData.karma = saveState.deathPersistentSaveData.karmaCap;
-                    saveState.cycleNumber = RedsIllness.RedsCycles(saveState.redExtraCycles) - 1;
+                    saveState.cycleNumber = Plugin.RedsCycles(saveState.redExtraCycles, saveState) - 1;
                     self.manager.statsAfterCredits = false;
                     self.manager.nextSlideshow = SlideShowID.HunterAltEnd;
                 }
@@ -871,7 +851,7 @@ namespace HunterExpansion.CustomEnding
                             " - ",
                             menu.Translate("Cycle"),
                             " ",
-                            ((slugcatNumber == SlugcatStats.Name.Red) ? (RedsIllness.RedsCycles(self.saveGameData.redsExtraCycles) - self.saveGameData.cycle) : self.saveGameData.cycle).ToString()
+                            ((slugcatNumber == SlugcatStats.Name.Red) ? (Plugin.RedsCycles(self.saveGameData.redsExtraCycles, self.saveGameData) - self.saveGameData.cycle) : self.saveGameData.cycle).ToString()
                     });
                     if (ModManager.MMF)
                     {
@@ -937,7 +917,7 @@ namespace HunterExpansion.CustomEnding
                             " - ",
                             menu.Translate("Cycle"),
                             " ",
-                            ((slugcatNumber == SlugcatStats.Name.Red) ? (RedsIllness.RedsCycles(self.saveGameData.redsExtraCycles) - self.saveGameData.cycle) : self.saveGameData.cycle).ToString()
+                            ((slugcatNumber == SlugcatStats.Name.Red) ? (Plugin.RedsCyclesWithMod(self.saveGameData.redsExtraCycles) - self.saveGameData.cycle) : self.saveGameData.cycle).ToString()
                     });
                     if (ModManager.MMF)
                     {

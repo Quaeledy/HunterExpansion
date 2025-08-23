@@ -37,7 +37,7 @@ namespace HunterExpansion.CustomOracle
         public NSHConversation(NSHOracleBehaviour owner, NSHOracleMeetHunter convBehav, Conversation.ID id, DialogBox dialogBox, SLOracleBehaviorHasMark.MiscItemType describeItem) : base(owner, id, dialogBox)
         {
             //EncryptAllDialogue();
-
+            //DecryptAllDialogue();
             this.owner = owner;
             this.convBehav = convBehav;
             this.describeItem = describeItem;
@@ -104,6 +104,62 @@ namespace HunterExpansion.CustomOracle
             }
         }
 
+        //用于加密文件
+        public new void DecryptAllDialogue()
+        {
+            Plugin.Log("Dncrypt all dialogue");
+            string modPath = "";
+            for (int j = ModManager.ActiveMods.Count - 1; j >= 0; j--)
+            {
+                if (ModManager.ActiveMods[j].id == Plugin.MOD_ID)
+                    modPath = ModManager.ActiveMods[j].path;
+            }
+            if (modPath == "")
+            {
+                Plugin.Log("Can not find mod path to encrypt all dialogue");
+                return;
+            }
+            for (int i = 0; i < ExtEnum<InGameTranslator.LanguageID>.values.Count; i++)
+            {
+                InGameTranslator.LanguageID languageID = InGameTranslator.LanguageID.Parse(i);
+                string path1 = modPath + string.Concat(new string[]
+                {
+                    Path.DirectorySeparatorChar.ToString(),
+                    "Text",
+                    Path.DirectorySeparatorChar.ToString(),
+                    "Text_",
+                    LocalizationTranslator.LangShort(languageID),
+                    Path.DirectorySeparatorChar.ToString()
+                }).ToLowerInvariant();
+                string path2 = modPath + string.Concat(new string[]
+                {
+                    Path.DirectorySeparatorChar.ToString(),
+                    "Newest",
+                    Path.DirectorySeparatorChar.ToString(),
+                    "Text",
+                    Path.DirectorySeparatorChar.ToString(),
+                    "Text_",
+                    LocalizationTranslator.LangShort(languageID),
+                    Path.DirectorySeparatorChar.ToString()
+                }).ToLowerInvariant();
+                if (Directory.Exists(path1))
+                {
+                    string[] files = Directory.GetFiles(path1, "*.txt", SearchOption.AllDirectories);
+                    for (int j = 0; j < files.Length; j++)
+                    {
+                        InGameTranslator.EncryptDecryptFile(files[j], false, false);//解密
+                    }
+                }
+                if (Directory.Exists(path2))
+                {
+                    string[] files = Directory.GetFiles(path2, "*.txt", SearchOption.AllDirectories);
+                    for (int j = 0; j < files.Length; j++)
+                    {
+                        InGameTranslator.EncryptDecryptFile(files[j], false, false);//解密
+                    }
+                }
+            }
+        }
         public override void AddEvents()
         {
             //猫猫有语言印记才会读

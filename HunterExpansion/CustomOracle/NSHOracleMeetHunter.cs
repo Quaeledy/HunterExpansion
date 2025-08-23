@@ -161,7 +161,7 @@ namespace HunterExpansion.CustomOracle
                         }
                         else if (state.playerEncountersWithMark >= 2 && inActionCounter > 10)
                         {
-                            if (RedsIllness.RedsCycles(saveState.redExtraCycles) - saveState.cycleNumber <= 0)
+                            if (Plugin.RedsCycles(saveState.redExtraCycles, saveState) - saveState.cycleNumber <= 0)
                             {
                                 owner.NewAction(NSHOracleBehaviorAction.MeetHunter_Talk3);
                             }
@@ -190,7 +190,7 @@ namespace HunterExpansion.CustomOracle
                         }
                         else if (state.playerEncountersWithMark >= 2 && inActionCounter > 10)
                         {
-                            if (RedsIllness.RedsCycles(saveState.redExtraCycles) - saveState.cycleNumber <= 0)
+                            if (Plugin.RedsCyclesWithMod(saveState.redExtraCycles) - saveState.cycleNumber <= 0)
                             {
                                 owner.NewAction(NSHOracleBehaviorAction.MeetHunter_Talk3);
                             }

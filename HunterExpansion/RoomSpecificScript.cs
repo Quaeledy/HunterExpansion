@@ -193,7 +193,9 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && player.firstChunk.pos.x > 150f && player.firstChunk.pos.x < 450f && PearlFixedSave.pearlFixed && EndingSession.openGate)
+                    if (player != null && player.firstChunk.pos.x > 150f && player.firstChunk.pos.x < 450f && 
+                        player.room != null && player.room == this.room &&
+                        PearlFixedSave.pearlFixed && EndingSession.openGate)
                     {
                         return true;
                     }
@@ -324,7 +326,8 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && player.firstChunk.pos.x > 200f && player.firstChunk.pos.x < 400f)
+                    if (player != null && player.firstChunk.pos.x > 200f && player.firstChunk.pos.x < 400f &&
+                        player.room != null && player.room == this.room)
                     {
                         return true;
                     }
@@ -443,7 +446,8 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && player.firstChunk.pos.x > 150f && player.firstChunk.pos.x < 350f)
+                    if (player != null && player.firstChunk.pos.x > 150f && player.firstChunk.pos.x < 350f &&
+                        player.room != null && player.room == this.room)
                     {
                         return true;
                     }
@@ -515,7 +519,8 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && this.player.DangerPos.y < 0f && (this.player.DangerPos.x < 800f || (blackRect != null && blackRect.alpha > 0f)))
+                    if (player != null && this.player.DangerPos.y < 0f && (this.player.DangerPos.x < 800f || (blackRect != null && blackRect.alpha > 0f)) &&
+                        player.room != null && player.room == this.room)
                     {
                         return true;
                     }
@@ -614,7 +619,8 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && this.player.DangerPos.y > 1250f && this.player.DangerPos.x > 1000f && this.player.DangerPos.y <= 1800f)
+                    if (player != null && this.player.DangerPos.y > 1250f && this.player.DangerPos.x > 1000f && this.player.DangerPos.y <= 1800f &&
+                        player.room != null && player.room == this.room)
                     {
                         return true;
                     }

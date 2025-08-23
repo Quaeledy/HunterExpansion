@@ -68,7 +68,7 @@ namespace HunterExpansion.CustomDream
                         upcomingDream = DreamID.HunterDream_3;
                     break;
                 case 4:
-                    if (saveState.cycleNumber >= RedsIllness.RedsCycles(saveState.redExtraCycles))
+                    if (saveState.cycleNumber >= Plugin.RedsCycles(saveState.redExtraCycles, saveState))
                         upcomingDream = DreamID.HunterDream_4;
                     break;
             }
