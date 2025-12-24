@@ -63,7 +63,7 @@ namespace HunterExpansion
             {
                 saveState = hud.rainWorld.progression.currentSaveState;
             }
-            else if (hud.owner.GetOwnerType() != HUD.HUD.OwnerType.RegionOverview)
+            else if (hud.owner.GetOwnerType() != HUD.HUD.OwnerType.RegionOverview && hud != null && hud.owner != null && hud.owner is SleepAndDeathScreen)
             {
                 saveState = (hud.owner as SleepAndDeathScreen).saveState;
             }

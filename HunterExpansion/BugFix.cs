@@ -211,7 +211,7 @@ namespace HunterExpansion
             {
                 ILCursor c = new ILCursor(il);
                 if (c.TryGotoNext(MoveType.After,
-                    (i) => i.MatchStloc(10)))//stloc.s 10
+                    (i) => i.MatchStloc(11)))//stloc.s 11
                 {
                     Plugin.Log("RegionState_AdaptWorldToRegionStateIL MatchFind!");
                     c.Emit(OpCodes.Ldloc_S, (byte)10);//找到flag3的本地变量

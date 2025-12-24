@@ -1,0 +1,529 @@
+Hunter Expansion|Hunter Expansion
+Quaeledy.hunterexpansion-name|Quaeledy.hunterexpansion-name
+Quaeledy.hunterexpansion-description|Добавлено шесть снов и новая концовка (с двумя вариантами) для Охотника. Реализовано базовое поведение НЗЗ и части комнат его мегаструктуры. Добавлена интерпретация НЗЗ в разделе «Коллекция».
+<LINE>Эта работа посвящена моим друзьям. Данный мод не отражает официальный сеттинг или сюжет. Я создал его, потому что мои друзья хотели увидеть НЗЗ в игре. Надеюсь, вам понравится этот мод.
+
+//提示
+The pearl you carry may determine your expedition's ending.|Жемчужина, которой ты обладаешь, может определить конец твоей миссии.
+Please treat it with caution.|Пожалуйста, обращайся с ней бережно. 
+No Significant Harassment's Transcription|Записи Нет Значимых Забот 
+
+//区域名
+No Significant Harassment|Нет Значимых Забот
+The Temporary Arena|Песочница
+No Significant Harassment (Memory Conflux)|Нет Значимых Забот (Отсек памяти）
+No Significant Harassment (The Boxroom)|Нет Значимых Забот (Комната）
+No Significant Harassment (Multistage Amplifier)|Нет Значимых Забот (Многокаскадный усилитель）
+No Significant Harassment (General Systems Bus)|Нет Значимых Забот (Главная системная шина）
+  
+//称呼
+little one|малыш 
+little messenger|маленький посланник 
+little furball|пушистик 
+little moth|мотылечек
+
+little wanderer|маленький путешественник
+little apprentice|маленький ученик 
+little scholar|маленький исследователь 
+little garbage worm|маленький дождевой червь 
+little naturalist|маленький исследователь природы 
+
+little Wanderer|маленький Путешественник
+little Apprentice|маленький Ученик
+little Scholar|маленький Исследователь 
+little Garbage Worm|маленький Дождевой Червь 
+little Naturalist|Маленький Исследователь природы 
+
+//新版对话翻译
+//第二场梦境，误入
+//玩家靠近神经元触发的对话，对话为随机抽取（太少了，多来点）
+//（一次）
+Please keep out. I don't want anything to go wrong at this stage.|Пожалуйста, не мешай. Я не хочу, чтобы что-то пошло не так на этой стадии.
+//（两次）
+It seems like you're curious about it? I'll hand it over to you at the right time, but not now.|Похоже, ты заинтересован в этом? В нужный момент я отдам тебе эту вещь, но не сейчас.
+//（三次）
+What are you doing, messenger? Please don't touch it.|Что ты делаешь, посланник? Не трогай его, пожалуйста.
+It will interrupt my process and potentially result in errors and irreversible damage.|Это прервет процесс и может привести к ошибкам и необратимым разрушениям. 
+It's an unpleasant experience for any iterator, so please stop your attempts.|Достаточно неприятный опыт для любого итератора, поэтому прекрати.
+//（多次之后随机抽取）
+Please do not approach it.|Пожалуйста, не приближайся к нему. 
+May I hope you don't interfere with my work?|Могу я надеяться, что ты не будешь вмешиваться в мою работу? 
+
+//玩家开挂拿神经元触发的对话，按触犯次数和严重程度依次触发
+//（一级）
+I don't know how you did it, but I hope it won't happen again.|Я не знаю, каким образом ты это сделал, но надеюсь, что подобное больше не повторится. 
+//（二级）
+Seems like you are unwilling to follow orders?|Похоже, ты не очень любишь подчиняться приказам? 
+Such a shame! I have to remind you that my patience is not infinite.|Какая жалость! Я вынужден тебе напомнить, что мое терпение не безгранично. 
+//（三级）
+Such a disobedient messenger ~|Какой непослушный~
+Congratulations! You are free now.|Поздравляю! Теперь можешь идти. 
+
+//结局流程对话
+//Moon修珍珠
+Oh... don't you want me to do this?|Оу… Разве ты не хочешь, чтобы я это сделал? 
+Um... I will continue.|Хм… Я продолжу.
+//NSH招呼猎手
+Good morning. Come here, my little messenger. Come to me.|Доброе утро. Иди сюда, мой милый посланник. Иди ко мне. 
+Good morning, messenger.|Доброе утро, посланник.
+Oh, you're with your friend. But we need some time alone, I believe. Can you come back for me after you take it to somewhere safe?|Оу, ты с другом. Но, я думаю, нам надо побыть наедине. Можешь вернуться ко мне, когда отнесешь его в безопасное место?
+Oh, you're with your friends. But we need some time alone, I believe. Can you come back for me after you take them to somewhere safe?|Оу, ты с другом. Но, я думаю, нам надо побыть наедине. Можешь вернуться ко мне, когда отведешь их в безопасное место? 
+Welcome back, my messenger. Come, Come here.|С возвращением, дорогой. Подойди, подойди сюда.
+
+//NSH被攻击
+What are you doing? Please don't attack me.|Что ты делаешь? Не атакуй меня, пожалуйста.
+Stop this barbaric behavior, animal.|Прекращай это варварское поведение, животное. 
+Remember to behave in the next cycle.|Не забудь вести себя хорошо в следующем цикле.
+I have already warned you.|Я тебя предупреждал. 
+
+//当着NSH的面食用神经元
+Creature, are you intentionally provoking me?|Создание, ты что специально меня провоцируешь? 
+Okay, if you brought it to me just for this moment, feel free.|Ладно, если ты принес мне это исключительно ради данного момента, не стесняйся. 
+
+//NSH读白色珍珠及彩色珍珠引语
+//第一次
+Do you want to give it to me? Or just want me to read it?|Ты хочешь отдать мне это? Или хочешь, чтобы я просто прочел? 
+Let me take a look at this pearl...|Дай-ка мне взглянуть на эту жемчужину…
+//第二次
+Are you curious about the content in this pearl? Okay, I'm curious~|Тебе не любопытно узнать о содержимом жемчужины? Ну, мне любопытно~
+//第三次
+Another pearl? It seems that you really like them!|Ещё одна жемчужина? Похоже, они тебе действительно нравятся! 
+Seeing you appear with pearls, I think I already know your purpose for coming here.|Как только я увидел тебя с жемчужинами, я сразу понял цель твоего визита. 
+The scavengers will be jealous of your horde!|Мусорщики будут завидовать твоей коллекции!
+//多次见203
+
+//NSH解读物品的引语
+What is that?|Что это?
+Seems like you found something new again! Let me take a look.|Похоже, ты снова нашел что-то новенькое! Позволь взглянуть.
+Seems like you found something new again. Let me take a look.|Похоже, ты снова нашел что-то новенькое! Позволь взглянуть.
+Ah-Hah! You are making this into a habit! Let me take a close look.|Ага! Это уже входит в привычку! Позволь мне взглянуть поближе. 
+If you continue to be polite, I will explain to you.|Если ты и дальше будешь вежливым, то я тебе все объясню. 
+I have the right to refuse to entertain impolite guests, don't you think?|Я имею право отказаться развлекать грубых гостей тебе так не кажется?
+Let's see, what do you have here this time?|Посмотрим, что тут у тебя на этот раз? 
+What is it again?|Что на этот раз?
+
+//NSH解读的火虫卵被拿走时
+Oh, of course, you can take it away anytime!|А, конечно, можешь брать это когда-угодно! 
+//NSH保管的奇点炸弹被拿走时
+You can take it, but don't attack me anymore.|Можешь взять это, но больше не атакуй меня. 
+
+//当着NSH的面吃神经元
+//吃NSH的
+Beast, are you intentionally provoking me?|Зверек, ты специально меня провоцируешь?
+//吃Moon的
+Goodbye, you cruel creature.|Пока, жестокое создание.
+//吃FP的
+Okay, if you brought it to me just for this moment, feel free.|Ладно, если ты принес мне это исключительно ради данного момента, не стесняйся. 
+
+
+//第一场梦境，诞生
+Can you hear me?|Ты меня слышишь?
+We are running out of time. Let's keep it simple.|У нас мало времени. Давай попроще. 
+As you see,I should be counted as a creator of you.|Как видишь, меня стоит считать твоим создателем.
+I need to lend your hand for something.|Мне нужно помочь тебе.
+As compensation, I will guide you on the path of ascension.|В качестве компенсации, я буду твоим проводником на пути к вознесению.
+But I know, this will always be a unreasonable request. Creating life should have not been such a hasty thing.|Но я знаю, что это всегда необоснованная просьба. Процесс создания жизни не должен был быть таким хаотичным. 
+I'm sorry. Unfortunately, we don't have any other options.|Мне жаль. К сожалению, у нас нет других вариантов.
+
+
+//第二场梦境，误入
+Why are you here?|Почему ты здесь？
+Neither you nor I are ready for what's coming next, yet.|Ни ты, ни я пока не готовы к тому, что будет дальше. 
+Please leave and don't disturb my work.|Пожалуйста, уйди и не мешай моей работе.
+If you just want to take a break, I don't object either.|Если тебе нужно сделать перерыв, я не возражаю.
+
+//玩家靠近神经元触发的对话，对话为随机抽取（太少了，多来点）
+//（一次）
+Please keep out. I don't want anything to go wrong at this stage.|Пожалуйста, не мешай. Я не хочу, чтобы что-то пошло не так на этой стадии.
+//（两次）
+It seems like you're curious about it? I'll hand it over to you at the right time, but not now.|Похоже, ты заинтересован в этом? В нужный момент я отдам тебе эту вещь, но не сейчас.
+//（三次）
+What are you doing, messenger? Please don't attempt to touch it.|Что ты делаешь, посланник? Не трогай его, пожалуйста.
+It will interrupt my process and potentially result in errors and irreversible damage.|Это прервет процесс и может привести к ошибкам и необратимым разрушениям. 
+It's an unpleasant experience for any iterator, so please stop your attempts.|Достаточно неприятный опыт для любого итератора, поэтому оставь свои попытки.
+//（多次之后随机抽取）
+Please do not approach it.|Пожалуйста, не приближайся к нему. 
+May I hope you don't interfere with my work?|Могу я надеяться, что ты не будешь вмешиваться в мою работу? 
+
+//玩家开挂拿神经元触发的对话，按触犯次数和严重程度依次触发
+//（一级）
+I don't know how you did it, but I hope it won't happen again.|Я не знаю как ты это сделал, но надеюсь, что подобное больше не повторится.
+//（二级）
+Seems like you are unwilling to follow orders?|Похоже, ты не слишком склонен подчиняться приказам?
+Such a shame! I have to remind you that my patience is not infinite.|Какая жалость! Я вынужден напомнить тебе, что моё терпение не бесконечно.
+//（三级）
+Such a disobedient messenger~|Какой же непослушный, посланник~
+Congratulations! You are free now.|Поздравляю! Теперь ты свободен.
+
+
+//第三场梦境，对战
+NSH: This time I'll set you up with a lizard.|НЗЗ: В этот раз я выпущу против тебя ящерицу.
+NSH: Keep your spirits up, soon after the situation you're facing would be far more dangerous than this.|НЗЗ: Не падай духом, совсем скоро тебе предстоит нечто куда более опасное.
+NSH: We need to ensure that everything is flawless.|НЗЗ: Мы должны убедиться, что всё пройдёт безупречно.
+//对战结语
+//（无伤）
+NSH: Good. Hope you can maintain the same level of proficiency and caution along the way.|НЗЗ: Прекрасно. Надеюсь, в пути ты сохранишь ту же сноровку и осторожность.
+//（一到二次）
+NSH: Well done, but still, you need my help.|НЗЗ: Неплохо, но тебе всё ещё нужна моя помощь.
+NSH: This can't be satisfying, isn't it?|НЗЗ: Разве это может приносить удовлетворение?
+NSH: There are not many opportunities left for us.|НЗЗ: У нас осталось не так много возможностей.
+//（三到五次）
+NSH: NSH: Calm down, your body have far more protential than you think.|НЗЗ: Спокойнее, твой организм способен на большее, чем ты думаешь.
+NSH: Learn to manipulate it perfectly. It will not be difficult for your race.|НЗЗ: Научись владеть им в совершенстве. Для твоего вида это несложно.
+NSH: Concentrate, we just need more time.|НЗЗ: Сосредоточься, нам просто нужно больше времени.
+//（更多）
+NSH: ...|НЗЗ：...
+NSH: Are you acting out?|НЗЗ: Ты срываешься?
+NSH: I have no intention of making things ugly for us. A quarter rain cycle - I hope you can recover later.|НЗЗ: У меня нет намерения усложнять нам жизнь. Четверть дождевого цикла - надеюсь, позже ты сможешь восстановиться.
+NSH: My messenger, I have no other choice on this matter. I can only hope that you understands.|НЗЗ: Мой посланник, у меня нет иного выбора в этом деле. Я лишь надеюсь, что ты понимаешь.
+
+
+//第四场梦境，启程
+I entrusted it to you.|Я доверил это тебе.
+Guess you have already known its importance.|Думаю, ты уже понимаешь всю её важность.
+If necessary, the pearl is expendible, but the neuron must be delivered to it's destination.|Если потребуется, жемчужина не столь важна, но нейрон должен быть доставлен к месту назначения.
+This will be your first time entering the wilderness, and the journey will not be easy, but I wish you a pleasant one.|Впервые тебе предстоит войти в дикую природу, путь будет нелёгким, но я желаю тебе приятного пути.
+Take care, my little messenger.|Береги себя, мой маленький посланник.
+
+
+//美梦的对话
+You have completed a very great job, messenger.|Ты проделал великую работу, посланник.
+I am proud of you, and at the same time, I feel ashamed of myself.|Я горжусь тобой и в то же время стыжусь самого себя.
+You don't have much time. Go deep underground and you will be saved.|У тебя мало времени. Спускайся глубоко под землю и спасение придёт к тебе.
+Don't look back.|Не оглядывайся.
+
+
+//结局流程对话
+Oh... don't you want me to do this?|Ох... ты не хочешь, чтобы я это делал?
+Um... I will continue.|Хм... я продолжу.
+Good morning. Come here, my little messenger. Come to me.|Доброе утро. Иди сюда, мой маленький посланник. Иди ко мне.
+
+
+//由moon解读nsh演算室的珍珠，对话为随机抽取
+// 1
+Its data compiling style is very familiar... I think it comes from a member of the local group.|Стиль записи данных очень знаком... Думаю, это работа кого-то из местной группы.
+
+Its data compiling style is very familiar... I think it comes from No Significant Harassement.|Стиль записи данных очень знаком...Думаю, что это работа Нет Значимых Забот.
+
+There isn't much left inside. I think this is a part of the unstructured grid of a physical field, but I lack information to further interpret it.|Внутри почти ничего не осталось. Я думаю, что это фрагмент неструктурированной сетки физического поля, однако мне не хватает информации для дальнейшей расшифровки.
+
+// 2
+This is a calculation process used to carefully encrypt and store special data, possibly some kind of key.|Это процесс вычислений, созданный для надёжного шифрования и хранения особых данных, возможно некоего ключа.
+Without context, I don't know its purpose.|Без контекста я не знаю, какова его цель.
+// 3
+Strange... This data clearly comes from an iterator. But there are several small errors inside, even though they have been carefully corrected, traces can still be seen.|Странно... Эти данные явно принадлежат итератору. Но внутри есть несколько мелких ошибок, хоть их и тщательно исправляли, следы всё же заметны.
+We rarely make mistakes in calculations, so its creator was certainly not paying attention.|Мы редко допускаем ошибки в вычислениях, так что их создатель явно был невнимателен.
+
+// 4
+This is a log of a working memory, but I can only interpret a few words.|Это запись рабочей памяти, но я могу прочесть лишь несколько слов.
+It is obvious that the compiler used some method to compress his information, in order to store it in a short period of time and perform more operations.|Очевидно, что её составитель использовал какой-то метод сжатия информации, чтобы вместить как можно больше операций за короткое время.
+This iterator used to handle an urgent matter, which overwhelmed them, but their calculations were still well-organized.|Этот итератор занимался срочным делом, что его перегружало, но расчёты оставались упорядоченными.
+Ah, this makes me feel familiar...|Ах, это чувство мне так знакомо...
+
+A faintly familiar feeling. If I were to speculate on my own, little creature, I would guess that it comes from the region of No Significant Harassment.|Малознакомое. Если рискнуть предположить, маленькое создание, я бы сказала, что это из региона Нет Значимых Забот.
+
+// 5
+This is a biome log, and its owner has observed and recorded the evolution of nearly a hundred species of organisms within their region.|Это биологический журнал, и его автор наблюдал и описывал эволюцию почти сотни видов в своем регионе.
+
+I saw a species unique to No Significant Harassment's region.|Я увидела вид, уникальный для региона Нет Значимых Забот.
+I hope you didn't steal it, little creature. The time span of the edits is dramatic, and he persisted in updating its data until a long time ago.|Надеюсь, ты её не украл, маленькое создание. Временной размах правок огромен, и его хозяин упорно обновлял данные вплоть до давнего прошлого.
+But for a long time recently, he seems to have forgotten it.|Но в последнее время он, похоже, надолго забыл о нём.
+
+I hope you didn't steal it, little creature. The time span of the edits is dramatic, and its owner persisted in updating its data until a long time ago.|Надеюсь, ты не украл её, маленькое создание. Сроки правок огромны, владелец обновлял данные до очень давних времён.
+But for a long time recently, the writer seems to have forgotten it.|Но в последнее время, похоже, писатель о нём забыл.
+
+// 6
+This is a special qualia... it's a dying experience.|Это уникальное чувство… Переживаемое на грани смерти.
+We all know that the near death experience of the ancients was not accompanied by fear, so obviously, this data is extracted from a simple creature.|Мы знаем, что у древних предсмертный опыт не сопровождался страхом, значит, данные взяты у простого существа.
+I can distinguish the primordial desire for survival - perhaps it's from the brain of a squidcada.|Я различаю первобытное стремление к жизни - возможно, это мозг крабокатицы.
+I find it difficult to imagine whether it will have any practical use.|Трудно представить, будет ли от этого какая-то польза.
+
+
+//NSH被攻击
+What are you doing? Please don't attack me.|Что ты делаешь? Пожалуйста, не нападай на меня.
+Animal, stop your barbaric behavior.|Животное, прекрати своё варварское поведение.
+Keep that in your mind: be polite in the next cycle.|Запомни это: в следующем цикле веди себя вежливее.
+I have already warned you.|Я уже предупреждал тебя.
+
+
+//NSH读FP演算室珍珠
+//水猫线
+This pearl has traces of corruption, although very faint... Well, I can guess who wrote it.|На этой жемчужине заметны следы порчи, хоть и очень слабые... Что ж, я могу догадаться, кто её написал.
+I don't want to read this pearl. Seeing his information is no more enjoyable than seeing the rot.|Я не хочу читать эту жемчужину. Её данные ничуть не приятнее гнили..
+If possible, please take it with you when you leave.|Если возможно, забери её с собой, когда уйдёшь.
+
+//圣猫线
+This pearl has suffered severe corruption before. There's nothing inside now.|Эта жемчужина сильно пострадала от порчи. Внутри теперь ничего нет.
+This pearl is even more blank than blank - it has been completely corrupted<LINE>and cannot perform any functions.|Эта жемчужина пустотнее пустоты, она полностью повреждена порчей<LINE>и не способна выполнять никаких функций.
+
+
+//NSH读FP演算室珍珠的引语
+<CapPlayerName>, do you want me to read this?|<CapPlayerName>, хочешь, чтобы я прочитал это?
+This pearl is still very warm, it seems that it has been used recently.|Эта жемчужина ещё тёплая, похоже, ею недавно пользовались.
+
+A beautiful pearl... and it is also used recently! Do you want me to read this?|Красивая жемчужина... да и недавно была использована! Хочешь, чтобы я её прочитал?
+
+This pearl was used not long ago! I'm curious where you found it.|Этой жемчужиной пользовались недавно! Мне любопытно, где ты её нашёл.
+Oh... a warm pearl. Do you want to know what is written here?|Ох... тёплая жемчужина. Хочешь знать, что здесь написано?
+I'm also very curious! Let me read it to you.|Мне тоже любопытно! Давай я прочту тебе.
+
+A fresh pearl! This is a rare find, let's take a look at what it says.|Свежая жемчужина! Редкая находка, давай посмотрим, что в ней.
+
+
+//NSH读白色珍珠及彩色珍珠引语
+//第一次
+Do you want to give it to me? Or just want me to read it?|Ты хочешь подарить её мне? Или просто хочешь, чтобы я её прочитал?
+Let me take a look at this pearl...|Дай-ка мне взглянуть на эту жемчужину...
+//第二次
+Are you curious about the content in this pearl? Okay, I'm curious~|Тебе любопытно, что в этой жемчужине? Ладно, мне тоже любопытно~
+//第三次
+Another pearl? It seems that you really like them!|Ещё жемчужина? Кажется, они тебе действительно нравятся!
+//第四次
+Seeing you appear with pearls, I think I already know your purpose for coming here.|Наблюдая тебя с очередной жемчужиной, я, кажется, знаю цель твоего прихода.
+The scavengers will be jealous of your collection ability!|Мусорщики позавидовали бы твоим способностям поиска.
+//多次
+<CapPlayerName>, you would like me to read this?|<CapPlayerName>, ты хочешь, чтобы я это прочитал?
+Would you like me to read this pearl?|Хочешь, чтобы я прочитал эту жемчужину?
+Are you curious about the content of this pearl, <PlayerName>?|Тебе интересно о чём эта жемчужина, <PlayerName>？
+A pearl! Let me see what's written inside.|Жемчужина! Дай мне взглянуть, что в ней.
+Do you want me to read this pearl for you?|Хочешь, я прочту эту жемчужину для тебя?
+
+
+//NSH被打断解读
+//喜欢猫
+Lost patience, <PlayerName>?|Теряешь терпение, <PlayerName>？
+Want to leave? In our creators, leaving early is a point deduction~|Хочешь уйти? У наших создателей уход пораньше ведёт к наказанию~
+Go play, children.|Иди играй, дитя.
+Are you leaving? Did anything scare you|Уходишь? Что-то напугало тебя?
+Are you leaving now? See you later.|Уже уходишь? Увидимся позже.
+//不喜欢猫
+Lost patience?|Теряешь терпение?
+Do you want to leave? Go quickly.|Желаешь уйти? Давай быстрее.
+...|...
+Are you leaving?|Ты уходишь?
+Are you leaving now?|Ты сейчас уходишь?
+
+//NSH重新解读
+//喜欢猫
+What are you reluctant to part ways with? Okay, let's continue.|С чем тебе не хочется расставаться? Хорошо, давай продолжим.
+Is this a game exclusively for small animals?|Эта игра только для маленьких зверушек?
+You're really not cute! But okay, it's hard for me to get serious with you.|Ты ни капли не милый! Но да, мне тяжело быть с тобой серьёзным.
+Come on, little beast. Where have we read?|Ну же, маленький зверь. На чём мы остановились?
+Have you changed your mind? But I won't continue~|Ты передумал? Но я не хочу продолжать~
+//不喜欢猫
+What are you reluctant to part with? I'm not interested in reading it to you.|С чем ты не хочешь расставаться? Мне не интересно это читать.
+I don't have time to play games with you, beast.|У меня нет времени на игры с тобой, зверь.
+...|...
+Little beast, I won't read it to impolite creatures.|Маленький зверь, я не буду читать это для столь невежливого существа.
+Have you changed your mind? But I won't continue.|Ты передумал? Но я не хочу продолжать.
+
+
+//NSH解读物品的引语
+What is that?|Что это?
+It seems that you has found something new again! Let me take a look.|Вижу ты снова что-то нашёл! Позволь взглянуть.
+It seems that you has found something new again. Let me take a look.|Вижу ты снова что-то нашёл! Позволь взглянуть.
+Haha, you have developed a habit! Let me take a look.|Ха-ха, у тебя появилась привычка! Дай взгляну.
+If you continue to be polite, I will explain to you.|Если ты будешь вежливым, я всё объясню.
+I have the right to refuse to entertain impolite guests, are you right?|Я имею право отказаться развлекать невежд, разве не так?
+Let's see, what kind of good thing is it?|Давай посмотрим, что это за штука?
+What kind of thing is it?|Что это такое?
+//多次（喜欢猫）
+Welcome! Searching, please wait a moment~|Добро пожаловать! Идёт поиск, подожди секунду~
+You're really tireless. Come on, let's take a look.|Ты действительно неутомим. Ну же, давай посмотрим.
+Is there another one? Let me take a look.|И ещё один? Давай взгляну.
+Let's take a look. Today's little lecture of NSH is about...|Давай посмотрим. Сегодняшняя лекция от НЗЗ про…
+Ah, you're here. Is there anything I want to see?|А, вот и ты. Есть что-то, на что мне надо взглянуть?
+Welcome back! Show me, <ItemPlayerName>.|С возвращением! Покажи мне, <ItemPlayerName>.
+//多次（不喜欢猫）
+You are such a difficult little thing, aren't you? Come on, let me take a look.|Ты такая сложная маленькая особь, не так ли? Дай мне посмотреть.
+Let me take a look.|Дай-ка посмотрю.
+What is this?|Что это такое?
+Another one? Let me take a look.|Ещё один? Дай взглянуть.
+Okay,  I will look at it.|Хорошо, я посмотрю.
+Do you want to show it to me?|Хочешь показать это мне?
+//多次
+<CapItemPlayerName>, let me see what you found again?|Можно посмотреть, что ты снова нашёл, <ItemPlayerName>?
+Oh, what is that, <ItemPlayerName>?|Ох, что это, <ItemPlayerName>?
+
+
+//NSH解读物品部分文本
+//矛
+This is a weapon. We are already quite familiar with it, aren't we?|Это оружие, мы с ним довольно хорошо знакомы, не так ли?
+This is a heavy rebar. If you can't use it, please feel free to leave it here.|Это тяжёлая палка. Если не можешь её использовать, можешь оставить здесь.
+This is a sharpened rebar. As an apprentice in nature,<LINE>I guess you are not unaware of its purpose.|Это заострённая палка. Как ученик природы,<LINE>я полагаю, ты не подозревал о её назначении.
+//SL_chimney珍珠补充内容
+I have to say, you are really cute!|Я хочу сказать, ты чертовски милый!
+
+//炸矛
+This is an explosive weapon, just throw it like a rebar. Remember<LINE>to keep a certain distance from the explosion point.|Это взрывное оружие, просто метайте его, как палку. Не забудьте<LINE>держаться на определённом расстоянии от точки взрыва.
+However, I guess you have already figured out its usage!|Впрочем, я думаю ты уже понял, как его использовать!
+A type of explosive weapon. Be careful, I have seen many creatures<LINE>use it to harm themselves.|Разновидность взрывного оружия. Будь осторожен, я видел, как многие существа<LINE>наносили им вред сами себе.
+
+//石头
+A rock, despite its non-lethality, can still play a unique role in your face of enemies. I think you are already familiar with it~|Камень. Несмотря на не летальность, он всё же может сыграть особую роль перед врагом. Я думаю, ты с ним уже знаком~
+This is a rock. I seriously suspect that you are trying to use me to compile an encyclopedia,<LINE>or showcase your strange collection addiction.|Это же камень. Я серьёзно подозреваю, что ты пытаешься использовать меня для составления энциклопедии<LINE>или демонстрации своей странной мании коллекционирования.
+
+
+//泡水果
+This is a plant that swells when exposed to water, and it is edible.<LINE>It is said to have a great taste.|Это растение разбухает при контакте с водой и является съедобным.<LINE>Говорят, у него прекрасный вкус.
+Yes, I can't eat it. Don't show off in front of me~|Да, я не могу его съесть. Не издевайся~
+
+//火虫卵被拿走时
+Oh, of course, you can take it away anytime!|А, конечно, забирай обратно когда захочешь!
+
+
+//NSH遇见矛大师
+
+//矛大师遇见FP前
+//第一次
+You are...|Ты…
+Suns' messenger.|Посланник Солнц’.
+Are you lost? We're in an urgent situation, and we all need you to rush to Five Pebbles as soon as possible.|Ты потерялся? У нас чрезвычайная ситуация и тебе надо добраться до Пяти Галек, как можно быстрее.
+//第二次
+Is there anything I can do? I'm not the iterator you're looking for, little idiot.|Я могу помочь? Я не тот итератор, что тебе нужен, глупыш.
+She's running out of time, please set off quickly.|У неё осталось мало времени, пожалуйста, поторопись.
+//多次
+Suns, what's wrong with your messenger?|Солнца, что не так с твоим посланником?
+Little one, please go on your mission ASAP.|Малыш, пожалуйста, выполни свою миссию быстрее.
+
+//矛大师遇见FP后
+//第一次
+Messenger? Come here and take a break. It's not an easy trip, is it.|Посланник? Иди сюда, отдохни. Путь не из лёгких, не так ли?
+I know he  is hard to persuade, but I didn't expect it to end in this way.|Я знал, что его трудно уговорить, но не ожидал, что всё так кончится.
+Ha!  He has already done such to Moon, what do you expect?|Ха! Он уже сделал это с Луной, что ты ждал?
+I will think of other methods.|Я подумаю над другим решением.
+
+//矛大师完成结局后
+//第一次
+I received her... message.|Я получил её… Сообщение.
+Did you do it, little messenger? Thank you.|Это сделал ты, маленький посланник? Спасибо тебе.
+Your mission has been completed and your return journey is smooth.|Твоя миссия завершена, удачной дороги назад.
+//第二次
+Is there anything you need?|Тебе что-то нужно?
+If not, do you mind leave me alone for a while? I need to think.|Если нет, то мог бы оставить меня наедине? Мне нужно подумать.
+Goodbye, good messenger.|Прощай, славный посланник.
+//多次
+Do you still want to rest here? Be my guest.|Всё ещё хочешь отдохнуть здесь? Милости прошу.
+But don't forget that Suns is still waiting for you, messenger.|Но не забывай, что Солнца ждут тебя, посланник.
+
+
+//NSH遇见工匠
+
+//第一次对话
+Hello! It seems that I've got a citizen in house. Let me see…What a surprise, you are one of his. Five Pebbles.|Здравствуй! Кажется, у меня в гостях гражданин. Дай-ка взглянуть… Вот сюрприз, ты от него. Пять Галек.
+Then we are enemies, please leave!|Тогда мы враги! Уходи!
+Haha, just joking~|Ха-ха, просто шучу~
+I am very unpleasent with him, but I do not wish to vent on small animals like you.|Он мне неприятен, но я не желаю срываться на маленьких созданиях вроде тебя.
+You seems like you're having a hard time, but I can't help you. Nevertheless,<LINE>before you depart, you can rest here to your heart's content.|Похоже, тебе пришлось нелегко, но я не могу тебе помочь. Тем не менее <LINE> перед тем, как уйти, ты можешь отдохнуть здесь.
+
+//第二次对话
+Anything catching your attention?|Что-то тебя привлекло?
+Oh, of course, you can stay here. I have no intention of interfering with your decision, as long as you don't sabotage my structure.|О, конечно, ты можешь остаться здесь. Я не намерен тебе мешать, пока ты не вредишь моим структурам.
+
+
+//NSH遇见猎手
+//多次对话但时机未到
+Is there anything you need, my little messenger?|Здесь что-то, что тебе нужно, мой маленький посланник?
+It's my pleasure~|Это приятно~
+
+
+//NSH遇见饕餮
+//第一次
+（sound of escaping laughter）| (Звук краткого смешка)
+Oh, I’m not laughing at you body type - That’s what our creators would do. Out of fear of gluttony.|Оу, я не смеюсь над твоим телом - так поступали наши создатели. Из-за страха перед чревоугодием.
+But you little creatures and us iterators don't need to be afraid.|Но тебе, маленькое создание, и нам, итераторам, бояться нечего.
+You look content. It's such a novelty on this land! What a sight.|Ты выглядишь счастливым. Это так ново для этих земель! Приятное зрелище.
+Anyway, I'm glad to see you. As long as you don't eat my neurons.|В любом случае, я рад тебя видеть. Главное - не ешь мои нейроны.
+//第二次
+You're back. Anything else you need?|Ты вернулся. Что-то нужно?
+Seriously, I can't think of anything you'll need from me, you round little creature!|Серьёзно, не могу представить, что тебе могло от меня понадобиться, ты маленькое круглое создание!
+Except for the neurons, of course. This won't work. Give it up.|Кроме нейронов, конечно. Это плохая затея. Забудь об этом.
+//多次
+Okay, if you want to stay here, remember to not eat my neurons!|Хорошо, если ты хочешь остаться, помни, что нейроны есть нельзя!
+
+//NSH遇见求生者
+//第一次
+Oh? Hello, I haven't encountered a little guest like you in a while.|О? Привет, давно я не встречал такого маленького гостя, как ты.
+You look very primitive, but you have been marked. There are only Five Pebbles nearby<LINE>who can do this. It seems that you have walked a long way, little traveler.|Ты выглядишь очень примитивно, но у тебя есть метка. Поблизости только Пять Галек<LINE>мог её дать. Похоже, ты проделал долгий путь, маленький странник. 
+You can rest here for a while. It used to be known as a temple, but now I don't<LINE>mind being treated as a hotel~|Ты можешь отдохнуть здесь. Раньше это место знали, как храм, но сейчас<LINE>я не против роли отеля~
+//第二次
+Do you want anything else?|Тебе что-то нужно?
+If you want a job, I can have you as a messenger.|Если хочешь помочь, то можешь быть посланником.
+Just kidding. I'm sorry, but there's not much I can do, I can't even hear your needs.|Шучу. Мне жаль, но я ничем не могу помочь, я даже твоих нужд не слышу.
+//多次
+Okay, if you want to stay here, don't forget my words: no neuron buffet!|Хорошо, если хочешь оставайся, но не забывай мои слова: Никакого шведского стола из нейронов!
+
+
+//NSH遇见僧侣
+//第一次
+Oh, hi! Your kind is really smart, isn't it? It's a rare occurrence for organisms to grope for the<LINE>location of the calculation room, but in hundreds of rain cycles, I actually saw two slugcats.|О, привет! Твой народ и впрямь сообразителен, не так ли? Редко случается, чтобы существа нащупали<LINE>путь к вычислительной камере, но за сотни циклов я увидел целых два слизнекота.
+Listen up: The rule of NSH Inn is: YES to overnight, NO to neuron buffet. If you encounter<LINE>someone of your kind, please let them know.|Запомни: Правила постоялого двора НЗЗ: ДА - ночлег, НЕТ - шведский стол из нейронов. Если встретишь<LINE>сородича, пожалуйста, передай ему это.
+//第二次
+Meeting again, what makes you reluctant to part ways? Let me guess...|Очередная встреча. Что заставляет тебя возвращаться? Дай угадаю…
+Your kind has gone to the jurisdiction of Five Pebbles - if that's what you want to know.|Все твои сородичи направлялись к структурам Пяти Галек - если это то, что ты хотел узнать.
+//多次
+Okay, if you want to stay here, don't forget my words: no neuron buffet!|Окей, хочешь оставайся, но помни мои слова: Никакого шведского стола из нейронов!
+
+
+//NSH遇见溪流
+//溪流完成结局前
+//第一次
+Wow, what a surprise! The last time I saw your species was a long time ago, let alone how special you look.|Ого, какой сюрприз! В последний раз я видел твой вид давным-давно, не говоря о том, какой ты особенный!
+I hope you don't mind me scanning your structure. As a passionate fan of slugcats,<LINE>I find it difficult to restrain my curiosity.|Надеюсь, ты не против, если я просканирую твоё строение. Как страстный поклонник слизнекотов,<LINE>мне трудно удержаться от любопытства.
+Let me see... you have a unique pair of gills, but your ancestors didn't. It seems that<LINE>your ethnic group has unique adaptability.|Дай-ка посмотреть... У тебя уникальные жабры, но у твоих предков их не было. Похоже,<LINE>твоя группа обладает уникальной способностью.
+Welcome to rest here with me. If you plan to visit the jurisdiction of<LINE>Looks To The Moon, please help me say hello to her.|Прошу, ты можешь отдохнуть тут. Если ты планируешь навестить Смотрящую На Луну, то передай ей, пожалуйста, привет.
+//第二次
+You can stay, but if I lose a dozen neurons again due to my hospitality...|Можешь остаться, но если из-за моего гостеприимства я снова потеряю десяток нейронов...
+I swear I can be much more tricky than a bunch of angry scavengers.|Клянусь, я могу быть куда опаснее, чем кучка разъярённых мусорщиков.
+//多次
+Do you have any further questions?|У тебя ещё есть вопросы?
+
+//溪流完成结局后
+//第一次
+Hello, I am entangled in a strange matter. A while ago, the area of Five Pebbles stopped raining,<LINE>and after a few cycles, the rain clouds began to condense over Looks To The Moon.|Здравствуй, я запутался в одном странном деле. Недавно дожди в области Пяти Галек прекратились,<LINE>а спустя несколько циклов дождевые тучи начали собираться над Смотрящей На Луну.
+It is obvious that someone installed his battery for Moon. Considering that her structure has<LINE>been submerged by water, this is almost an impossible task.|Видимо, кто-то отнёс его разрядную ячейку Луне. А учитывая, что её структуры<LINE>погружены в воду, это невыполнимая задача.
+Now that I see you, everything has a clue. Did I guess correctly, the magical little one?<LINE>If you did this, please accept my gratitude.|Теперь, когда я увидел тебя, всё прояснилось. Я угадал, маленький волшебный зверёк?<LINE>Если это был ты, прими мои благодарности.
+I hope this means that Five Pebbles have already digested his anger. Anyway, what you<LINE>have accomplished has extraordinary significance.|Надеюсь, это значит, что Пять Галек усмирили свой гнев. В любом случае, то<LINE>что ты сделал, имеет огромное значение.
+Okay, you're the only slugcat worth enjoying the neuron buffet, just take it as my thank you.|
+Uh, be merciful under your tongue.|Хорошо, ты единственный слизнекот, которому позволено устроить шведский стол из нейронов, так сказать в качестве благодарности. 
+//第二次
+I calculated your movement speed based on the time interval of battery installation.<LINE>You're really agile, aren't you?|Я вычислил твою скорость по тому, как шустро ты перемещался по моим структурам.<LINE>А ты действительно проворный, не так ли?
+You can simply race against a frightened eggbug, and my fellows may even bet on you.|Ты бы мог на равных посоревноваться с перепуганным яйцежуком, и мои собратья может быть сделали на тебя ставку. 
+//多次
+Of course you can stay, but I am planning to start studying your body structure.|Конечно, можешь остаться, но я как раз собирался начать изучать твое анатомическое строение.
+Do you mind seeing your own scanned slices?|Не желаешь взглянуть на собственные сканы?
+
+//NSH遇见圣徒
+//第一次
+Ha, it's really strange! After the weather turns cold, have slugcats evolved hair?|Ха, вот удивительно! После похолодания у слизнекотов, что, шерсть появилась?
+Come on, although my room may not be warm, it can barely keep warm. I have always<LINE>loved the companionship of your kind, especially recently.|Заходи, у меня не жарко, но укрыться от стужи можно. Я всегда<LINE>любил общество вашего вида, а в последнее время - особенно.
+To this day, this land is still trapped here with us...|До сей поры эта земля остаётся в заточении вместе с нами...
+I hope you can leave when you want. You know, the void sea has always been open for you.|Надеюсь, ты сможешь уйти, когда захочешь. Знай, что море пустоты всегда открыто для тебя.
+//第二次
+Do you want to stay a little longer? I am very welcome.|Хочешь задержаться подольше? Ты всегда желанный гость.
+You remind me of the past. Although it may sound incredible, your species has<LINE>always been a good partner for iterators...|Ты напоминаешь мне о прошлом. Хоть это и прозвучит невероятно, твой народ<LINE>всегда был хорошим другом для итераторов...
+- When you're not feasting on neurons.|- Если не считать случаев поедания нейронов.
+//多次
+Do you want to stay a little longer? I am very welcome.|Хочешь задержаться подольше? Ты всегда желанный гость.
+
+
+//NSH遇见怪猫
+//第一次
+You have come at last, my valiant visitor. As I witnessed your arduous journey<LINE>through the watchers, a firm idea took shape:|Наконец-то ты пришёл, мой отважный путник. Наблюдая за твоим изнурительным путешествием<LINE>через наблюдателей, во мне крепла одна мысль:
+I love you.|Я люблю тебя.
+I've waited a long time for this, and I'm sure you have too! Come to me.|Я ждал этого так долго, и уверен - ты тоже! Подойди ко мне.
+Closer, I understand your desire for fusion, and today your hopes will not be dashed once again...|Ближе... Я чувствую твоё стремление к слиянию, и сегодня твои надежды не будут вновь растоптаны...
+... We can be together forever in the future.|...Впереди нас ждёт вечность вместе.
+//多次
+Come here... don't be afraid...|Иди сюда… Не бойся…
+
+
+//NSH遇见其他蛞蝓猫
+//第一次
+Strange little guy, hello.|Странное маленькое создание, привет.
+You are such an interesting little creature... different from the guests who used to come to my place.|Ты весьма любопытное существо... не похожее на тех гостей, что раньше приходили ко мне.
+Anyway, I welcome you to stay here and rest, as long as you don't intend to consume my neurons.|В любом случае, добро пожаловать. Можешь остаться здесь и отдохнуть,
+пока не решишься полакомиться моими нейронами.
+//多次
+Do you want to stay a little longer?|Хочешь задержаться здесь подольше?
+Of course you can! As long as you don't eat my neurons.|Конечно, можешь! Главное - не ешь мои нейроны.

@@ -54,6 +54,16 @@ namespace HunterExpansion.CustomEnding
             if (self.room.game.devToolsActive && Input.GetKey(KeyCode.LeftControl))
             {
                 Plugin.Log("Player Pos: " + self.DangerPos);
+                if (self.grasps != null)
+                {
+                    for (int g = 0; g < self.grasps.Length; g++)
+                    {
+                        if (self.grasps[g] != null && self.grasps[g].grabbed != null && !self.grasps[g].discontinued)
+                        {
+                            Plugin.Log($"Player grabbed[{g}]: {self.grasps[g].grabbed.abstractPhysicalObject.type.ToString()}");
+                        }
+                    }
+                }
             }
             if (self.room.game.devToolsActive && Input.GetKey(KeyCode.LeftControl) && Input.GetKey("6"))
             {

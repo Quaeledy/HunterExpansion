@@ -1213,7 +1213,7 @@ namespace HunterExpansion.CustomOracle
             bool flag = false;
             if (oracle.ID == Oracle.OracleID.SS && oracle.room.game.StoryCharacter == SlugcatStats.Name.Red && !oracle.room.game.GetStorySession.saveState.miscWorldSaveData.pebblesSeenGreenNeuron)
             {
-                Player playerWithNeuronInStomach = PlayerWithNeuronInStomach;
+                Player playerWithNeuronInStomach = this.playerWithGreenNeuron; //PlayerWithNeuronInStomach;
                 if (playerWithNeuronInStomach != null)
                 {
                     flag = true;

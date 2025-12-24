@@ -38,6 +38,7 @@ namespace HunterExpansion.CustomSave
                         result += ",";
                     }
                 }
+                result += "<mpdA>";
                 Plugin.Log("decipheredNSHPearls save!");
             }
             return result;

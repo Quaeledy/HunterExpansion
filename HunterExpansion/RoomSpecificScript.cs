@@ -193,7 +193,7 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && player.firstChunk.pos.x > 150f && player.firstChunk.pos.x < 450f && 
+                    if (player != null && player.firstChunk.pos.x > 135f && player.firstChunk.pos.x < 450f && 
                         player.room != null && player.room == this.room &&
                         PearlFixedSave.pearlFixed && EndingSession.openGate)
                     {
@@ -342,7 +342,7 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && player.firstChunk.pos.x <= 200f)
+                    if (player != null && player.firstChunk.pos.x <= 210f)
                     {
                         return true;
                     }
@@ -462,7 +462,7 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && player.firstChunk.pos.x <= 150f)
+                    if (player != null && player.firstChunk.pos.x <= 160f)
                     {
                         return true;
                     }
@@ -635,7 +635,7 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && this.player.DangerPos.y > 1800f && blackRect != null && blackRect.alpha >= 0.99f)
+                    if (player != null && this.player.DangerPos.y > 1790f && blackRect != null && blackRect.alpha >= 0.99f)
                     {
                         return true;
                     }
@@ -860,14 +860,14 @@ namespace HunterExpansion
             {
                 get
                 {
-                    if (player != null && player.firstChunk.pos.x > 200f && player.firstChunk.pos.x < 400f)
+                    if (player != null && player.firstChunk.pos.x < 400f)//player.firstChunk.pos.x > 200f && 
                     {
                         return true;
                     }
                     return false;
                 }
-                set
-                {
+                set 
+                {                     
                     isBufferZone = value;
                 }
             }
@@ -957,6 +957,12 @@ namespace HunterExpansion
             AbstractRoom oldRoom = player.room.abstractRoom;
             AbstractRoom room = player.abstractCreature.world.GetAbstractRoom(newRoomName);
             AbstractPhysicalObject stomachObject = null;
+            Dictionary<int, AbstractPhysicalObject> playerGrasp = new Dictionary<int, AbstractPhysicalObject>();
+            Dictionary<int, int> playerGraspChunkGrabbed = new Dictionary<int, int>();
+            Dictionary<int, Creature.Grasp.Shareability> playerGraspShareability = new Dictionary<int, Creature.Grasp.Shareability>();
+            Dictionary<int, float> playerGraspDominance = new Dictionary<int, float>();
+            //Dictionary<int, bool> playerGraspOverrideEquallyDominant = new Dictionary<int, bool>();
+            Dictionary<int, bool> playerGraspPacifying = new Dictionary<int, bool>();
             if (player != null && player.objectInStomach != null)
             {
                 stomachObject = player.objectInStomach;
@@ -1003,10 +1009,22 @@ namespace HunterExpansion
                 {
                     for (int g = 0; g < player.grasps.Length; g++)
                     {
-                        if (player.grasps[g] != null && player.grasps[g].grabbed != null && !player.grasps[g].discontinued &&
-                            player.grasps[g].grabbed is Creature && (!(player.grasps[g].grabbed is Player) || !(player.grasps[g].grabbed as Player).isSlugpup))// 
-                        {
-                            player.ReleaseGrasp(g);
+                        if (player.grasps[g] != null && player.grasps[g].grabbed != null && !player.grasps[g].discontinued) 
+                        { 
+                            if (!(player.grasps[g].grabbed is Creature))
+                            {
+                                playerGrasp.Add(g, player.grasps[g].grabbed.abstractPhysicalObject);
+                                playerGraspChunkGrabbed.Add(g, player.grasps[g].chunkGrabbed);
+                                playerGraspShareability.Add(g, player.grasps[g].shareability);
+                                playerGraspDominance.Add(g, player.grasps[g].dominance);
+                                //playerGraspOverrideEquallyDominant.Add(g, player.grasps[g].overrideEquallyDominant);
+                                playerGraspPacifying.Add(g, player.grasps[g].pacifying);
+                                player.ReleaseGrasp(g);
+                            }
+                            else if (!(player.grasps[g].grabbed is Player) || !(player.grasps[g].grabbed as Player).isSlugpup)// 
+                            {
+                                player.ReleaseGrasp(g);
+                            }
                         }
                     }
                 }
@@ -1079,7 +1097,37 @@ namespace HunterExpansion
                 if (stomachObject != null && player.objectInStomach == null)
                 {
                     player.objectInStomach = stomachObject;
-                }/*
+                }
+                foreach (var obj in playerGrasp)
+                {
+                    Plugin.Log($"playerGrasp: {(obj.Value as AbstractPhysicalObject).type.ToString()}");
+                    (obj.Value as AbstractPhysicalObject).realizedObject.RemoveFromRoom();
+                    (obj.Value as AbstractPhysicalObject).realizedObject = null;
+                    (obj.Value as AbstractPhysicalObject).world = player.abstractCreature.world;
+                    (obj.Value as AbstractPhysicalObject).Move(new WorldCoordinate(room.index, x, y, 0));
+                    (obj.Value as AbstractPhysicalObject).pos = player.abstractCreature.pos;
+                    (obj.Value as AbstractPhysicalObject).RealizeInRoom();
+                    (obj.Value as AbstractPhysicalObject).realizedObject.PlaceInRoom(room.realizedRoom);
+                    (obj.Value as AbstractPhysicalObject).realizedObject.room = player.room;
+                    foreach (var chunk in (obj.Value as AbstractPhysicalObject).realizedObject.bodyChunks)
+                        chunk.HardSetPosition(player.firstChunk.pos);
+                    Plugin.Log($"playerGrasp: {(obj.Value as AbstractPhysicalObject).realizedObject.room.abstractRoom.name}");
+                    Plugin.Log($"playerGrasp: {(obj.Value as AbstractPhysicalObject).realizedObject.firstChunk.pos}");
+                    bool flag = player.Grab((obj.Value as AbstractPhysicalObject).realizedObject, obj.Key, playerGraspChunkGrabbed[obj.Key],
+                        playerGraspShareability[obj.Key], playerGraspDominance[obj.Key], false, playerGraspPacifying[obj.Key]);
+                    Plugin.Log($"playerGrasp: {flag}");
+                    if (player.grasps != null)
+                    {
+                        for (int g = 0; g < player.grasps.Length; g++)
+                        {
+                            if (player.grasps[g] != null && player.grasps[g].grabbed != null && !player.grasps[g].discontinued)
+                            {
+                                Plugin.Log($"playerGrasp grabbed: {player.grasps[g].grabbed.abstractPhysicalObject.type.ToString()}");
+                            }
+                        }
+                    }
+                }
+                /*
                 for (int i3 = game.shortcuts.transportVessels.Count - 1; i3 >= 0; i3--)
                 {
                     if (!game.overWorld.activeWorld.region.IsRoomInRegion(game.shortcuts.transportVessels[i3].room.index))
