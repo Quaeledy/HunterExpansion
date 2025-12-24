@@ -24,7 +24,7 @@ using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
 
 namespace HunterExpansion
 {
-    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.8")]
+    [BepInPlugin("Quaeledy.hunterexpansion", "Hunter Expansion", "1.1.10")]
     public class Plugin : BaseUnityPlugin
     {
         static public readonly string MOD_ID = "Quaeledy.hunterexpansion";
